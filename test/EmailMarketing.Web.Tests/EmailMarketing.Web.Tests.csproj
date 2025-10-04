@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EmailMarketing.Membership\EmailMarketing.Membership.csproj" />
-    <ProjectReference Include="..\EmailMarketing.Web\EmailMarketing.Web.csproj" />
+  <ProjectReference Include="..\..\src\EmailMarketing.Membership\EmailMarketing.Membership.csproj" />
+  <ProjectReference Include="..\..\src\EmailMarketing.Web\EmailMarketing.Web.csproj" />
   </ItemGroup>
 
 </Project>
