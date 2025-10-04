@@ -16,7 +16,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
     {
         public Guid UserId { get; set; }
         [Required]
-        [Display(Name="Name")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
         [Required]
         [Display(Name = "Description")]
@@ -106,23 +106,23 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
                 IsProcessing = this.IsDraft ? false : true,
             };
 
-            
-            foreach(var item in GroupSelectList)
+
+            foreach (var item in GroupSelectList)
             {
-                if(item.IsChecked)
+                if (item.IsChecked)
                 {
                     var campaignGroup = new CampaignGroup
                     {
                         GroupId = item.Value
                     };
-                    
+
                     campaign.CampaignGroups.Add(campaignGroup);
                 }
-                
+
             }
 
             var hasTemplateAssign = false;
-            if(this.SelectedTemplateId.HasValue && this.SelectedTemplateId.Value != 0)
+            if (this.SelectedTemplateId.HasValue && this.SelectedTemplateId.Value != 0)
             {
                 campaign.EmailTemplateId = this.SelectedTemplateId.Value;
                 campaign.IsPersonalized = EmailTemplateList.FirstOrDefault(x => x.Id == this.SelectedTemplateId.Value).IsPersonalized;
@@ -140,7 +140,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
                 campaign.EmailTemplate = emailTemplate;
                 hasTemplateAssign = true;
             }
-            if(hasTemplateAssign)
+            if (hasTemplateAssign)
             {
                 await _campaignService.AddCampaign(campaign);
             }
@@ -149,7 +149,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
                 throw new Exception("You must select one Template or Create a new Template.");
             }
 
-            
+
 
         }
     }

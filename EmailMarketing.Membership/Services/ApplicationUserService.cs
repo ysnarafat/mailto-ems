@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EmailMarketing.Common.Exceptions;
+using EmailMarketing.Common.Extensions;
+using EmailMarketing.Common.Services;
+using EmailMarketing.Membership.Constants;
+using EmailMarketing.Membership.Entities;
+using EmailMarketing.Membership.Enums;
+using EmailMarketing.Membership.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System;
 using System.Linq.Expressions;
-using EmailMarketing.Membership.Entities;
-using EmailMarketing.Common.Services;
-using EmailMarketing.Membership.Enums;
-using EmailMarketing.Common.Extensions;
-using EmailMarketing.Common.Exceptions;
-using EmailMarketing.Membership.Exceptions;
-using EmailMarketing.Membership.Constants;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace EmailMarketing.Membership.Services
@@ -148,7 +147,7 @@ namespace EmailMarketing.Membership.Services
             resultTotalFilter = await query.CountAsync();
             resultItems = await query.AsNoTracking().ToListAsync();
 
-            return  resultTotalFilter;
+            return resultTotalFilter;
         }
 
 
@@ -201,7 +200,8 @@ namespace EmailMarketing.Membership.Services
                     if (!userSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(userSaveResult.Errors);
-                    };
+                    }
+                    ;
 
                     // Add New User Role
                     var user = await _userManager.FindByNameAsync(entity.UserName);
@@ -217,7 +217,8 @@ namespace EmailMarketing.Membership.Services
                     if (!roleSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(roleSaveResult.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -252,7 +253,8 @@ namespace EmailMarketing.Membership.Services
                     if (!userSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(userSaveResult.Errors);
-                    };
+                    }
+                    ;
 
                     // Add New User Role
                     var user = await _userManager.FindByNameAsync(entity.UserName);
@@ -268,7 +270,8 @@ namespace EmailMarketing.Membership.Services
                     if (!roleSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(roleSaveResult.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -317,7 +320,8 @@ namespace EmailMarketing.Membership.Services
                     if (!userSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(userSaveResult.Errors);
-                    };
+                    }
+                    ;
 
                     // Remove Previous User Role
                     var previousUserRoles = await _userManager.GetRolesAsync(user);
@@ -328,7 +332,8 @@ namespace EmailMarketing.Membership.Services
                         if (!roleRemoveResult.Succeeded)
                         {
                             throw new IdentityValidationException(roleRemoveResult.Errors);
-                        };
+                        }
+                        ;
 
                     }
 
@@ -345,7 +350,8 @@ namespace EmailMarketing.Membership.Services
                     if (!roleSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(roleSaveResult.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -373,7 +379,7 @@ namespace EmailMarketing.Membership.Services
                     }
 
                     var isExists = await this.IsExistsUserNameAsync(entity.UserName, entity.Id);
-       
+
                     if (isExists)
                     {
                         throw new DuplicationException(nameof(entity.Email));
@@ -395,7 +401,8 @@ namespace EmailMarketing.Membership.Services
                     if (!userSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(userSaveResult.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -429,7 +436,8 @@ namespace EmailMarketing.Membership.Services
                     if (!result.Succeeded)
                     {
                         throw new IdentityValidationException(result.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -462,7 +470,8 @@ namespace EmailMarketing.Membership.Services
                     if (!result.Succeeded)
                     {
                         throw new IdentityValidationException(result.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -495,7 +504,8 @@ namespace EmailMarketing.Membership.Services
                     if (!result.Succeeded)
                     {
                         throw new IdentityValidationException(result.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -532,7 +542,8 @@ namespace EmailMarketing.Membership.Services
                     if (!result.Succeeded)
                     {
                         throw new IdentityValidationException(result.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 
@@ -594,7 +605,8 @@ namespace EmailMarketing.Membership.Services
                     if (!userSaveResult.Succeeded)
                     {
                         throw new IdentityValidationException(result.Errors);
-                    };
+                    }
+                    ;
 
                     scope.Complete();
 

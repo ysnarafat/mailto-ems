@@ -7,7 +7,7 @@ using System;
 
 namespace EmailMarketing.Web.Areas.Member.Models
 {
-    public class DashboardBaseModel : MemberBaseModel , IDisposable
+    public class DashboardBaseModel : MemberBaseModel, IDisposable
     {
         protected readonly ICampaignService _campaignService;
         protected readonly IContactService _contactService;

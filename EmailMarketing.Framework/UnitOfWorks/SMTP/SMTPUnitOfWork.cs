@@ -1,11 +1,5 @@
 ﻿using EmailMarketing.Framework.Context;
 using EmailMarketing.Framework.Repositories.SMTP;
-using EmailMarketing.Framework.UnitOfWorks.SMTP;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.UnitOfWorks.SMTP
 {

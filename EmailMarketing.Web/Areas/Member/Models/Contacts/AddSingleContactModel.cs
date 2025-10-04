@@ -1,13 +1,10 @@
-﻿using Autofac;
-using EmailMarketing.Common.Services;
-using EmailMarketing.Framework.Entities;
+﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Services.Contacts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Contacts
@@ -36,14 +33,14 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         {
             GroupSelectList = (await _contactService.GetAllGroupsAsync(_currentUserService.UserId))
                                            .Select(x => new ContactValueTextModel { Value = x.Value, Text = x.Text, Count = x.Count, IsChecked = false }).ToList();
-            
+
             ContactValueMapsStandard = (await _contactService.GetAllContactValueMapsStandard())
                                            .Select(x => new ContactValueTextModel { Value = x.Value, Text = x.Text }).ToList();
-            
+
             ContactValueMapsCustom = (await _contactService.GetAllContactValueMapsCustom(_currentUserService.UserId))
                                            .Select(x => new ContactValueTextModel { Value = x.Value, Text = x.Text }).ToList();
         }
-        
+
         public async Task<bool> IsContactExistAsync()
         {
             var existingContact = await _contactService.IsContactExist(Email, _currentUserService.UserId);
@@ -55,16 +52,16 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         {
             if (this.GroupSelectList == null) throw new Exception("Please add/activate atleast one group to add contact.");
             else if (!this.GroupSelectList.Any(x => x.IsChecked)) throw new Exception("Please select at least one group.");
-            
-                try
-                {
-                    var newContact = new Contact();
-                    newContact.ContactValueMaps = new List<ContactValueMap>();
-                    newContact.ContactGroups = new List<ContactGroup>();
-                    newContact.CreatedBy = _currentUserService.UserId;
-                    newContact.Created = DateTime.Now;
-                    newContact.Email = this.Email;
-                    newContact.UserId = _currentUserService.UserId;
+
+            try
+            {
+                var newContact = new Contact();
+                newContact.ContactValueMaps = new List<ContactValueMap>();
+                newContact.ContactGroups = new List<ContactGroup>();
+                newContact.CreatedBy = _currentUserService.UserId;
+                newContact.Created = DateTime.Now;
+                newContact.Email = this.Email;
+                newContact.UserId = _currentUserService.UserId;
 
 
                 #region Add Standard ContactValueMaps
@@ -100,27 +97,27 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                 #endregion
 
                 #region Add Contact Group
-                
-                    foreach (var item in GroupSelectList)
-                    {
-                        if (item.IsChecked)
-                        {
-                            var newContactGroup = new ContactGroup();
-                            newContactGroup.GroupId = (int)item.Value;
-                            newContact.ContactGroups.Add(newContactGroup);
-                        }
-                    }
-                
-                    #endregion
 
-                    await _contactService.AddContact(newContact);
-                
-                }
-                catch (Exception ex)
+                foreach (var item in GroupSelectList)
                 {
-                    throw new Exception("Failed to Add Contact.");
+                    if (item.IsChecked)
+                    {
+                        var newContactGroup = new ContactGroup();
+                        newContactGroup.GroupId = (int)item.Value;
+                        newContact.ContactGroups.Add(newContactGroup);
+                    }
                 }
-            
+
+                #endregion
+
+                await _contactService.AddContact(newContact);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to Add Contact.");
+            }
+
         }
 
     }

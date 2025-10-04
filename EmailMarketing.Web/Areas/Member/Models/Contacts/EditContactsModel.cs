@@ -1,12 +1,10 @@
 ﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Entities.Contacts;
-using EmailMarketing.Framework.Entities.Groups;
 using EmailMarketing.Framework.Services.Contacts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Contacts
@@ -67,14 +65,14 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                 }
             }
             this.ContactValueMapsCustomSelected = SelectedCustomFields;
-             
+
             ContactValueMaps = (await _contactService.GetAllContactValueMapsStandard())
                                            .Select(x => new ContactValueTextModel { Value = x.Value, Text = x.Text }).ToList();
 
             var SelectedStandardFields = (await _contactService.GetAllSelectedContactValueMapsStandard(contact.Id))
                                             .Select(x => new ContactValueTextModel { Id = x.Id, Value = x.Value, Text = x.Text, Input = x.Input }).ToList();
 
-             foreach (var item in ContactValueMaps)
+            foreach (var item in ContactValueMaps)
             {
                 if (!SelectedStandardFields.Any(x => x.Value.Equals(item.Value)))
                 {
@@ -132,7 +130,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                 updatedContact.ContactGroups = new List<ContactGroup>();
                 updatedContact.ContactValueMaps = new List<ContactValueMap>();
 
-             
+
                 var contactValueMaps = new List<ContactValueMap>();
 
                 #region AddConatacValueMapsStandard
@@ -157,16 +155,16 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                     var contactValueMap = new ContactValueMap();
                     contactValueMap.ContactId = this.Id;
                     contactValueMap.Value = item.Input;
-                    contactValueMap.FieldMapId = (int)item.Value; 
+                    contactValueMap.FieldMapId = (int)item.Value;
                     //contactValueMaps.Add(contactValueMap);
                     updatedContact.ContactValueMaps.Add(contactValueMap);
                 }
                 #endregion
-                
+
                 var groupList = new List<ContactGroup>();
                 foreach (var item in GroupSelectList)
                 {
-                    if(item.IsChecked)
+                    if (item.IsChecked)
                     {
                         var contactGroup = new ContactGroup();
                         contactGroup.ContactId = this.Id;
@@ -175,11 +173,11 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                         updatedContact.ContactGroups.Add(contactGroup);
                     }
                 }
-              
+
                 await _contactService.UpdateAsync(updatedContact);
 
             }
-        
+
             catch (Exception ex)
             {
                 throw;

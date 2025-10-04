@@ -1,6 +1,4 @@
-﻿using Autofac;
-using EmailMarketing.Common.Constants;
-using EmailMarketing.Common.Services;
+﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Enums;
 using EmailMarketing.Framework.Services.Contacts;
@@ -10,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Contacts

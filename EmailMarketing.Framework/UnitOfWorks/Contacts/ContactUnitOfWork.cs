@@ -1,13 +1,5 @@
-﻿using EmailMarketing.Data;
-using EmailMarketing.Framework.Context;
+﻿using EmailMarketing.Framework.Context;
 using EmailMarketing.Framework.Repositories.Contacts;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using EmailMarketing.Framework.Repositories.Contacts;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.UnitOfWorks.Contacts
 {

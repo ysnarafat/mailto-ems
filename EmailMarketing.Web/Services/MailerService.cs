@@ -1,13 +1,10 @@
-﻿using EmailMarketing.Web.Core;
-using EmailMarketing.Common.Services;
+﻿using EmailMarketing.Common.Services;
+using EmailMarketing.Web.Core;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Services
@@ -22,7 +19,7 @@ namespace EmailMarketing.Web.Services
             _smtpSettings = smtpSettings.Value;
             _env = env;
         }
-        
+
         public async Task SendEmailAsync(string email, string subject, string body)
         {
             try
@@ -42,7 +39,7 @@ namespace EmailMarketing.Web.Services
 
                     //if(_env.IsDevelopment())
                     //{
-                        await client.ConnectAsync(_smtpSettings.Server, _smtpSettings.Port, true);
+                    await client.ConnectAsync(_smtpSettings.Server, _smtpSettings.Port, true);
                     //}
                     //else
                     //{

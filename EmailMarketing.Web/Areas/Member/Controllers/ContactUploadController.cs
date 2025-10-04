@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using EmailMarketing.Membership.Constants;
 using EmailMarketing.Web.Areas.Member.Enums;
 using EmailMarketing.Web.Areas.Member.Models;
@@ -10,6 +6,8 @@ using EmailMarketing.Web.Areas.Member.Models.Contacts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Controllers
 {
@@ -73,7 +71,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
             try
             {
                 var result = await model.FinishUploadAsync(id);
-                model.Response = new ResponseModel($"{result.FileName} { (result.IsProcessing == true ? "successfully  Finished" : "in Processing")}.", ResponseType.Success);
+                model.Response = new ResponseModel($"{result.FileName} {(result.IsProcessing == true ? "successfully  Finished" : "in Processing")}.", ResponseType.Success);
                 _logger.LogInformation($"ConatactUpload - {result.FileName} - Processing Status updated");
             }
             catch (Exception ex)

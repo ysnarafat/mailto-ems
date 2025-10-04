@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Membership.Constants;
-using EmailMarketing.Membership.Entities;
-using EmailMarketing.Membership.Enums;
-using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Areas.Admin.Enums;
 using EmailMarketing.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Controllers
 {
@@ -81,7 +73,7 @@ namespace EmailMarketing.Web.Areas.Admin.Controllers
             await model.LoadByIdAsync(id);
             return View(model);
         }
-       
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -150,7 +142,7 @@ namespace EmailMarketing.Web.Areas.Admin.Controllers
                 try
                 {
                     var user = await model.BlockUnblockAsync(id);
-                    model.Response = new ResponseModel($"Member {user.Name} successfully { (user.IsBlocked == true ? "Blocked" : "Unblocked")}.", ResponseType.Success);
+                    model.Response = new ResponseModel($"Member {user.Name} successfully {(user.IsBlocked == true ? "Blocked" : "Unblocked")}.", ResponseType.Success);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)

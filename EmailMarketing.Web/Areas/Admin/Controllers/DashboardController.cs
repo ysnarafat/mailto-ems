@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
-using EmailMarketing.Membership.Constants;
+﻿using EmailMarketing.Membership.Constants;
 using EmailMarketing.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Controllers
 {

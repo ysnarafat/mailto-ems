@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmailMarketing.ExcelWorkerService.Templates
+﻿namespace EmailMarketing.ExcelWorkerService.Templates
 {
     public partial class FileUploadFailedEmailTemplate
     {

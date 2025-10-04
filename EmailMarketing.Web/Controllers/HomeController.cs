@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EmailMarketing.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using EmailMarketing.Web.Models;
-using EmailMarketing.Framework.Services.Contacts;
-using Autofac;
+using System.Diagnostics;
 
 namespace EmailMarketing.Web.Controllers
 {

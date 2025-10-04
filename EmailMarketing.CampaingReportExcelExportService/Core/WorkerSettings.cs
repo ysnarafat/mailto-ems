@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EmailMarketing.CampaingReportExcelExportService.Core
+﻿namespace EmailMarketing.CampaingReportExcelExportService.Core
 {
     public class WorkerSettings
     {

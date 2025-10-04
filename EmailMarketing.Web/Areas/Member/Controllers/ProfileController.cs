@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EmailMarketing.Common.Services;
+﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Membership.Constants;
-using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Exceptions;
 using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Areas.Member.Enums;
@@ -12,9 +7,11 @@ using EmailMarketing.Web.Areas.Member.Models;
 using EmailMarketing.Web.Areas.Member.Models.ProfileModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Controllers
 {
@@ -55,7 +52,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            var model = new ChangePasswordModel(); 
+            var model = new ChangePasswordModel();
             return View(model);
         }
 
@@ -72,19 +69,19 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                     {
                         _logger.LogInformation("Successfully Changed Password.");
                         TempData["SuccessNotify"] = "Successfully Changed Password.";
-                        return RedirectToAction("Index","Dashboard");
+                        return RedirectToAction("Index", "Dashboard");
                     }
                 }
                 catch (IdentityValidationException ex)
                 {
                     var message = string.Join(" ", ex.Failures.Select(x => x.Value));
                     model.Response = new ResponseModel(message, ResponseType.Failure); ;
-                    _logger.LogError(ex,"Failed to Change Password.");
+                    _logger.LogError(ex, "Failed to Change Password.");
                 }
             }
             return View(model);
         }
-         
+
         [HttpGet]
         public async Task<IActionResult> ChangePasswordConfirmation(ChangePasswordConfirmationModel model)
         {
@@ -123,7 +120,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                 }
                 catch
                 {
-                    _logger.LogError("Failed to Update Member Information"); 
+                    _logger.LogError("Failed to Update Member Information");
                     model.Response = new ResponseModel("Failed to Update", ResponseType.Failure);
                 }
             }

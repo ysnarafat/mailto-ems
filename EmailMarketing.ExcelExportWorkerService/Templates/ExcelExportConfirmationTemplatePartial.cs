@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmailMarketing.ExcelExportWorkerService.Templates
+﻿namespace EmailMarketing.ExcelExportWorkerService.Templates
 {
     public partial class ExcelExportConfirmationTemplate
     {

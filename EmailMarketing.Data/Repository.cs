@@ -346,7 +346,7 @@ namespace EmailMarketing.Data
         {
             return (IList<TEntity>)_dbSet.FromSqlRaw(sql, parameters).ToListAsync();
         }
-        
+
         public int ExecuteSqlCommand(string sql, params object[] parameters)
         {
             return _dbContext.Database.ExecuteSqlRaw(sql, parameters);

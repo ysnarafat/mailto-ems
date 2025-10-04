@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
+﻿using EmailMarketing.Common.Services;
+using Microsoft.AspNetCore.Http;
 using System;
-using EmailMarketing.Common.Services;
+using System.Security.Claims;
 
 namespace EmailMarketing.Web.Services
 {
@@ -11,7 +11,7 @@ namespace EmailMarketing.Web.Services
         {
             Guid.TryParse(httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier), out Guid value);
             UserId = value;
-            IsAuthenticated = httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated??false;
+            IsAuthenticated = httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
         }
 
         public Guid UserId { get; }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using EmailMarketing.Framework.Entities;
-using EmailMarketing.Framework.Services.Contacts;
+﻿using EmailMarketing.Framework.Services.Contacts;
 using EmailMarketing.Membership.Constants;
 using EmailMarketing.Web.Areas.Member.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Controllers
 {

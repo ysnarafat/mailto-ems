@@ -1,12 +1,8 @@
 ﻿using Autofac;
-using EmailMarketing.Membership.Constants;
-using EmailMarketing.Membership.Enums;
 using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Core;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +19,7 @@ namespace EmailMarketing.Web.Areas.Admin.Models.AdminUsers
             _appSettings = Startup.AutofacContainer.Resolve<IOptions<AppSettings>>().Value;
         }
 
-        public AdminUsersModel(IApplicationUserService applicationUserService , IOptions<AppSettings> appSettings)
+        public AdminUsersModel(IApplicationUserService applicationUserService, IOptions<AppSettings> appSettings)
         {
             _applicationUserService = applicationUserService;
             _appSettings = appSettings.Value;

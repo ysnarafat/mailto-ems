@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmailMarketing.Membership.Enums
+﻿namespace EmailMarketing.Membership.Enums
 {
     public enum EnumApplicationUserStatus
     {

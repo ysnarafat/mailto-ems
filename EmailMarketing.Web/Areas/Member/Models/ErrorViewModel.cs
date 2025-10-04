@@ -1,5 +1,3 @@
-using System;
-
 namespace EmailMarketing.Web.Areas.Member.Models
 {
     public class ErrorViewModel

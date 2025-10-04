@@ -1,8 +1,7 @@
-using EmailMarketing.Common.Exceptions;
 using Autofac.Extras.Moq;
-using EmailMarketing.Framework.Entities.Groups;
+using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Framework.Entities.Contacts;
-using EmailMarketing.Framework.Enums;
+using EmailMarketing.Framework.Entities.Groups;
 using EmailMarketing.Framework.Repositories.Contacts;
 using EmailMarketing.Framework.Repositories.Groups;
 using EmailMarketing.Framework.Services.Contacts;
@@ -17,9 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using EmailMarketing.Framework.Entities;
 
 
 namespace EmailMarketing.Framework.Tests.Services.Contacts
@@ -193,8 +190,8 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             int count = 1;
             _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
 
-             _groupContactRepositoryMock.Setup(x => x.GetCountAsync(
-               It.Is<Expression<Func<ContactGroup, bool>>>(y => y.Compile()(contactGroup)))).Returns(Task.FromResult(count)).Verifiable();
+            _groupContactRepositoryMock.Setup(x => x.GetCountAsync(
+              It.Is<Expression<Func<ContactGroup, bool>>>(y => y.Compile()(contactGroup)))).Returns(Task.FromResult(count)).Verifiable();
 
             //Act
             _contactService.GroupContactCountAsync(contactGroup.ContactId);
@@ -275,7 +272,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             //Assert
             _contactValueMapRepositoryMock.Verify();
         }
-      
+
         [Test]
         public void AddContactGroupList_AddContactGroupListNotNull_AddContactGroupList()
         {
@@ -290,7 +287,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
 
             _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
 
-          
+
             _groupContactRepositoryMock.Setup(x => x.AddRangeAsync(contactGrouplist)).Returns(Task.CompletedTask).Verifiable();
             _contactUnitOfWorkMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable();
 
@@ -302,24 +299,24 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             _contactUnitOfWorkMock.VerifyAll();
         }
 
-//             int groupId = 2, contactId = 1;
-//             List<ContactGroup> list = null;
+        //             int groupId = 2, contactId = 1;
+        //             List<ContactGroup> list = null;
 
-//             _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
-//             _groupContactRepositoryMock.Setup(x => x.GetAsync(
-//                 It.Is<Expression<Func<ContactGroup,ContactGroup>>>(y => y.Compile()(new ContactGroup()) is ContactGroup),
-//                 It.Is<Expression<Func<ContactGroup,bool>>>(y => y.Compile()(contactGroup)),
-//                 null,null,
-//                 true)).ReturnsAsync(list).Verifiable();
+        //             _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
+        //             _groupContactRepositoryMock.Setup(x => x.GetAsync(
+        //                 It.Is<Expression<Func<ContactGroup,ContactGroup>>>(y => y.Compile()(new ContactGroup()) is ContactGroup),
+        //                 It.Is<Expression<Func<ContactGroup,bool>>>(y => y.Compile()(contactGroup)),
+        //                 null,null,
+        //                 true)).ReturnsAsync(list).Verifiable();
 
-//             //Act
-//             Should.Throw<NotFoundException>(
-//             () => _contactService.DeleteContactGroupAsync(contactId)
-//             );
+        //             //Act
+        //             Should.Throw<NotFoundException>(
+        //             () => _contactService.DeleteContactGroupAsync(contactId)
+        //             );
 
-//             //Assert
-//             _groupContactRepositoryMock.VerifyAll();
-//         } 
+        //             //Assert
+        //             _groupContactRepositoryMock.VerifyAll();
+        //         } 
 
         [Test]
         public void GetGroupByIdAsync_ValidGroupId_ReturnGroupObject()
@@ -333,7 +330,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             int id = 1;
             _groupUnitOfWorkMock.Setup(x => x.GroupRepository).Returns(_groupRepositoryMock.Object);
 
-  
+
             _groupRepositoryMock.Setup(x => x.GetByIdAsync(id)).Returns(Task.FromResult(group)).Verifiable();
 
             //Act
@@ -345,21 +342,21 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
 
         }
 
-//             int groupId = 2, contactId = 1;
-//             List<ContactGroup> list = new List<ContactGroup>();
+        //             int groupId = 2, contactId = 1;
+        //             List<ContactGroup> list = new List<ContactGroup>();
 
-//             _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
-//             _groupContactRepositoryMock.Setup(x => x.GetAsync(
-//                 It.Is<Expression<Func<ContactGroup, ContactGroup>>>(y => y.Compile()(new ContactGroup()) is ContactGroup),
-//                 It.Is<Expression<Func<ContactGroup, bool>>>(y => y.Compile()(contactGroupToMatch)),
-//                 null,null,
-//                 true)).ReturnsAsync(list).Verifiable();
+        //             _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
+        //             _groupContactRepositoryMock.Setup(x => x.GetAsync(
+        //                 It.Is<Expression<Func<ContactGroup, ContactGroup>>>(y => y.Compile()(new ContactGroup()) is ContactGroup),
+        //                 It.Is<Expression<Func<ContactGroup, bool>>>(y => y.Compile()(contactGroupToMatch)),
+        //                 null,null,
+        //                 true)).ReturnsAsync(list).Verifiable();
 
-//             _groupContactRepositoryMock.Setup(x => x.DeleteRangeAsync(list)).Returns(Task.CompletedTask).Verifiable();
-//             _groupUnitOfWorkMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable();
+        //             _groupContactRepositoryMock.Setup(x => x.DeleteRangeAsync(list)).Returns(Task.CompletedTask).Verifiable();
+        //             _groupUnitOfWorkMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable();
 
-//             //Act
-//             _contactService.DeleteContactGroupAsync(contactId);
+        //             //Act
+        //             _contactService.DeleteContactGroupAsync(contactId);
 
 
 
@@ -539,7 +536,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             _contactUnitOfWorkMock.VerifyAll();
         }
 
-    
+
 
         //[Test]
         //public void GetIdByEmail_ValidEmail_ReturnContact()
@@ -623,15 +620,15 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
                 pageIndex,
                 pageSize,
                 true
-            )).ReturnsAsync((contactListToReturn,3,3)).Verifiable();
+            )).ReturnsAsync((contactListToReturn, 3, 3)).Verifiable();
             _contactRepositoryMock.Setup(x => x.GetCountAsync(
                 It.Is<Expression<Func<Contact, bool>>>(y => y.Compile()(contactToMatch))
             )).ReturnsAsync((3)).Verifiable();
-            
+
             //Act
             var result = _contactService.GetAllContactAsync(userId, searchText, orderBy, pageIndex, pageSize);
-            result.Result.ShouldBe((contactListToReturn, 3,3));
-          
+            result.Result.ShouldBe((contactListToReturn, 3, 3));
+
             //Assert
             _contactRepositoryMock.VerifyAll();
         }

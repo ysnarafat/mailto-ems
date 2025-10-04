@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmailMarketing.Membership.Templates
+﻿namespace EmailMarketing.Membership.Templates
 {
     public partial class PasswordResetEmailTemplate
     {

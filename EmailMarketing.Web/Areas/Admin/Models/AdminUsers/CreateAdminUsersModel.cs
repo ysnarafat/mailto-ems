@@ -5,9 +5,7 @@ using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Core;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Models.AdminUsers

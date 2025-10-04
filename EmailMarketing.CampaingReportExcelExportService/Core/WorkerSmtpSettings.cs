@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmailMarketing.CampaingReportExcelExportService.Core
+﻿namespace EmailMarketing.CampaingReportExcelExportService.Core
 {
     public class WorkerSmtpSettings
     {

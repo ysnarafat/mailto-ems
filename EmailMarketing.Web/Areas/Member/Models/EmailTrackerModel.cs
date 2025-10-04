@@ -1,9 +1,5 @@
 ﻿using Autofac;
 using EmailMarketing.Framework.Services.Campaigns;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models

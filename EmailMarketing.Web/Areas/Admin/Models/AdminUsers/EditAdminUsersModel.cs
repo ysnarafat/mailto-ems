@@ -1,15 +1,12 @@
 ﻿using Autofac;
-using EmailMarketing.Common.Services;
 using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Services;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Models.AdminUsers
-{    
+{
     public class EditAdminUsersModel : AdminBaseModel
     {
         public Guid Id { get; set; }
@@ -29,7 +26,7 @@ namespace EmailMarketing.Web.Areas.Admin.Models.AdminUsers
         private readonly IApplicationUserService _applicationUserService;
 
         public EditAdminUsersModel()
-        { 
+        {
             _applicationUserService = Startup.AutofacContainer.Resolve<IApplicationUserService>();
         }
 

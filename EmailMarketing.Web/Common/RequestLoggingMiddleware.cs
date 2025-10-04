@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Common
@@ -30,7 +28,7 @@ namespace EmailMarketing.Web.Common
 
                 await _next(context);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }

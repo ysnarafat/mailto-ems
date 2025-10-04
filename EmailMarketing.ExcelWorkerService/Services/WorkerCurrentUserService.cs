@@ -1,6 +1,5 @@
-﻿using System.Security.Claims;
+﻿using EmailMarketing.Common.Services;
 using System;
-using EmailMarketing.Common.Services;
 
 namespace EmailMarketing.ExcelWorkerService.Services
 {

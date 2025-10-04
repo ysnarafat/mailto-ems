@@ -1,11 +1,7 @@
-﻿using EmailMarketing.Common.Exceptions;
-using EmailMarketing.Framework.Entities.Contacts;
-using EmailMarketing.Web.Models;
-using System;
+﻿using EmailMarketing.Web.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Markup;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Contacts
 {
@@ -17,7 +13,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         public string Groups { get; set; }
         public ContactDetailsModel() : base()
         {
-                
+
         }
 
         public async Task LoadByIdAsync(int id)
@@ -25,12 +21,12 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
             var contact = await _contactService.GetByIdAsync(id);
             this.Id = contact.Id;
             this.Email = contact.Email;
-            this.ContactValueMaps = contact.ContactValueMaps.Select(x => 
-                new ValueTextModel 
-                { 
-                    Value = x.Value, 
-                    Text = x.FieldMap.DisplayName, 
-                    IsChecked = x.FieldMap.IsStandard 
+            this.ContactValueMaps = contact.ContactValueMaps.Select(x =>
+                new ValueTextModel
+                {
+                    Value = x.Value,
+                    Text = x.FieldMap.DisplayName,
+                    IsChecked = x.FieldMap.IsStandard
                 }).GroupBy(x => x.IsChecked).Select(x =>
                 (IsStandard: x.Key, Values: x.ToList())).ToList();
             this.Groups = string.Join(", ", contact.ContactGroups.Select(x => x.Group.Name));

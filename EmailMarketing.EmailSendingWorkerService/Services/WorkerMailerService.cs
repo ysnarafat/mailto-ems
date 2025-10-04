@@ -1,17 +1,14 @@
-﻿using EmailMarketing.Common.Services;
+﻿using EmailMarketing.Common.Extensions;
+using EmailMarketing.Common.Services;
+using EmailMarketing.EmailSendingWorkerService.Core;
+using EmailMarketing.Framework.Entities.SMTP;
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EmailMarketing.EmailSendingWorkerService.Core;
-using EmailMarketing.Framework.Entities.SMTP;
-using EmailMarketing.Common.Extensions;
-using EmailMarketing.Common.Constants;
-using Microsoft.Extensions.Logging;
 
 namespace EmailMarketing.EmailSendingWorkerService.Services
 {

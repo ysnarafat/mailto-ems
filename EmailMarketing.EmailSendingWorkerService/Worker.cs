@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using EmailMarketing.Common.Constants;
 using EmailMarketing.Common.Extensions;
 using EmailMarketing.Common.Services;
@@ -16,6 +9,11 @@ using EmailMarketing.Framework.Services.Campaigns;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.EmailSendingWorkerService
 {
@@ -62,7 +60,7 @@ namespace EmailMarketing.EmailSendingWorkerService
 
                     var campaignReportList = new List<CampaignReport>();
 
-                    foreach(var item in campaignList)
+                    foreach (var item in campaignList)
                     {
                         try
                         {
@@ -83,7 +81,7 @@ namespace EmailMarketing.EmailSendingWorkerService
                                 {
                                     emailTemplate = ConvertExtension.FormatStringFromDictionary(emailTemplate, fieldmapDict);
                                 }
-                                
+
                                 #region mail open tracker
                                 var imageHtml = $"<img src='{_workerSettings.EmailOpenTrackingUrl}?campaignId={result.Id}&contactId={singleContact.Id}&email={singleContact.Email}' width='1' height='1' />";
                                 emailTemplate += imageHtml;
@@ -142,7 +140,7 @@ namespace EmailMarketing.EmailSendingWorkerService
 
                     await _campaignReportService.AddCampaingReportAsync(campaignReportList);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, $"Error Message: {ex.Message}");
                 }

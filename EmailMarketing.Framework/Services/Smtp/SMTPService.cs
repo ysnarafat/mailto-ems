@@ -1,15 +1,11 @@
 ﻿using EmailMarketing.Common.Exceptions;
-using EmailMarketing.Framework.Entities;
+using EmailMarketing.Common.Extensions;
+using EmailMarketing.Framework.Entities.SMTP;
 using EmailMarketing.Framework.UnitOfWorks.SMTP;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using EmailMarketing.Common.Extensions;
-using EmailMarketing.Framework.Entities.SMTP;
 
 namespace EmailMarketing.Framework.Services.SMTP
 {
@@ -23,7 +19,7 @@ namespace EmailMarketing.Framework.Services.SMTP
         }
 
         public async Task<(IList<SMTPConfig> Items, int Total, int TotalFilter)> GetAllAsync(
-            Guid? userId,string searchText, string orderBy, int pageIndex, int pageSize)
+            Guid? userId, string searchText, string orderBy, int pageIndex, int pageSize)
         {
             var columnsMap = new Dictionary<string, Expression<Func<SMTPConfig, object>>>()
             {

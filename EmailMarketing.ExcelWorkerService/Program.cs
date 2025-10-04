@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using EmailMarketing.Common.Constants;
 using EmailMarketing.Common.Services;
 using EmailMarketing.ExcelWorkerService.Core;
 using EmailMarketing.ExcelWorkerService.Services;
@@ -15,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.IO;
 
 namespace EmailMarketing.ExcelWorkerService
 {
@@ -66,7 +62,8 @@ namespace EmailMarketing.ExcelWorkerService
                 // .UseSystemd()
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog()
-                .ConfigureContainer<ContainerBuilder>(builder => {
+                .ConfigureContainer<ContainerBuilder>(builder =>
+                {
                     builder.RegisterModule(new FrameworkModule(_connectionString,
                         _migrationAssemblyName));
                 })

@@ -2,10 +2,7 @@
 using EmailMarketing.Framework.Entities.Groups;
 using EmailMarketing.Framework.Services.Groups;
 using EmailMarketing.Membership.Services;
-using EmailMarketing.Web.Areas.Admin.Models;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,7 +67,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Groups
             };
             await _groupService.AddAsync(entity);
         }
-         
+
         public async Task LoadByIdAsync(int id)
         {
             var result = await _groupService.GetByIdAsync(id);

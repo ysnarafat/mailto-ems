@@ -2,7 +2,6 @@
 using EmailMarketing.Framework.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EmailMarketing.Framework.Entities
 {

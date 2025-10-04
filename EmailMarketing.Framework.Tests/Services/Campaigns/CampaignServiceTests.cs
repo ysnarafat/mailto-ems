@@ -10,7 +10,6 @@ using EmailMarketing.Framework.UnitOfWorks.Campaigns;
 using EmailMarketing.Framework.UnitOfWorks.Groups;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using Shouldly;
 using System;
@@ -18,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services.Campaigns
@@ -243,7 +241,7 @@ namespace EmailMarketing.Framework.Tests.Services.Campaigns
 
             _campaignRepositoryMock.Setup(x => x.GetCountAsync(
                 It.Is<Expression<Func<Campaign, bool>>>(y => y.Compile()(campaign))
-                )).ReturnsAsync((2)).Verifiable(); 
+                )).ReturnsAsync((2)).Verifiable();
             //Act
             var result = _campaignService.GetAllCampaignAsync(userId, searchText, orderBy, pageIndex, pageSize);
 
@@ -392,7 +390,7 @@ namespace EmailMarketing.Framework.Tests.Services.Campaigns
             Should.Throw<NotFoundException>(() =>
                 _campaignService.GetAllCampaignReportAsync(userId, campaignId, searchText, orderBy, pageIndex, pageSize)
             );
-            
+
 
             //Assert
             _campaignReportRepository.VerifyAll();
@@ -590,8 +588,8 @@ namespace EmailMarketing.Framework.Tests.Services.Campaigns
 
             //Act
             Should.Throw<NotFoundException>(() =>
-                _campaignService.GetCampaignByIdAsync(campaign.UserId,campaign.Id)
-            ) ;
+                _campaignService.GetCampaignByIdAsync(campaign.UserId, campaign.Id)
+            );
 
             //Assert
             _campaignRepositoryMock.VerifyAll();

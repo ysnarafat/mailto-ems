@@ -1,6 +1,4 @@
-﻿using ClosedXML.Excel;
-using EmailMarketing.Common.Constants;
-using EmailMarketing.Common.Services;
+﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.Campaigns;
 using EmailMarketing.Framework.Enums;

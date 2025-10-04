@@ -4,7 +4,6 @@ using EmailMarketing.Common.Extensions;
 using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Enums;
-using EmailMarketing.Framework.Repositories.Contacts;
 using EmailMarketing.Framework.UnitOfWorks.Contacts;
 using EmailMarketing.Framework.UnitOfWorks.Groups;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Services.Contacts

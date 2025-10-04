@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.Moq;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Framework.Entities.SMTP;
 using EmailMarketing.Framework.Repositories.SMTP;
@@ -13,7 +12,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services.SMTP
@@ -119,7 +117,7 @@ namespace EmailMarketing.Framework.Tests.Services.SMTP
 
 
             //Act
-            var result = _smtpService.GetAllAsync(userId,searchText, orderBy, pageIndex, pageSize);
+            var result = _smtpService.GetAllAsync(userId, searchText, orderBy, pageIndex, pageSize);
 
 
             //Assert
@@ -329,7 +327,7 @@ namespace EmailMarketing.Framework.Tests.Services.SMTP
                 SenderEmail = "sam@gmail.com",
                 UserName = "Abc",
                 Password = "12345",
-                EnableSSL = true 
+                EnableSSL = true
             };
 
             _smtpUnitOfWorkMock.Setup(x => x.SMTPRepository).Returns(_smtpRepositoryMock.Object);
@@ -340,7 +338,7 @@ namespace EmailMarketing.Framework.Tests.Services.SMTP
             _smtpUnitOfWorkMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable();
 
             //Act
-           // _smtpService.DeleteAsync(id);
+            // _smtpService.DeleteAsync(id);
 
 
             //Assert

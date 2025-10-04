@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Membership.Constants;
 using EmailMarketing.Web.Areas.Member.Enums;
@@ -11,6 +7,8 @@ using EmailMarketing.Web.Areas.Member.Models.Groups;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Controllers
 {
@@ -37,7 +35,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
             try
             {
                 var group = await model.ActivateGroupAsync(id);
-                model.Response = new ResponseModel($"{group.Name} successfully { (group.IsActive == true ? "Activated" : "Deactivated")}.", ResponseType.Success);
+                model.Response = new ResponseModel($"{group.Name} successfully {(group.IsActive == true ? "Activated" : "Deactivated")}.", ResponseType.Success);
                 _logger.LogInformation("Group Active Status updated");
             }
             catch (Exception ex)
@@ -47,7 +45,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
             }
             return RedirectToAction("Index");
         }
-        
+
 
         [HttpGet]
         public async Task<IActionResult> AddOrEdit(int? id)
@@ -64,7 +62,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
             return PartialView("_AddOrEdit", model);
         }
 
-        
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -83,7 +81,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                         model.Response = new ResponseModel("Group Updated successfully.", ResponseType.Success);
                         _logger.LogInformation($"Group: {model.Name} updated successfully.");
                     }
-                        
+
                     else
                     {
                         await model.AddAsync();

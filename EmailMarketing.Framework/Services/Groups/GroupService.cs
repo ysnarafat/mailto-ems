@@ -1,22 +1,20 @@
 ﻿using EmailMarketing.Common.Exceptions;
-using EmailMarketing.Framework.Entities;
+using EmailMarketing.Common.Extensions;
+using EmailMarketing.Common.Services;
+using EmailMarketing.Framework.Entities.Groups;
 using EmailMarketing.Framework.UnitOfWorks.Groups;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using EmailMarketing.Common.Extensions;
 using System.Linq;
-using EmailMarketing.Common.Services;
-using Microsoft.EntityFrameworkCore;
-using EmailMarketing.Framework.Entities.Groups;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Services.Groups
 {
-    public class GroupService:IGroupService
-    { 
-        
+    public class GroupService : IGroupService
+    {
+
         private IGroupUnitOfWork _groupUnitOfWork;
         private ICurrentUserService _currentUserService;
 
@@ -26,14 +24,14 @@ namespace EmailMarketing.Framework.Services.Groups
             _currentUserService = currentUserService;
 
         }
-        public async Task<(IList<Group> Items, int Total, int TotalFilter)> GetAllAsync( 
-            Guid? userId,string searchText, string orderBy, int pageIndex, int pageSize)
+        public async Task<(IList<Group> Items, int Total, int TotalFilter)> GetAllAsync(
+            Guid? userId, string searchText, string orderBy, int pageIndex, int pageSize)
         {
             var columnsMap = new Dictionary<string, Expression<Func<Group, object>>>()
             {
                 ["Name"] = v => v.Name
             };
-            
+
             var result = await _groupUnitOfWork.GroupRepository.GetAsync<Group>(
                 x => x, x => ((x.Name.Contains(searchText)) && (!userId.HasValue || x.UserId == userId.Value)),
                 x => x.ApplyOrdering(columnsMap, orderBy), null,
@@ -91,7 +89,7 @@ namespace EmailMarketing.Framework.Services.Groups
         {
             return (await _groupUnitOfWork.GroupRepository.GetAsync(x => new { Value = x.Id, Text = x.Name, ContactCount = x.ContactGroups.Count },
                                                     x => !x.IsDeleted && x.IsActive &&
-                                                    (!userId.HasValue || x.UserId == userId.Value), x => x.OrderBy(o => o.Name), 
+                                                    (!userId.HasValue || x.UserId == userId.Value), x => x.OrderBy(o => o.Name),
                                                     x => x.Include(i => i.ContactGroups), true))
                                                     .Select(x => (Value: x.Value, Text: x.Text, ContactCount: x.ContactCount)).ToList();
         }
@@ -104,8 +102,8 @@ namespace EmailMarketing.Framework.Services.Groups
             return await _groupUnitOfWork.GroupRepository.GetCountAsync();
         }
         public void Dispose()
-    {
+        {
             _groupUnitOfWork?.Dispose();
-    }
+        }
     }
 }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EmailMarketing.Common.Services;
+﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Membership.Constants;
-using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Exceptions;
 using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Areas.Admin.Enums;
@@ -12,9 +7,10 @@ using EmailMarketing.Web.Areas.Admin.Models;
 using EmailMarketing.Web.Areas.Admin.Models.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Controllers
 {
@@ -79,7 +75,7 @@ namespace EmailMarketing.Web.Areas.Admin.Controllers
                 {
                     var message = string.Join(" ", ex.Failures.Select(x => x.Value));
                     model.Response = new ResponseModel(message, ResponseType.Failure); ;
-                    _logger.LogError(ex,"Failed to Change Password.");
+                    _logger.LogError(ex, "Failed to Change Password.");
                 }
             }
             return View(model);

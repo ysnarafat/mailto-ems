@@ -2,9 +2,7 @@
 using EmailMarketing.Framework.Entities.Campaigns;
 using EmailMarketing.Framework.Services.Campaigns;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
@@ -23,9 +21,9 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
         [Display(Name = "Email Personalize")]
         public bool IsPersonalized { get; set; }
 
-        public CreateEmailTemplateModel(ICampaignService campaignService, 
+        public CreateEmailTemplateModel(ICampaignService campaignService,
             ICurrentUserService currentUserService,
-            IEmailTemplateService emailTemplateService) 
+            IEmailTemplateService emailTemplateService)
             : base(campaignService, currentUserService, emailTemplateService)
         {
 

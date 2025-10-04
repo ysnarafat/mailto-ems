@@ -1,13 +1,7 @@
 ﻿using Autofac;
 using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Services.Contacts;
-using EmailMarketing.Framework.Services.Groups;
-using EmailMarketing.Web.Core;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Contacts
 {
@@ -55,7 +49,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
             _contactUploadService = Startup.AutofacContainer.Resolve<IContactUploadService>();
             _contactService = Startup.AutofacContainer.Resolve<IContactService>();
             _fieldMapService = Startup.AutofacContainer.Resolve<IFieldMapService>();
-            _currentUserService = Startup.AutofacContainer.Resolve<ICurrentUserService>(); 
+            _currentUserService = Startup.AutofacContainer.Resolve<ICurrentUserService>();
             _contactExportService = Startup.AutofacContainer.Resolve<IContactExportService>();
         }
 

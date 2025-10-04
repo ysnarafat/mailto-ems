@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using EmailMarketing.Common.Services;
 using EmailMarketing.ExcelWorkerService.Core;
 using EmailMarketing.ExcelWorkerService.Templates;
@@ -10,6 +5,9 @@ using EmailMarketing.Framework.Services.Contacts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.ExcelWorkerService
 {
@@ -52,9 +50,9 @@ namespace EmailMarketing.ExcelWorkerService
                             _logger.LogInformation($"item values - file url is = {item.FileUrl}");
                             var importResult = await _contactUploadService.ContactExcelImportAsync(item.Id);
 
-                            if(item.IsSendEmailNotify)
+                            if (item.IsSendEmailNotify)
                             {
-                                if(importResult.SucceedCount > 0)
+                                if (importResult.SucceedCount > 0)
                                 {
                                     var fileUploadConfirmationEmailTemplate = new FileUploadConfirmationEmailTemplate("Sir", importResult.SucceedCount,
                                         importResult.ExistCount, importResult.InvalidCount, _workerSettings.CompanyFullName, _workerSettings.CompanyShortName,
@@ -66,7 +64,7 @@ namespace EmailMarketing.ExcelWorkerService
                                 }
                                 else
                                 {
-                                    var fileUploadFailedEmailTemplate = new FileUploadFailedEmailTemplate("Sir", _workerSettings.CompanyFullName, 
+                                    var fileUploadFailedEmailTemplate = new FileUploadFailedEmailTemplate("Sir", _workerSettings.CompanyFullName,
                                         _workerSettings.CompanyShortName, _workerSettings.CompanyWebsiteUrl);
                                     var emailBody = fileUploadFailedEmailTemplate.TransformText();
                                     await _mailerService.SendEmailAsync(item.SendEmailAddress, "Upload Failed", emailBody);

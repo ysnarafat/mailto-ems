@@ -1,9 +1,7 @@
 ﻿using Autofac;
 using EmailMarketing.Common.Services;
-using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Services.Contacts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +21,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         public string SendEmailAddress { get; set; }
         public int SucceedEntryCount { get; set; }
         public bool IsProcessing { get; set; }
-        public DateTime Created { get; set ; }
+        public DateTime Created { get; set; }
 
         private readonly IContactService _contactService;
         public ViewContactUploadModel(IContactUploadService contactUploadService, IContactService contactService,
@@ -31,7 +29,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         {
             _contactService = contactService;
         }
-        
+
         internal async Task SetContactUploadId(int id)
         {
             this.ContactUploadId = id;
@@ -47,7 +45,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
             this.Id = id;
             var result = await _contactUploadService.GetByIdAsync(id);
             this.FileName = result.FileName;
-            
+
             this.SucceedEntryCount = result.SucceedEntryCount;
             this.IsSucceed = result.IsSucceed;
             this.IsProcessing = result.IsProcessing;
@@ -56,16 +54,16 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
 
         }
 
-        
+
 
         public async Task<object> GetContactByContactUploadIdAsync(DataTablesAjaxRequestModel tableModel, int contactUploadId)
         {
-            
+
             var result = await _contactService.GetContactByContactUploadIdAsync(
                 _currentUserService.UserId,
                 contactUploadId,
                 tableModel.SearchText,
-                tableModel.GetSortText(new string[] { "Group", "Email"  }),
+                tableModel.GetSortText(new string[] { "Group", "Email" }),
                 tableModel.PageIndex, tableModel.PageSize);
 
 
@@ -77,12 +75,12 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                         select new string[]
                         {
                             string.Join(", ",item.ContactGroups.Select(x=>x.Group.Name)),
-                            item.Email,                            
+                            item.Email,
                         }).ToArray()
 
             };
         }
 
-       
+
     }
 }

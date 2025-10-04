@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EmailMarketing.CampaingReportExcelExportService.Templates
+﻿namespace EmailMarketing.CampaingReportExcelExportService.Templates
 {
     public partial class CampReportExportTemplate
     {

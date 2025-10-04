@@ -1,7 +1,7 @@
 
-﻿using Autofac.Extras.Moq;
+using Autofac.Extras.Moq;
 using EmailMarketing.Common.Exceptions;
-using EmailMarketing.Framework.Entities;
+using EmailMarketing.Framework.Entities.Groups;
 using EmailMarketing.Framework.Repositories.Groups;
 using EmailMarketing.Framework.Services.Groups;
 using EmailMarketing.Framework.UnitOfWorks.Groups;
@@ -11,13 +11,9 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using EmailMarketing.Common.Extensions;
-using EmailMarketing.Framework.Entities.Groups;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services.Groups
 {
@@ -89,14 +85,14 @@ namespace EmailMarketing.Framework.Tests.Services.Groups
             {
                 new Group { Id = 1, Name = "Friends" },
                 new Group {Id = 2, Name = "Colleague"},
-                
+
             };
 
             var group = new Group
             {
-                Id = 1, 
-                Name = "Friends" 
-                
+                Id = 1,
+                Name = "Friends"
+
             };
 
             _groupUnitOfWorkMock.Setup(x => x.GroupRepository).Returns(_groupRepositoryMock.Object);
@@ -106,15 +102,15 @@ namespace EmailMarketing.Framework.Tests.Services.Groups
                 It.Is<Expression<Func<Group, bool>>>(y => y.Compile()(group)),
                 It.IsAny<Func<IQueryable<Group>, IOrderedQueryable<Group>>>(),
                 //It.IsAny<Func<IQueryable<Group>, IIncludableQueryable<Group, object>>>(),
-                null,pageIndex, pageSize, true)).ReturnsAsync((groupList, 2, 2)).Verifiable();
+                null, pageIndex, pageSize, true)).ReturnsAsync((groupList, 2, 2)).Verifiable();
 
             _groupRepositoryMock.Setup(x => x.GetCountAsync(
 
                 It.Is<Expression<Func<Group, bool>>>(y => y.Compile()(group))
-            )).ReturnsAsync((2)).Verifiable() ;
+            )).ReturnsAsync((2)).Verifiable();
 
             //Act
-            _groupService.GetAllAsync(userId,searchText, orderBy, pageIndex, pageSize);
+            _groupService.GetAllAsync(userId, searchText, orderBy, pageIndex, pageSize);
 
 
             //Assert
@@ -396,7 +392,7 @@ namespace EmailMarketing.Framework.Tests.Services.Groups
 
         //    //Act
         //    _groupService.GetAllGroupForSelectAsync(userId);
-           
+
         //    //Assert
         //    _groupRepositoryMock.VerifyAll();
 
