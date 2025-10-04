@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <UserSecretsId>dotnet-EmailMarketing.ExcelExportWorkerService-89B2217B-4F4F-433F-94BF-3B36F88C1527</UserSecretsId>
   </PropertyGroup>
 
