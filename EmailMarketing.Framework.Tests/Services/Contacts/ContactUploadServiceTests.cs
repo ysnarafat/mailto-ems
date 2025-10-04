@@ -1,23 +1,14 @@
 ﻿using Autofac.Extras.Moq;
-using EmailMarketing.Common.Exceptions;
-using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Entities.Groups;
 using EmailMarketing.Framework.Repositories.Contacts;
-using EmailMarketing.Framework.Repositories.Groups;
 using EmailMarketing.Framework.Services.Contacts;
-using EmailMarketing.Framework.Services.Groups;
-using EmailMarketing.Framework.UnitOfWorks;
 using EmailMarketing.Framework.UnitOfWorks.Contacts;
 using Moq;
 using NUnit.Framework;
-using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services.Contacts
@@ -62,9 +53,9 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
         }
 
         [Test]
-        public async Task ContactExcelImportAsync_SearchByContactUploadId_ReturnContactUploadObject     ()
+        public async Task ContactExcelImportAsync_SearchByContactUploadId_ReturnContactUploadObject()
         {
-            
+
             // Arrange
             var newContacts = new List<ContactUpload>()
             {
@@ -108,8 +99,8 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             // Act
 
             //Should.Throw<DuplicationException>(async () =>);
-             //await _groupService.AddAsync(group)
-         //);
+            //await _groupService.AddAsync(group)
+            //);
 
             // Assert
             //_groupRepositoryMock.VerifyAll();

@@ -1,12 +1,8 @@
 ﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Services;
-using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.ProfileModels
@@ -33,7 +29,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.ProfileModels
         internal async Task Load()
         {
             var user = await _applicationuserService.GetByIdAsync(_currentUserService.UserId);
-            if(user!=null)
+            if (user != null)
             {
                 //Id = user.Id;
                 FullName = user.FullName;
@@ -50,7 +46,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.ProfileModels
             user.Email = Email;
             user.DateOfBirth = DateOfBirth;
             user.Gender = Gender;
-            user.PhoneNumber = PhoneNumber; 
+            user.PhoneNumber = PhoneNumber;
             user.Address = Address;
         }
         internal async Task UpdateMemberAsync()

@@ -1,13 +1,11 @@
-﻿using EmailMarketing.Framework.Entities;
-using EmailMarketing.Framework.Entities.SMTP;
+﻿using EmailMarketing.Framework.Entities.SMTP;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Services.SMTP
 {
-    public interface ISMTPService:IDisposable
+    public interface ISMTPService : IDisposable
     {
         Task<(IList<SMTPConfig> Items, int Total, int TotalFilter)> GetAllAsync(
             Guid? userId,

@@ -12,11 +12,7 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services
@@ -111,7 +107,7 @@ namespace EmailMarketing.Framework.Tests.Services
                 DownloadQueueFor = DownloadQueueFor.ContactAllExport,
                 IsProcessing = true
             };
-            
+
             var id = 1;
 
             _contactExportUnitOfWorkMock.Setup(x => x.DownloadQueueRepository).Returns(_downloadQueueRepositoryMock.Object);
@@ -160,42 +156,41 @@ namespace EmailMarketing.Framework.Tests.Services
     }
 }
 
-        //public void GetDownloadQueue_ForAllProcessingDownlaodQueue_ReturnsDownloadQueueList()
-        //{
-        //    var list = new List<DownloadQueue>()
-        //    {
-        //        new DownloadQueue()
-        //        {
-        //            Id = 1,
-        //            FileUrl = "C:\\EmailMarketingTeamA",
-        //            DownloadQueueFor = DownloadQueueFor.ContactAllExport,
-        //            IsProcessing = true
-        //        },
-        //        new DownloadQueue()
-        //        {
-        //            Id = 2,
-        //            FileUrl = "C:\\EmailMarketingTeamA",
-        //            DownloadQueueFor = DownloadQueueFor.ContactAllExport,
-        //            IsProcessing = true
-        //        },
-        //        new DownloadQueue()
-        //        {
-        //            Id = 3,
-        //            FileUrl = "C:\\EmailMarketingTeamA",
-        //            DownloadQueueFor = DownloadQueueFor.ContactAllExport,
-        //            IsProcessing = false
-        //        }
-        //    };
+//public void GetDownloadQueue_ForAllProcessingDownlaodQueue_ReturnsDownloadQueueList()
+//{
+//    var list = new List<DownloadQueue>()
+//    {
+//        new DownloadQueue()
+//        {
+//            Id = 1,
+//            FileUrl = "C:\\EmailMarketingTeamA",
+//            DownloadQueueFor = DownloadQueueFor.ContactAllExport,
+//            IsProcessing = true
+//        },
+//        new DownloadQueue()
+//        {
+//            Id = 2,
+//            FileUrl = "C:\\EmailMarketingTeamA",
+//            DownloadQueueFor = DownloadQueueFor.ContactAllExport,
+//            IsProcessing = true
+//        },
+//        new DownloadQueue()
+//        {
+//            Id = 3,
+//            FileUrl = "C:\\EmailMarketingTeamA",
+//            DownloadQueueFor = DownloadQueueFor.ContactAllExport,
+//            IsProcessing = false
+//        }
+//    };
 
-        //    var groupToMatch = new List<DownloadQueue>
-        //    {
-        //        new DownloadQueue { Id = 1, FileUrl = "C:\\EmailMarketingTeamA",DownloadQueueFor = DownloadQueueFor.ContactAllExport },
-        //        new DownloadQueue { Id = 2, FileUrl = "C:\\EmailMarketingTeamA",DownloadQueueFor = DownloadQueueFor.ContactAllExport },
-        //        //new DownloadQueue { Id = 3, FileUrl = "C:\\EmailMarketingTeamA",DownloadQueueFor = DownloadQueueFor.ContactAllExport }
-        //    };
+//    var groupToMatch = new List<DownloadQueue>
+//    {
+//        new DownloadQueue { Id = 1, FileUrl = "C:\\EmailMarketingTeamA",DownloadQueueFor = DownloadQueueFor.ContactAllExport },
+//        new DownloadQueue { Id = 2, FileUrl = "C:\\EmailMarketingTeamA",DownloadQueueFor = DownloadQueueFor.ContactAllExport },
+//        //new DownloadQueue { Id = 3, FileUrl = "C:\\EmailMarketingTeamA",DownloadQueueFor = DownloadQueueFor.ContactAllExport }
+//    };
 
-        //    _contactExportUnitOfWorkMock.Setup(x => x.DownloadQueueRepository).Returns(_downloadQueueRepositoryMock.Object);
-        //    _downloadQueueRepositoryMock.Setup(x => x.GetAsync<IList<DownloadQueue>>(It.Is<Expression<Func<DownloadQueue, DownloadQueue>>>(y => y.Compile()(new DownloadQueue())), It.Is<Expression<Func<DownloadQueue,DownloadQueue>>>(y => y.Compile()(groupToMatch)))
-        //        .Returns(Task.CompletedTask).Verifiable();
+//    _contactExportUnitOfWorkMock.Setup(x => x.DownloadQueueRepository).Returns(_downloadQueueRepositoryMock.Object);
+//    _downloadQueueRepositoryMock.Setup(x => x.GetAsync<IList<DownloadQueue>>(It.Is<Expression<Func<DownloadQueue, DownloadQueue>>>(y => y.Compile()(new DownloadQueue())), It.Is<Expression<Func<DownloadQueue,DownloadQueue>>>(y => y.Compile()(groupToMatch)))
+//        .Returns(Task.CompletedTask).Verifiable();
 
-       

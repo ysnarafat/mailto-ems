@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using EmailMarketing.Common.Services;
-using EmailMarketing.Web.Extensions;
 using EmailMarketing.Framework.Menus;
 using EmailMarketing.Membership.Services;
+using EmailMarketing.Web.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace EmailMarketing.Web.Areas.Admin.Models
                                     Icon = "icon-user-tie", IsActive = false },
                                 new MenuChildItem () { Controller = "AdminUsers", Action = "Add", Area="Admin", Title = "Add New Admin",
                                     Icon = "icon-user-plus", IsActive = false },
-                             
+
                             }
                         }
 

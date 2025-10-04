@@ -1,7 +1,5 @@
-﻿using EmailMarketing.Common.Constants;
-using EmailMarketing.Common.Extensions;
+﻿using EmailMarketing.Common.Extensions;
 using EmailMarketing.Common.Services;
-using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.SMTP;
 using EmailMarketing.Framework.Services.SMTP;
 using EmailMarketing.Membership.Services;
@@ -9,14 +7,12 @@ using EmailMarketing.Web.Core;
 using EmailMarketing.Web.Services;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Smtp
 {
-    public class CreateSMTPModel:SMTPBaseModel
+    public class CreateSMTPModel : SMTPBaseModel
     {
         [Required]
         public string Server { get; set; }
@@ -34,21 +30,21 @@ namespace EmailMarketing.Web.Areas.Member.Models.Smtp
         public string UserName { get; set; }
         [Required]
         public string Password { get; set; }
-        
+
         [Display(Name = "Enable SSL")]
         public bool EnableSSL { get; set; }
         public Guid UserId { get; set; }
 
         public CreateSMTPModel(ISMTPService smtpService, IApplicationUserService applicationUserService,
-            ICurrentUserService currentUserService, ISmtpTestService smtpTestService, IOptions<AppSettings> appSettings) : 
+            ICurrentUserService currentUserService, ISmtpTestService smtpTestService, IOptions<AppSettings> appSettings) :
                 base(smtpService, applicationUserService, currentUserService, smtpTestService, appSettings)
         {
-            
+
         }
 
-        public CreateSMTPModel():base()
+        public CreateSMTPModel() : base()
         {
-            
+
         }
 
         public async Task AddAsync()
@@ -58,12 +54,12 @@ namespace EmailMarketing.Web.Areas.Member.Models.Smtp
             var entity = new SMTPConfig
             {
                 Server = this.Server,
-                Port=this.Port??0,
-                SenderName=this.SenderName,
-                SenderEmail=this.SenderEmail,
-                UserName=this.UserName,
-                Password=this.Password,
-                EnableSSL=this.EnableSSL,
+                Port = this.Port ?? 0,
+                SenderName = this.SenderName,
+                SenderEmail = this.SenderEmail,
+                UserName = this.UserName,
+                Password = this.Password,
+                EnableSSL = this.EnableSSL,
                 UserId = _currentUserService.UserId
             };
             await _smtpService.AddAsync(entity);

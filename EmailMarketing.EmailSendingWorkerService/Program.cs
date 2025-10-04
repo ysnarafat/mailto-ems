@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using EmailMarketing.Common.Constants;
 using EmailMarketing.Common.Services;
 using EmailMarketing.EmailSendingWorkerService.Core;
 using EmailMarketing.EmailSendingWorkerService.Services;
@@ -15,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.IO;
 
 namespace EmailMarketing.EmailSendingWorkerService
 {
@@ -30,7 +26,7 @@ namespace EmailMarketing.EmailSendingWorkerService
                                 .AddJsonFile("appsettings.json", false, true)
                                 .AddEnvironmentVariables()
                                 .Build();
-            
+
             var workerSettings = _configuration.GetSection("WorkerSettings").Get<WorkerSettings>();
 
             _connectionString = _configuration.GetConnectionString("DefaultConnection");
@@ -49,7 +45,7 @@ namespace EmailMarketing.EmailSendingWorkerService
                 Log.Information("Email Sending Worker Service Staring up");
                 CreateHostBuilder(args).Build().Run();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Fatal(ex, "Email Sending Worker Service Start-up Failed");
             }
@@ -67,7 +63,7 @@ namespace EmailMarketing.EmailSendingWorkerService
                 .UseSerilog()
                 .ConfigureContainer<ContainerBuilder>(builder =>
                 {
-                    builder.RegisterModule(new FrameworkModule(_connectionString, 
+                    builder.RegisterModule(new FrameworkModule(_connectionString,
                                 _migrationAssemblyName));
                 })
                 .ConfigureServices((hostContext, services) =>

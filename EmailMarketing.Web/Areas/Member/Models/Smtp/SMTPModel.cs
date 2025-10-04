@@ -6,13 +6,12 @@ using EmailMarketing.Web.Core;
 using EmailMarketing.Web.Services;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Smtp
 {
-    public class SMTPModel:SMTPBaseModel
+    public class SMTPModel : SMTPBaseModel
     {
         public SMTPModel(ISMTPService smtpService, IApplicationUserService applicationUserService,
             ICurrentUserService currentUserService, ISmtpTestService smtpTestService, IOptions<AppSettings> appSettings) :
@@ -28,7 +27,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Smtp
             var result = await _smtpService.GetAllAsync(
                 userId,
                 tableModel.SearchText,
-                tableModel.GetSortText(new string[] { "Server","Port","SenderName","SenderEmail","UserName","EnableSSL" }),
+                tableModel.GetSortText(new string[] { "Server", "Port", "SenderName", "SenderEmail", "UserName", "EnableSSL" }),
                 tableModel.PageIndex, tableModel.PageSize);
 
             return new

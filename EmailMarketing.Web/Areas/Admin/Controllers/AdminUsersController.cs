@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Membership.Constants;
-using EmailMarketing.Membership.Entities;
-using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Areas.Admin.Enums;
 using EmailMarketing.Web.Areas.Admin.Models;
 using EmailMarketing.Web.Areas.Admin.Models.AdminUsers;
-using EmailMarketing.Web.Controllers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Controllers
 {
@@ -156,7 +150,7 @@ namespace EmailMarketing.Web.Areas.Admin.Controllers
                 try
                 {
                     var user = await model.BlockUnblockAsync(id);
-                    model.Response = new ResponseModel($"Admin {user.Name} successfully { (user.IsBlocked == true ? "Blocked" : "Unblocked")}.", ResponseType.Success);
+                    model.Response = new ResponseModel($"Admin {user.Name} successfully {(user.IsBlocked == true ? "Blocked" : "Unblocked")}.", ResponseType.Success);
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -174,7 +168,7 @@ namespace EmailMarketing.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var model = new  AdminUsersModel();
+                var model = new AdminUsersModel();
                 try
                 {
                     var title = await model.ResetPasswordAsync(id);
@@ -189,7 +183,7 @@ namespace EmailMarketing.Web.Areas.Admin.Controllers
             }
 
             return RedirectToAction("Index");
-        }      
+        }
         public async Task<IActionResult> UserInformation(Guid id)
         {
             var model = new AdminInformationModel();

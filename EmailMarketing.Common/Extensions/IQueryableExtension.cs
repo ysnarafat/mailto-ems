@@ -19,7 +19,7 @@ namespace EmailMarketing.Common.Extensions
 
             if (orderBy.Split(' ')[1] == "asc" && columnsMap.ContainsKey(prop))
                 orderedQuery = orderedQuery.OrderBy(columnsMap[prop]);
-            else if(columnsMap.ContainsKey(prop))
+            else if (columnsMap.ContainsKey(prop))
                 orderedQuery = orderedQuery.OrderByDescending(columnsMap[prop]);
             else
                 orderedQuery = orderedQuery.OrderBy(x => x);
@@ -31,7 +31,7 @@ namespace EmailMarketing.Common.Extensions
 
                 if (orderBy.Split(' ')[1] == "asc" && columnsMap.ContainsKey(prop))
                     orderedQuery = orderedQuery.ThenBy(columnsMap[prop]);
-                else if(columnsMap.ContainsKey(prop))
+                else if (columnsMap.ContainsKey(prop))
                     orderedQuery = orderedQuery.ThenByDescending(columnsMap[prop]);
             }
 

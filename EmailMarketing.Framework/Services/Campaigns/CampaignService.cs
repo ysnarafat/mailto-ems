@@ -1,5 +1,5 @@
 
-﻿using EmailMarketing.Common.Exceptions;
+using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Common.Extensions;
 using EmailMarketing.Framework.Entities.Campaigns;
 using EmailMarketing.Framework.UnitOfWorks.Campaigns;
@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Services.Campaigns
@@ -27,11 +26,11 @@ namespace EmailMarketing.Framework.Services.Campaigns
 
         public async Task<IList<(int Value, string Text, int Count)>> GetAllGroupsAsync(Guid? userId)
         {
-            return (await _groupUnitOfWork.GroupRepository.GetAsync(x => new ValueTuple<int, string, int> (x.Id, x.Name, x.ContactGroups.Count() ),
+            return (await _groupUnitOfWork.GroupRepository.GetAsync(x => new ValueTuple<int, string, int>(x.Id, x.Name, x.ContactGroups.Count()),
                                                    x => !x.IsDeleted && x.IsActive &&
                                                    (!userId.HasValue || x.UserId == userId.Value), x => x.OrderBy(o => o.Name), null, true));
         }
-        public async Task<(IList<Campaign> Items, int Total, int TotalFilter)> GetAllCampaignAsync( 
+        public async Task<(IList<Campaign> Items, int Total, int TotalFilter)> GetAllCampaignAsync(
           Guid? userId,
           string searchText,
           string orderBy,
@@ -45,7 +44,7 @@ namespace EmailMarketing.Framework.Services.Campaigns
             var result = (await _campaignUnitOfWork.CampaignRepository.GetAsync(x => x,
                                                   x => !x.IsDeleted && x.IsActive &&
                                                   (!userId.HasValue || x.UserId == userId.Value) && x.Name.Contains(searchText),
-                                                  x => x.ApplyOrdering(columnsMap,orderBy),
+                                                  x => x.ApplyOrdering(columnsMap, orderBy),
                                                   x => x.Include(y => y.CampaignReports).Include(y => y.SMTPConfig)
                                                         .Include(y => y.CampaignGroups).ThenInclude(z => z.Group),
                                                   pageIndex, pageSize,
@@ -58,12 +57,12 @@ namespace EmailMarketing.Framework.Services.Campaigns
             return (result.Items, result.Total, result.TotalFilter);
 
         }
-        public async Task<Campaign> GetCampaignByIdAsync(Guid? userId,int campaignId)
+        public async Task<Campaign> GetCampaignByIdAsync(Guid? userId, int campaignId)
         {
             var result = await _campaignUnitOfWork.CampaignRepository.GetFirstOrDefaultAsync(
                 x => x, x => !x.IsDeleted && x.IsActive &&
                 (!userId.HasValue || x.UserId == userId.Value) && (x.Id == campaignId),
-                  x => x.Include(y => y.SMTPConfig).Include(y=>y.EmailTemplate), true);
+                  x => x.Include(y => y.SMTPConfig).Include(y => y.EmailTemplate), true);
 
             if (result == null) throw new NotFoundException(nameof(Campaign), campaignId);
 
@@ -83,7 +82,7 @@ namespace EmailMarketing.Framework.Services.Campaigns
                                                    x => x.OrderBy(o => o.Contact.Email),
                                                    x => x.Include(y => y.Contact).Include(y => y.Campaign).Include(y => y.SMTPConfig), pageIndex, pageSize,
                                                    true));
-            
+
 
             if (result.Items == null) throw new NotFoundException(nameof(CampaignReport), userId);
 

@@ -1,9 +1,6 @@
 ﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Membership.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.ProfileModels
@@ -12,7 +9,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.ProfileModels
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name ="Current Password")]
+        [Display(Name = "Current Password")]
         public string CurrentPassword { get; set; }
         [Required]
         [DataType(DataType.Password)]
@@ -21,7 +18,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.ProfileModels
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm New Password")]
-        [Compare("NewPassword",ErrorMessage ="Did not match with new password")]
+        [Compare("NewPassword", ErrorMessage = "Did not match with new password")]
         public string ConfirmNewPassword { get; set; }
 
         public ChangePasswordModel() : base() { }

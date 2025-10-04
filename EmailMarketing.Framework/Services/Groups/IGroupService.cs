@@ -1,13 +1,11 @@
-﻿using System;
+﻿using EmailMarketing.Framework.Entities.Groups;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using EmailMarketing.Framework.Entities;
-using EmailMarketing.Framework.Entities.Groups;
 
 namespace EmailMarketing.Framework.Services.Groups
 {
-    public interface IGroupService:IDisposable
+    public interface IGroupService : IDisposable
     {
         Task<(IList<Group> Items, int Total, int TotalFilter)> GetAllAsync(
             Guid? userId,
@@ -20,7 +18,7 @@ namespace EmailMarketing.Framework.Services.Groups
         Task AddAsync(Group entity);
         Task UpdateActiveStatusAsync(Group entity);
         Task UpdateAsync(Group entity);
-        Task<Group> DeleteAsync(int id); 
+        Task<Group> DeleteAsync(int id);
         Task<IList<(int Value, string Text, int ContactCount)>> GetAllGroupForSelectAsync(Guid? userId);
         Task<int> GetGroupCountAsync(Guid? userId);
         Task<int> GetGroupCountAsync();

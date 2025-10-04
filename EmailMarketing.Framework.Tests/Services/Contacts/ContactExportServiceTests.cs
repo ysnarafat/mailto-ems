@@ -1,7 +1,6 @@
 ﻿
 using Autofac.Extras.Moq;
-using DocumentFormat.OpenXml.Bibliography;
-using EmailMarketing.Framework.Entities.Groups;
+using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Enums;
 using EmailMarketing.Framework.Repositories.Contacts;
@@ -18,9 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using EmailMarketing.Framework.Entities;
 
 namespace EmailMarketing.Framework.Tests.Services.Contacts
 {

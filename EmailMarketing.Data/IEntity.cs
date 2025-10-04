@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EmailMarketing.Data
+﻿namespace EmailMarketing.Data
 {
     public abstract class IEntity<TKey>
     {

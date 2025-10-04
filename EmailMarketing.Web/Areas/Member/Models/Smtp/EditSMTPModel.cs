@@ -1,7 +1,5 @@
-﻿using EmailMarketing.Common.Constants;
-using EmailMarketing.Common.Extensions;
+﻿using EmailMarketing.Common.Extensions;
 using EmailMarketing.Common.Services;
-using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.SMTP;
 using EmailMarketing.Framework.Services.SMTP;
 using EmailMarketing.Membership.Services;
@@ -9,14 +7,12 @@ using EmailMarketing.Web.Core;
 using EmailMarketing.Web.Services;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Smtp
 {
-    public class EditSMTPModel:SMTPBaseModel
+    public class EditSMTPModel : SMTPBaseModel
     {
         [Required]
         public Guid Id { get; set; }
@@ -39,7 +35,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Smtp
         public bool EnableSSL { get; set; }
 
         public EditSMTPModel(ISMTPService smtpService, IApplicationUserService applicationUserService,
-           ICurrentUserService currentUserService, ISmtpTestService smtpTestService, IOptions<AppSettings> appSettings) : 
+           ICurrentUserService currentUserService, ISmtpTestService smtpTestService, IOptions<AppSettings> appSettings) :
                 base(smtpService, applicationUserService, currentUserService, smtpTestService, appSettings)
         {
 

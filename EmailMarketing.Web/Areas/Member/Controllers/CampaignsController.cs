@@ -1,23 +1,18 @@
 
-using Microsoft.AspNetCore.Mvc;
 using Autofac;
-using EmailMarketing.Web.Areas.Member.Models;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using ClosedXML.Excel;
-using EmailMarketing.Web.Areas.Member.Enums;
-using EmailMarketing.Web.Areas.Member.Models.Campaigns;
-using Microsoft.Extensions.Logging;
-using System;
-using Microsoft.CodeAnalysis.Options;
-using EmailMarketing.Web.Core;
-using Microsoft.Extensions.Options;
-using EmailMarketing.Web.Areas.Member.Models.Contacts;
-using Microsoft.AspNetCore.Authorization;
 using EmailMarketing.Membership.Constants;
+using EmailMarketing.Web.Areas.Member.Enums;
+using EmailMarketing.Web.Areas.Member.Models;
+using EmailMarketing.Web.Areas.Member.Models.Campaigns;
+using EmailMarketing.Web.Areas.Member.Models.Contacts;
+using EmailMarketing.Web.Core;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Controllers
 {
@@ -140,7 +135,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
             try
             {
                 var result = await model.ActivateCampaign(id);
-                model.Response = new ResponseModel($"{result.Name} { (result.IsProcessing == true ? "successfully  Finished" : "in Processing") }", ResponseType.Success);
+                model.Response = new ResponseModel($"{result.Name} {(result.IsProcessing == true ? "successfully  Finished" : "in Processing")}", ResponseType.Success);
                 _logger.LogInformation($"Campaign - {result.Name} - Processing Status updated");
             }
             catch (Exception ex)

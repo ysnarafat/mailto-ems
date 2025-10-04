@@ -1,5 +1,5 @@
-﻿using System;
-using EmailMarketing.Common.Services;
+﻿using EmailMarketing.Common.Services;
+using System;
 
 namespace EmailMarketing.ExcelWorkerService.Services
 {

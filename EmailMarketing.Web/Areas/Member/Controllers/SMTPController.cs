@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Membership.Constants;
 using EmailMarketing.Web.Areas.Member.Enums;
@@ -11,6 +7,8 @@ using EmailMarketing.Web.Areas.Member.Models.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Controllers
 {
@@ -31,7 +29,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
         }
         public IActionResult Add()
         {
-            var model = new CreateSMTPModel(); 
+            var model = new CreateSMTPModel();
             return View(model);
         }
 
@@ -69,20 +67,20 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
         [HttpPost]
         public async Task<IActionResult> TestSmtp(CreateSMTPModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
                     var result = await model.SmtpTest();
                     return Json(result);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return Json(false);
                 }
             }
             return Json("failed");
-            
+
         }
 
         public async Task<IActionResult> Edit(Guid id)
@@ -132,7 +130,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
             try
             {
                 var smtp = await model.ActivateSmtpAsync(id);
-                model.Response = new ResponseModel($"{smtp.Server} successfully { (smtp.IsActive == true ? "Activated" : "Deactivated")}.", ResponseType.Success);
+                model.Response = new ResponseModel($"{smtp.Server} successfully {(smtp.IsActive == true ? "Activated" : "Deactivated")}.", ResponseType.Success);
                 _logger.LogInformation("Custome Field Map Active Status updated");
             }
             catch (Exception ex)

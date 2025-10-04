@@ -1,6 +1,5 @@
-using System.Drawing;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Core
 {

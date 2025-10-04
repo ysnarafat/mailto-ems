@@ -1,5 +1,4 @@
 ﻿using Autofac.Extras.Moq;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Framework.Entities.Campaigns;
 using EmailMarketing.Framework.Repositories.Campaigns;
@@ -9,10 +8,8 @@ using Moq;
 using NUnit.Framework;
 using Shouldly;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services.Campaigns

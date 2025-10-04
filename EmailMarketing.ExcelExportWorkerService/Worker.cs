@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using EmailMarketing.Common.Services;
 using EmailMarketing.ExcelExportWorkerService.Core;
 using EmailMarketing.ExcelExportWorkerService.Templates;
@@ -14,7 +6,9 @@ using EmailMarketing.Framework.Services.Contacts;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MimeKit;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.ExcelExportWorkerService
 {
@@ -25,7 +19,7 @@ namespace EmailMarketing.ExcelExportWorkerService
         private readonly IExportMailerService _exportMailerService;
         private readonly WorkerSettings _workerSettings;
 
-        public Worker(ILogger<Worker> logger, IContactExportService contactExportService, 
+        public Worker(ILogger<Worker> logger, IContactExportService contactExportService,
             IExportMailerService exportMailerService, IOptions<WorkerSettings> workerSettings)
         {
             _logger = logger;

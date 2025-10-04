@@ -1,13 +1,11 @@
 ﻿using EmailMarketing.Common.Services;
+using EmailMarketing.ExcelWorkerService.Core;
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EmailMarketing.ExcelWorkerService.Core;
 
 namespace EmailMarketing.ExcelWorkerService.Services
 {
@@ -19,7 +17,7 @@ namespace EmailMarketing.ExcelWorkerService.Services
         {
             _workerSmtpSettings = smtpSettings.Value;
         }
-        
+
         public async Task SendEmailAsync(string email, string subject, string body)
         {
             try

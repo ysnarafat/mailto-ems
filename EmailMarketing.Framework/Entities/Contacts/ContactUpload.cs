@@ -1,8 +1,6 @@
 ﻿using EmailMarketing.Data;
-using EmailMarketing.Framework.Entities.Contacts;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EmailMarketing.Framework.Entities.Contacts
 {

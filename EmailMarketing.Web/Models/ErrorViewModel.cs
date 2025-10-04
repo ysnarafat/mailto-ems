@@ -1,5 +1,3 @@
-using System;
-
 namespace EmailMarketing.Web.Models
 {
     public class ErrorViewModel

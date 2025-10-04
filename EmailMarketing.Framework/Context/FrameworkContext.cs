@@ -4,11 +4,6 @@ using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Entities.Groups;
 using EmailMarketing.Framework.Entities.SMTP;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Context
 {

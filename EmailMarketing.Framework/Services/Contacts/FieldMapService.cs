@@ -2,11 +2,9 @@
 using EmailMarketing.Common.Extensions;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.UnitOfWorks.Contacts;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Services.Contacts

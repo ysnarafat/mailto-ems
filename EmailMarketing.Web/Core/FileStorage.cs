@@ -1,10 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 
 namespace EmailMarketing.Web.Core
 {

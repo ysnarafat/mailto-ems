@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services.Contacts
@@ -123,7 +122,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             _fieldMapUnitOfWorkMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable();
 
             //Act
-                _fieldMapService.AddAsync(fieldMap);
+            _fieldMapService.AddAsync(fieldMap);
 
             //Assert
             _fieldMapRepositoryMock.VerifyAll();
@@ -233,7 +232,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
 
             _fieldMapUnitOfWorkMock.Setup(x => x.FieldMapRepository).Returns(_fieldMapRepositoryMock.Object);
             _fieldMapRepositoryMock.Setup(x => x.GetByIdAsync(fieldMapToMatch.Id)).Returns(Task.FromResult(fieldMap)).Verifiable();
-           
+
             _fieldMapRepositoryMock.Setup(x => x.UpdateAsync(It.Is<FieldMap>(y => y.Id == fieldMap.Id))).Returns(Task.CompletedTask).Verifiable();
             _fieldMapUnitOfWorkMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable();
 
@@ -369,7 +368,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             };
             FieldMap NullFieldMap = new FieldMap();
             NullFieldMap = null;
-           
+
             _fieldMapUnitOfWorkMock.Setup(x => x.FieldMapRepository).Returns(_fieldMapRepositoryMock.Object);
 
             _fieldMapRepositoryMock.Setup(x => x.GetAsync(
@@ -380,9 +379,9 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
                 pageIndex, pageSize, true)).ReturnsAsync((fieldMapListToReturn, total, totalFilter)).Verifiable();
 
             _fieldMapUnitOfWorkMock.Setup(x => x.FieldMapRepository).Returns(_fieldMapRepositoryMock.Object);
-    
+
             _fieldMapRepositoryMock.Setup(x => x.GetCountAsync(
-               It.Is<Expression<Func<FieldMap, bool>>>(y => y.Compile()(fieldMapToMatch)))).Returns(Task.FromResult(count)) .Verifiable();
+               It.Is<Expression<Func<FieldMap, bool>>>(y => y.Compile()(fieldMapToMatch)))).Returns(Task.FromResult(count)).Verifiable();
 
             //Act
             var result = _fieldMapService.GetAllAsync(userId, searchText, orderBy, pageIndex, pageSize);
@@ -393,4 +392,4 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
         }
 
     }
- }
+}

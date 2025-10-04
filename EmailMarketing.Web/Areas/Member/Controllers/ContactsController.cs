@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Membership.Constants;
 using EmailMarketing.Web.Areas.Member.Enums;
@@ -14,6 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Controllers
 {
@@ -103,7 +101,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
             try
             {
                 var customFieldMap = await model.ActivateFieldMapAsync(id);
-                model.Response = new ResponseModel($"{customFieldMap.DisplayName} successfully { (customFieldMap.IsActive == true ? "Activated" : "Deactivated")}.", ResponseType.Success);
+                model.Response = new ResponseModel($"{customFieldMap.DisplayName} successfully {(customFieldMap.IsActive == true ? "Activated" : "Deactivated")}.", ResponseType.Success);
                 _logger.LogInformation("Custome Field Map Active Status updated");
             }
             catch (Exception ex)

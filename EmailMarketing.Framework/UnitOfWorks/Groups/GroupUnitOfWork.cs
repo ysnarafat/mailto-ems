@@ -1,10 +1,5 @@
 ﻿using EmailMarketing.Framework.Context;
 using EmailMarketing.Framework.Repositories.Groups;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.UnitOfWorks.Groups
 {
@@ -16,6 +11,6 @@ namespace EmailMarketing.Framework.UnitOfWorks.Groups
             GroupRepository = groupRepository;
         }
 
-        
+
     }
 }

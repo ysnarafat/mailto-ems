@@ -1,16 +1,13 @@
 ﻿using Autofac.Extras.Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace EmailMarketing.Membership.Tests
 {
     [ExcludeFromCodeCoverage]
     public class ApplicationUserServiceTests
     {
-         private AutoMock _mock;
+        private AutoMock _mock;
         //private Mock<IGroupRepository> _groupRepositoryMock;
         //private Mock<IGroupUnitOfWork> _groupUnitOfWorkMock;
         //private IGroupService _groupService;
@@ -30,8 +27,8 @@ namespace EmailMarketing.Membership.Tests
         [SetUp]
         public void Setup()
         {
-           // _groupRepositoryMock = _mock.Mock<IGroupRepository>();
-            
+            // _groupRepositoryMock = _mock.Mock<IGroupRepository>();
+
         }
 
         [TearDown]
@@ -44,10 +41,10 @@ namespace EmailMarketing.Membership.Tests
         [Test]
         public void GetByIdAsync_GroupId_ReturnsGroupObject()
         {
-           //Arrange
-           //Act
-           //Assert
+            //Arrange
+            //Act
+            //Assert
         }
-            
+
     }
 }

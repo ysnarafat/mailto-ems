@@ -1,7 +1,5 @@
 ﻿using Autofac;
-using EmailMarketing.Common.Constants;
 using EmailMarketing.Common.Services;
-using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Services.Contacts;
 using EmailMarketing.Framework.Services.Groups;
@@ -77,25 +75,25 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
 
             for (int i = 0; i < this.ContactUploadFieldMaps.Count; i++)
             {
-                if(int.Parse(this.ContactUploadFieldMaps[i].Value) != -1)
+                if (int.Parse(this.ContactUploadFieldMaps[i].Value) != -1)
                 {
                     var conFieldMap = new ContactUploadFieldMap();
                     conFieldMap.FieldMapId = int.Parse(this.ContactUploadFieldMaps[i].Value);
                     conFieldMap.Index = i;
 
                     entity.ContactUploadFieldMaps.Add(conFieldMap);
-                }    
+                }
             }
 
             for (int i = 0; i < this.ContactUploadGroups.Count; i++)
             {
-                if(this.ContactUploadGroups[i].IsChecked)
+                if (this.ContactUploadGroups[i].IsChecked)
                 {
                     var conGrp = new ContactUploadGroup();
                     conGrp.GroupId = int.Parse(this.ContactUploadGroups[i].Value);
 
                     entity.ContactUploadGroups.Add(conGrp);
-                }    
+                }
             }
 
             await _contactUploadService.AddContactUploadAsync(entity);
@@ -104,8 +102,12 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         public async Task<object> GetAllFieldMapForSelectAsync()
         {
             return (await _contactUploadService.GetAllFieldMapForSelectAsync(_currentUserService.UserId)).GroupBy(x => x.IsStandard)
-                                .Select(x => new { IsChecked = x.Key, Values = x.Select(y => 
-                                    new ValueTextModel { Value = y.Value.ToString(), Text = y.Text, IsChecked = y.IsStandard }).ToList() })
+                                .Select(x => new
+                                {
+                                    IsChecked = x.Key,
+                                    Values = x.Select(y =>
+                                    new ValueTextModel { Value = y.Value.ToString(), Text = y.Text, IsChecked = y.IsStandard }).ToList()
+                                })
                                 .OrderByDescending(x => x.IsChecked).ToList();
         }
 

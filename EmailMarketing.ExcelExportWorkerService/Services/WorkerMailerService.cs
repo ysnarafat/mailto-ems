@@ -1,11 +1,9 @@
 ﻿using EmailMarketing.Common.Services;
 using EmailMarketing.ExcelExportWorkerService.Core;
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +17,7 @@ namespace EmailMarketing.ExcelExportWorkerService.Services
         {
             _workerSmtpSettings = smtpSettings.Value;
         }
-        
+
         public async Task SendEmailAsync(string email, string subject, string body, string url)
         {
             try
@@ -40,8 +38,8 @@ namespace EmailMarketing.ExcelExportWorkerService.Services
                 builder.Attachments.Add(url);
 
                 messgae.Body = builder.ToMessageBody();
-                
-                
+
+
                 using (var client = new SmtpClient())
                 {
                     client.ServerCertificateValidationCallback = (s, c, h, e) => true;

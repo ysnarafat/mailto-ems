@@ -1,23 +1,16 @@
 ﻿using EmailMarketing.Common.Constants;
-using EmailMarketing.Common.Exceptions;
 using EmailMarketing.Common.Extensions;
 using EmailMarketing.Common.Services;
-using EmailMarketing.Framework.Entities;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.UnitOfWorks.Contacts;
 using ExcelDataReader;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Services.Contacts
@@ -47,7 +40,7 @@ namespace EmailMarketing.Framework.Services.Contacts
             var invalidCount = 0;
             var emailIndex = contactUpload.ContactUploadFieldMaps.FirstOrDefault(x => x.FieldMap.DisplayName == ConstantsValue.ContactFieldMapEmail)?.Index;
 
-            if(!emailIndex.HasValue) throw new Exception("Email column not found.");
+            if (!emailIndex.HasValue) throw new Exception("Email column not found.");
 
             using (var stream = File.Open(contactUpload.FileUrl, FileMode.Open, FileAccess.Read))
             {
@@ -96,9 +89,9 @@ namespace EmailMarketing.Framework.Services.Contacts
                 }
             }
 
-            if(newContacts.Any())
+            if (newContacts.Any())
                 await _contactUploadUnitOfWork.ContactRepository.AddRangeAsync(newContacts);
-            if(existingContacts.Any())
+            if (existingContacts.Any())
                 await _contactUploadUnitOfWork.ContactRepository.UpdateRangeAsync(existingContacts);
             await _contactUploadUnitOfWork.SaveChangesAsync();
 
@@ -155,7 +148,7 @@ namespace EmailMarketing.Framework.Services.Contacts
             return newContact;
         }
 
-        private  async Task<Contact> GenerateUpdateContact(ContactUpload contactUpload, int emailIndex, Contact existingContact, IExcelDataReader reader)
+        private async Task<Contact> GenerateUpdateContact(ContactUpload contactUpload, int emailIndex, Contact existingContact, IExcelDataReader reader)
         {
             existingContact.ContactValueMaps = new List<ContactValueMap>();
             existingContact.ContactGroups = new List<ContactGroup>();
@@ -210,7 +203,7 @@ namespace EmailMarketing.Framework.Services.Contacts
 
         public async Task<(int SucceedCount, int ExistCount, int InvalidCount)> ContactExcelImportAsync(int contactUploadId)
         {
-            var contactUpload = await _contactUploadUnitOfWork.ContactUploadRepository.GetFirstOrDefaultAsync(x => x, x => x.Id == contactUploadId, 
+            var contactUpload = await _contactUploadUnitOfWork.ContactUploadRepository.GetFirstOrDefaultAsync(x => x, x => x.Id == contactUploadId,
                                     x => x.Include(i => i.ContactUploadFieldMaps).ThenInclude(i => i.FieldMap).Include(i => i.ContactUploadGroups), true);
 
             var result = await this.ContactExcelImportAsync(contactUpload);
@@ -228,7 +221,7 @@ namespace EmailMarketing.Framework.Services.Contacts
         #region Upload
         public async Task<IList<(int Value, string Text, bool IsStandard)>> GetAllFieldMapForSelectAsync(Guid? userId)
         {
-            return (await _contactUploadUnitOfWork.FieldMapRepository.GetAsync(x => new { Value= x.Id, Text= x.DisplayName, IsStandard= x.IsStandard }, 
+            return (await _contactUploadUnitOfWork.FieldMapRepository.GetAsync(x => new { Value = x.Id, Text = x.DisplayName, IsStandard = x.IsStandard },
                                                     x => !x.IsDeleted && x.IsActive &&
                                                     (x.IsStandard || (!userId.HasValue || x.UserId == userId.Value)), x => x.OrderBy(o => o.DisplayName), null, true))
                                                     .Select(x => (Value: x.Value, Text: x.Text, IsStandard: x.IsStandard)).ToList();
@@ -240,7 +233,7 @@ namespace EmailMarketing.Framework.Services.Contacts
             entity.IsSucceed = false;
             entity.Created = _dateTime.Now;
             entity.CreatedBy = _currentUserService.UserId;
-            
+
             await _contactUploadUnitOfWork.ContactUploadRepository.AddAsync(entity);
             await _contactUploadUnitOfWork.SaveChangesAsync();
         }
@@ -260,7 +253,7 @@ namespace EmailMarketing.Framework.Services.Contacts
                 ["Created"] = v => v.Created
             };
 
-            var result = await _contactUploadUnitOfWork.ContactUploadRepository.GetAsync(x => x, 
+            var result = await _contactUploadUnitOfWork.ContactUploadRepository.GetAsync(x => x,
                 x => (!userId.HasValue || x.UserId == userId.Value) && x.FileName.Contains(searchText),
                 x => x.ApplyOrdering(columnsMap, orderBy), null,
                 pageIndex, pageSize, true);
@@ -290,12 +283,12 @@ namespace EmailMarketing.Framework.Services.Contacts
         //}
         public async Task<ContactUpload> GetByIdAsync(int id)
         {
-           return await _contactUploadUnitOfWork.ContactUploadRepository.GetByIdAsync(id);
+            return await _contactUploadUnitOfWork.ContactUploadRepository.GetByIdAsync(id);
         }
 
         public async Task UpdateAsync(ContactUpload entity)
         {
-            entity.IsProcessing = entity.IsProcessing == true? false : true ;
+            entity.IsProcessing = entity.IsProcessing == true ? false : true;
 
             await _contactUploadUnitOfWork.ContactUploadRepository.UpdateAsync(entity);
             await _contactUploadUnitOfWork.SaveChangesAsync();

@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.Tests.Services.Campaigns
@@ -132,10 +131,10 @@ namespace EmailMarketing.Framework.Tests.Services.Campaigns
                 FileName = "AllContact",
                 IsProcessing = true,
                 IsSucceed = false,
-                DownloadQueueFor= DownloadQueueFor.CampaignAllReportExport
+                DownloadQueueFor = DownloadQueueFor.CampaignAllReportExport
             };
 
-            
+
 
             _campaignReportExportUnitOfWorkMock.Setup(x => x.DownloadQueueRepository)
                 .Returns(_downloadQueueRepositoryMock.Object);
@@ -151,7 +150,7 @@ namespace EmailMarketing.Framework.Tests.Services.Campaigns
             //Act
             var result = _campaignReportExportService.GetDownloadQueue();
             result.Result.ShouldBe(downloadQueues);
-           
+
 
             //Assert
             _downloadQueueRepositoryMock.VerifyAll();

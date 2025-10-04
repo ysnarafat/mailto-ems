@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using System.Transactions;
+﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Membership.Constants;
 using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Services;
-using EmailMarketing.Web.Models;
+using EmailMarketing.Membership.Templates;
+using EmailMarketing.Web.Core;
 using EmailMarketing.Web.Models.Account;
-using EmailMarketing.Common.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using MimeKit;
-using EmailMarketing.Web.Core;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
-using EmailMarketing.Membership.Templates;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace EmailMarketing.Web.Controllers
 {
@@ -87,7 +79,7 @@ namespace EmailMarketing.Web.Controllers
                     // This doesn't count login failures towards account lockout
                     // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                     //var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                    var user = await _userManager.FindByEmailAsync(model.Email); 
+                    var user = await _userManager.FindByEmailAsync(model.Email);
                     if (user == null)
                     {
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -97,15 +89,15 @@ namespace EmailMarketing.Web.Controllers
 
                     if (isValidUser)
                     {
-                        if(user.IsBlocked)
+                        if (user.IsBlocked)
                         {
                             ModelState.AddModelError(string.Empty, "You have been blocked !!");
                         }
-                        else if(!(await _userManager.IsEmailConfirmedAsync(user)))
+                        else if (!(await _userManager.IsEmailConfirmedAsync(user)))
                         {
                             ModelState.AddModelError(string.Empty, "Please confirm your email account.");
                         }
-                        else if(user.PasswordChangedCount == 0)
+                        else if (user.PasswordChangedCount == 0)
                         {
                             return RedirectToAction("ChangeDefaultPassword", new { email = user.Email });
                         }
@@ -158,7 +150,7 @@ namespace EmailMarketing.Web.Controllers
             {
                 ViewData["ReturnUrl"] = returnUrl;
 
-                ViewData["ExternalLogins"] = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();   
+                ViewData["ExternalLogins"] = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             }
             catch (Exception ex)
             {
@@ -281,7 +273,7 @@ namespace EmailMarketing.Web.Controllers
 
                     var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                    var passwordResetLink = Url.Action(nameof(ResetPassword), "Account", new { email = model.Email, code }, 
+                    var passwordResetLink = Url.Action(nameof(ResetPassword), "Account", new { email = model.Email, code },
                                                         Request.Scheme, Request.Host.ToString());
 
                     var subject = "Recover Account Password";
@@ -323,14 +315,14 @@ namespace EmailMarketing.Web.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
-                if(user != null)
+                if (user != null)
                 {
                     user.PasswordChangedCount += 1;
                     var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
-                    if(result.Succeeded)
+                    if (result.Succeeded)
                     {
                         var updatedResult = await _userManager.UpdateAsync(user);
-                        if(updatedResult.Succeeded)
+                        if (updatedResult.Succeeded)
                         {
                             return RedirectToAction("ResetPasswordConfirmation");
                         }
@@ -380,7 +372,7 @@ namespace EmailMarketing.Web.Controllers
                 return RedirectToAction("Login", new { returnUrl });
             }
 
-        }   
+        }
 
 
         public async Task<IActionResult> VerifyEmail(string userId, string code)
@@ -429,22 +421,22 @@ namespace EmailMarketing.Web.Controllers
         {
             try
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     var user = await _userManager.FindByEmailAsync(model.Email);
-                    if(user == null)
+                    if (user == null)
                     {
                         return RedirectToAction("Login", "Account");
                     }
 
                     var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.Password);
 
-                    if(result.Succeeded)
+                    if (result.Succeeded)
                     {
                         user.PasswordChangedCount = 1;
                         var updatedResult = await _userManager.UpdateAsync(user);
 
-                        if(updatedResult.Succeeded)
+                        if (updatedResult.Succeeded)
                         {
                             return RedirectToAction("ChangePasswordConfirmation");
                         }

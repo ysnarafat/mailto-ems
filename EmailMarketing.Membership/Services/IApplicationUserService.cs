@@ -36,6 +36,6 @@ namespace EmailMarketing.Membership.Services
         Task<IList<(Guid Value, string Text)>> GetAllForSelectAsync();
         Task<bool> IsExistsUserNameAsync(string name, Guid id);
         Task<bool> IsExistsEmailAsync(string email, Guid id);
-        Task<bool> ChangePasswordAsync(Guid id,string CurrentPassword,string NewPassword);
+        Task<bool> ChangePasswordAsync(Guid id, string CurrentPassword, string NewPassword);
     }
 }

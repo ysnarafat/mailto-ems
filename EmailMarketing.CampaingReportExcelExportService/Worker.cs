@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using ClosedXML.Excel;
 using EmailMarketing.CampaingReportExcelExportService.Core;
 using EmailMarketing.CampaingReportExcelExportService.Templates;
 using EmailMarketing.Common.Services;
@@ -13,6 +6,9 @@ using EmailMarketing.Framework.Services.Campaigns;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EmailMarketing.CampaingReportExcelExportService
 {
@@ -52,7 +48,7 @@ namespace EmailMarketing.CampaingReportExcelExportService
                     {
                         try
                         {
-                            
+
                             var importResult = await _campaignReportExportService.GetDownloadQueueByIdAsync(item.Id);
 
                             if (item.DownloadQueueFor == DownloadQueueFor.CampaignAllReportExport)

@@ -1,21 +1,14 @@
 ﻿using Autofac;
-using EmailMarketing.Framework.Services;
-using EmailMarketing.Membership.Constants;
-using EmailMarketing.Membership.Entities;
-using EmailMarketing.Membership.Enums;
 using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Core;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Models
 {
-    public class MemberUserModel :AdminBaseModel
+    public class MemberUserModel : AdminBaseModel
     {
         private readonly AppSettings _appSettings;
         private readonly IApplicationUserService _applicationUserService;
@@ -25,7 +18,7 @@ namespace EmailMarketing.Web.Areas.Admin.Models
             _applicationUserService = Startup.AutofacContainer.Resolve<IApplicationUserService>();
             _appSettings = Startup.AutofacContainer.Resolve<IOptions<AppSettings>>().Value;
         }
-   
+
         public MemberUserModel(IApplicationUserService applicationUserService, IOptions<AppSettings> appSettings)
         {
             _applicationUserService = applicationUserService;
@@ -36,7 +29,7 @@ namespace EmailMarketing.Web.Areas.Admin.Models
         {
             var result = await _applicationUserService.GetAllMemberAsync(
                 tableModel.SearchText,
-                tableModel.GetSortText(new string[] { "FullName","Email" }),
+                tableModel.GetSortText(new string[] { "FullName", "Email" }),
                 tableModel.PageIndex, tableModel.PageSize);
 
             return new

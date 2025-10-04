@@ -1,10 +1,5 @@
 ﻿using EmailMarketing.Framework.Context;
 using EmailMarketing.Framework.Repositories.Contacts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EmailMarketing.Framework.UnitOfWorks.Contacts
 {
@@ -19,10 +14,10 @@ namespace EmailMarketing.Framework.UnitOfWorks.Contacts
         public IContactGroupRepository ContactGroupRepository { get; set; }
 
         public ContactUploadUnitOfWork(FrameworkContext dbContext,
-            IContactRepository contactRepository, 
+            IContactRepository contactRepository,
             IContactUploadRepository contactUploadRepository,
             IFieldMapRepository fieldMapRepository,
-            IContactUploadFieldMapRepository contactUploadFieldMapRepository, 
+            IContactUploadFieldMapRepository contactUploadFieldMapRepository,
             IContactValueMapRepository contactValueMapRepository,
             IContactUploadGroupRepository contactUploadGroupRepository,
             IContactGroupRepository contactGroupRepository) : base(dbContext)

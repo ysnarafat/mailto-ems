@@ -1,15 +1,8 @@
 ﻿using Autofac;
-using EmailMarketing.Data;
-using EmailMarketing.Framework.Entities;
-using EmailMarketing.Framework.Enums;
 using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Services;
-using EmailMarketing.Web.Core;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Models
@@ -37,7 +30,7 @@ namespace EmailMarketing.Web.Areas.Admin.Models
         public MemberEditUserModel(IApplicationUserService applicationUserService)
         {
             _applicationUserService = applicationUserService;
-            
+
         }
 
         public async Task LoadByIdAsync(Guid id)

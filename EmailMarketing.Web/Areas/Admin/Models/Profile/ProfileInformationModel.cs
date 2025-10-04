@@ -1,11 +1,6 @@
 ﻿using EmailMarketing.Common.Services;
-using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Admin.Models.Profile

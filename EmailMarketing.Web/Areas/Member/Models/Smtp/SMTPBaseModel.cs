@@ -2,18 +2,14 @@
 using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Services.SMTP;
 using EmailMarketing.Membership.Services;
-using EmailMarketing.Web.Areas.Admin.Models;
 using EmailMarketing.Web.Core;
 using EmailMarketing.Web.Services;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Smtp
 {
-    public class SMTPBaseModel:MemberBaseModel, IDisposable
+    public class SMTPBaseModel : MemberBaseModel, IDisposable
     {
         protected readonly ISMTPService _smtpService;
         protected readonly IApplicationUserService _applicationUserService;

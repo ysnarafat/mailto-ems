@@ -1,11 +1,7 @@
 ﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Services.Contacts;
-using EmailMarketing.Membership.Services;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailMarketing.Web.Areas.Member.Models.Contacts
@@ -32,7 +28,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         {
 
         }
-        
+
         public async Task<object> GetAllAsync(DataTablesAjaxRequestModel tableModel)
         {
             var userId = _currentUserService.UserId;

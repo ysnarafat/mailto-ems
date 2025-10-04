@@ -346,10 +346,10 @@ namespace EmailMarketing.Data
         {
             return (IList<TEntity>)_dbSet.FromSqlRaw(sql, parameters).ToListAsync();
         }
-        
+
         public int ExecuteSqlCommand(string sql, params object[] parameters)
         {
-            return _dbContext.Database.ExecuteSqlCommand(sql, parameters);
+            return _dbContext.Database.ExecuteSqlRaw(sql, parameters);
         }
 
         public IList<dynamic> GetFromSql(string sql, Dictionary<string, object> parameters, bool isStoredProcedure = false)

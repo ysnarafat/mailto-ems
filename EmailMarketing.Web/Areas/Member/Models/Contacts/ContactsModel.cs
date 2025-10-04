@@ -1,8 +1,6 @@
 ﻿using EmailMarketing.Common.Services;
 using EmailMarketing.Framework.Entities.Contacts;
 using EmailMarketing.Framework.Services.Contacts;
-using Org.BouncyCastle.Math.EC.Rfc7748;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +28,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                 tableModel.GetSortText(new string[] { "Group", "Email" }),
                 tableModel.PageIndex, tableModel.PageSize);
 
-           
+
             return new
             {
                 recordsTotal = result.Total,
