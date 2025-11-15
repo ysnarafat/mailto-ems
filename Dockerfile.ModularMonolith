@@ -1,0 +1,65 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+
+# Copy solution and project files
+COPY EmailMarketing.ModularMonolith.sln ./
+COPY src/EmailMarketing.Host/EmailMarketing.Host.csproj src/EmailMarketing.Host/
+COPY src/EmailMarketing.Shared/EmailMarketing.Shared.Abstractions/EmailMarketing.Shared.Abstractions.csproj src/EmailMarketing.Shared/EmailMarketing.Shared.Abstractions/
+COPY src/EmailMarketing.Shared/EmailMarketing.Shared.Domain/EmailMarketing.Shared.Domain.csproj src/EmailMarketing.Shared/EmailMarketing.Shared.Domain/
+COPY src/EmailMarketing.Shared/EmailMarketing.Shared.Infrastructure/EmailMarketing.Shared.Infrastructure.csproj src/EmailMarketing.Shared/EmailMarketing.Shared.Infrastructure/
+COPY src/Modules/Users/EmailMarketing.Modules.Users/EmailMarketing.Modules.Users.csproj src/Modules/Users/EmailMarketing.Modules.Users/
+COPY src/Modules/Contacts/EmailMarketing.Modules.Contacts/EmailMarketing.Modules.Contacts.csproj src/Modules/Contacts/EmailMarketing.Modules.Contacts/
+COPY src/Modules/Campaigns/EmailMarketing.Modules.Campaigns/EmailMarketing.Modules.Campaigns.csproj src/Modules/Campaigns/EmailMarketing.Modules.Campaigns/
+COPY src/Modules/FileProcessing/EmailMarketing.Modules.FileProcessing/EmailMarketing.Modules.FileProcessing.csproj src/Modules/FileProcessing/EmailMarketing.Modules.FileProcessing/
+COPY src/Modules/Notifications/EmailMarketing.Modules.Notifications/EmailMarketing.Modules.Notifications.csproj src/Modules/Notifications/EmailMarketing.Modules.Notifications/
+
+# Restore dependencies
+RUN dotnet restore EmailMarketing.ModularMonolith.sln
+
+# Copy source code
+COPY src/ src/
+
+# Build and publish
+WORKDIR /src/src/EmailMarketing.Host
+RUN dotnet publish -c Release -o /app/publish --no-restore
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
+# Install System.Drawing native dependencies for Excel processing
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libc6-dev \
+        libgdiplus \
+        libx11-dev \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Copy published app
+COPY --from=build /app/publish .
+
+# Create directories and set permissions
+RUN mkdir -p /app/wwwroot/Files /app/wwwroot/Logs && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose port
+EXPOSE 8080
+
+# Set environment variables
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+ENTRYPOINT ["dotnet", "EmailMarketing.Host.dll"]

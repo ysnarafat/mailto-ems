@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Modular Monolith Application
+  emailmarketing-modular:
+    build:
+      context: .
+      dockerfile: Dockerfile.ModularMonolith
+    container_name: emailmarketing-modular
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=${CONNECTION_STRING:-Server=sqlserver;Database=EmailMarketing;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true;}
+    depends_on:
+      - sqlserver
+    volumes:
+      - modular-files:/app/wwwroot/Files
+      - modular-logs:/app/wwwroot/Logs
+    networks:
+      - emailmarketing-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: emailmarketing-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - emailmarketing-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -Q 'SELECT 1'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  modular-files:
+  modular-logs:
+  sqlserver-data:
+
+networks:
+  emailmarketing-network:
+    driver: bridge
