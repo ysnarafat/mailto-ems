@@ -23,7 +23,7 @@ namespace EmailMarketing.Framework.Context
         {
             if (!dbContextOptionsBuilder.IsConfigured)
             {
-                dbContextOptionsBuilder.UseSqlServer(
+                dbContextOptionsBuilder.UseNpgsql(
                     _connectionString,
                     m => m.MigrationsAssembly(_migrationAssemblyName));
             }
