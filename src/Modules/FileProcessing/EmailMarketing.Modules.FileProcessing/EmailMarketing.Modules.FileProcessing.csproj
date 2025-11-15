@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="ExcelDataReader" Version="3.8.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.8.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="System.CodeDom" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\EmailMarketing.Shared\EmailMarketing.Shared.Abstractions\EmailMarketing.Shared.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\EmailMarketing.Shared\EmailMarketing.Shared.Domain\EmailMarketing.Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\..\EmailMarketing.Shared\EmailMarketing.Shared.Infrastructure\EmailMarketing.Shared.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\FileUploadConfirmationEmailTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>FileUploadConfirmationEmailTemplate.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\FileUploadFailedEmailTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>FileUploadFailedEmailTemplate.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\ExcelExportConfirmationTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ExcelExportConfirmationTemplate.cs</LastGenOutput>
+    </None>
+    <None Update="Templates\CampReportExportTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CampReportExportTemplate.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Templates\FileUploadConfirmationEmailTemplate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FileUploadConfirmationEmailTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\FileUploadFailedEmailTemplate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FileUploadFailedEmailTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\ExcelExportConfirmationTemplate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExcelExportConfirmationTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Templates\CampReportExportTemplate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CampReportExportTemplate.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>
