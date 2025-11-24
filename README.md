@@ -28,7 +28,7 @@ EmailMarketing.CampaingReportExcelExportService/ # Worker for campaign report ex
 ```
 
 ## Prerequisites
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 - [Docker](https://www.docker.com/) (for containerized deployment)
 - SQL Server (local or remote)
 
@@ -71,4 +71,4 @@ dotnet test EmailMarketing.sln
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
-This project is for internal/organizational use. See individual library folders for third-party licenses.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
