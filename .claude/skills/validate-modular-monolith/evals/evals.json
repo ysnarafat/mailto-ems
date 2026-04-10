@@ -1,0 +1,44 @@
+{
+  "skill_name": "validate-modular-monolith",
+  "evals": [
+    {
+      "id": 1,
+      "name": "critical-cross-module-dependency",
+      "prompt": "I'm about to commit changes to the Campaigns module. Here's the new CreateCampaignService code. Can you validate it against our modular monolith architecture?\n\n```csharp\nusing EmailMarketing.Modules.Campaigns.Domain;\nusing EmailMarketing.Modules.Notifications.Services;\nusing MediatR;\n\nnamespace EmailMarketing.Modules.Campaigns.Services\n{\n    public class CreateCampaignService\n    {\n        private readonly ApplicationDbContext _dbContext;\n        private readonly EmailSender _emailSender;  // Direct reference to another module!\n        private readonly IMediator _mediator;\n\n        public CreateCampaignService(\n            ApplicationDbContext dbContext,\n            EmailSender emailSender,\n            IMediator mediator)\n        {\n            _dbContext = dbContext;\n            _emailSender = emailSender;\n            _mediator = mediator;\n        }\n\n        public async Task<Campaign> CreateAsync(CreateCampaignDto dto)\n        {\n            var campaign = new Campaign(dto.Name, dto.Subject);\n            _dbContext.Campaigns.Add(campaign);\n            await _dbContext.SaveChangesAsync();\n\n            // Direct synchronous call - should be event-driven!\n            await _emailSender.SendNotificationAsync(campaign.CreatedBy, $\"Campaign {campaign.Name} created\");\n\n            return campaign;\n        }\n    }\n}\n```",
+      "expected_output": "Should identify critical errors: direct injection of EmailSender from Notifications module, synchronous cross-module call that should be event-driven. Should suggest using MediatR to publish a CampaignCreatedEvent instead.",
+      "assertions": [
+        {"id": "detects_direct_module_import", "text": "Identifies direct import of EmailSender from another module as an error"},
+        {"id": "detects_cross_module_call", "text": "Identifies synchronous cross-module service call as critical violation"},
+        {"id": "suggests_event_driven_fix", "text": "Recommends using MediatR events instead of direct calls"},
+        {"id": "provides_code_example", "text": "Includes corrected code example showing event-driven pattern"},
+        {"id": "explains_architectural_reasoning", "text": "Explains why this pattern breaks modularity and prevents future microservices extraction"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "suboptimal-di-registration",
+      "prompt": "I'm updating the module registration in ContainerBuilderExtensions. Is this the right approach?\n\n```csharp\npublic static IServiceCollection RegisterModules(this IServiceCollection services)\n{\n    // Registering Contacts module services\n    services.AddTransient<ContactService>();\n    services.AddTransient<ContactRepository>();\n    services.AddTransient<IContactValidator, ContactValidator>();\n    services.AddMediatR(cfg => \n        cfg.RegisterServicesFromAssembly(typeof(ContactService).Assembly));\n\n    // Registering Campaigns module services\n    services.AddTransient<CampaignService>();\n    services.AddTransient<CampaignRepository>();\n\n    return services;\n}\n```",
+      "expected_output": "Should identify warning: services should be registered in their respective modules' RegisterServices() method, not in ContainerBuilderExtensions. Should suggest each module implements IModule and registers its own services.",
+      "assertions": [
+        {"id": "flags_centralized_registration", "text": "Identifies that services are registered in ContainerBuilderExtensions instead of in module classes"},
+        {"id": "classifies_as_warning", "text": "Classifies as WARNING (works, but violates pattern) rather than ERROR"},
+        {"id": "suggests_module_registration", "text": "Recommends moving services to each module's RegisterServices() method"},
+        {"id": "shows_correct_pattern", "text": "Shows example of IModule implementation with RegisterServices()"},
+        {"id": "explains_why_pattern_matters", "text": "Explains why module-level registration is important (loose coupling, independent modules)"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "correct-event-driven-pattern",
+      "prompt": "I've refactored ContactService to use event-driven communication. Does this align with our modular monolith patterns?\n\n```csharp\nusing EmailMarketing.Modules.Contacts.Domain;\nusing EmailMarketing.Modules.Contacts.Events;\nusing EmailMarketing.Shared.Abstractions;\nusing MediatR;\n\nnamespace EmailMarketing.Modules.Contacts.Services\n{\n    public class ContactService\n    {\n        private readonly ApplicationDbContext _dbContext;\n        private readonly IMediator _mediator;\n\n        public ContactService(ApplicationDbContext dbContext, IMediator mediator)\n        {\n            _dbContext = dbContext;\n            _mediator = mediator;\n        }\n\n        public async Task<Contact> CreateAsync(CreateContactDto dto)\n        {\n            var contact = new Contact(dto.Email, dto.FirstName, dto.LastName);\n            _dbContext.Contacts.Add(contact);\n            await _dbContext.SaveChangesAsync();\n\n            // Publish event - other modules can subscribe\n            await _mediator.Publish(new ContactCreatedEvent(\n                contact.Id,\n                contact.Email,\n                contact.FirstName));\n\n            return contact;\n        }\n    }\n}\n\npublic class ContactCreatedEvent : INotification\n{\n    public Guid ContactId { get; }\n    public string Email { get; }\n    public string FirstName { get; }\n\n    public ContactCreatedEvent(Guid contactId, string email, string firstName)\n    {\n        ContactId = contactId;\n        Email = email;\n        FirstName = firstName;\n    }\n}\n```",
+      "expected_output": "Should show PASS. This correctly demonstrates: (1) event-driven communication via MediatR, (2) proper module boundaries with no cross-module imports, (3) publishing integration events that other modules can subscribe to, (4) clean separation of concerns.",
+      "assertions": [
+        {"id": "passes_validation", "text": "Reports overall status as PASS with no errors or warnings"},
+        {"id": "validates_event_pattern", "text": "Confirms correct use of MediatR for event publishing"},
+        {"id": "confirms_no_cross_module_deps", "text": "Verifies no direct cross-module service dependencies"},
+        {"id": "notes_good_practices", "text": "Identifies and highlights positive aspects (event-driven communication, proper module boundaries)"},
+        {"id": "explains_architecture_benefits", "text": "Explains why this pattern enables future microservices extraction and independent testing"}
+      ]
+    }
+  ]
+}

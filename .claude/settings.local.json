@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod +x \"D:/Github/My Github/mailto-ems/.git-hooks/setup-hooks.sh\")",
+      "Bash(chmod +x \"D:/Github/My Github/mailto-ems/.git-hooks/pre-commit-validate-architecture.sh\")"
+    ]
+  }
+}
