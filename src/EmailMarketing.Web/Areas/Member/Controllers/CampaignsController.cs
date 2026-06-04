@@ -178,7 +178,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                 memory.Position = 0;
                 return File(memory, "application/vnd.ms-excel", file.FileName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 model.Response = new ResponseModel("Cannot find file.", ResponseType.Failure);
                 _logger.LogError("Cannot Find Campaign Export File to Download.");

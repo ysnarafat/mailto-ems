@@ -6,6 +6,7 @@ using EmailMarketing.Framework.Context;
 using EmailMarketing.Membership;
 using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Extensions;
+using EmailMarketing.Membership.Seeds;
 using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Core;
 using EmailMarketing.Web.Services;
@@ -56,10 +57,10 @@ namespace EmailMarketing.Web
             var migrationAssemblyName = typeof(Startup).Assembly.FullName;
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName)));
+                options.UseNpgsql(connectionString, b => b.MigrationsAssembly(migrationAssemblyName)));
 
             services.AddDbContext<FrameworkContext>(options =>
-                options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationAssemblyName)));
+                options.UseNpgsql(connectionString, b => b.MigrationsAssembly(migrationAssemblyName)));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -127,14 +128,15 @@ namespace EmailMarketing.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            ApplicationUserManager userManager, ApplicationRoleManager roleManager)
         {
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -162,6 +164,8 @@ namespace EmailMarketing.Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            DataSeeder.SeedAsync(userManager, roleManager).GetAwaiter().GetResult();
         }
     }
 }

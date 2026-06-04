@@ -194,7 +194,7 @@ namespace EmailMarketing.Framework.Tests.Services.Campaigns
             //Arrange
             var userId = Guid.NewGuid();
 
-            List<CampaignReport?> campaignReports = null;
+            List<CampaignReport> campaignReports = null;
             var campaignReportToMatch = new CampaignReport
             {
                 IsDeleted = false,
@@ -280,7 +280,7 @@ namespace EmailMarketing.Framework.Tests.Services.Campaigns
             //Arrange
             var userId = Guid.NewGuid();
             var campaignId = 2;
-            List<CampaignReport?> campaignReports = null;
+            List<CampaignReport> campaignReports = null;
             var campaignReportToMatch = new CampaignReport
             {
                 Id = 1,

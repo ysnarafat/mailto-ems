@@ -133,7 +133,6 @@ namespace EmailMarketing.Framework.Services.Campaigns
 
                 var worksheet = workbook.Worksheets.Add("All Campaign Report");
                 var currentRow = 1;
-                int i = 3;
 
                 worksheet.Cell(currentRow, 1).Value = "Email";
                 worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
@@ -178,7 +177,6 @@ namespace EmailMarketing.Framework.Services.Campaigns
 
                     var worksheet = workbook.Worksheets.Add("CampaignWiseReport");
                     var currentRow = 1;
-                    int i = 3;
 
                     worksheet.Cell(currentRow, 1).Value = "Email";
                     worksheet.Cell(currentRow, 1).Style.Font.Bold = true;

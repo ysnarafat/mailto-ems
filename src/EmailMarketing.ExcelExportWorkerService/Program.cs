@@ -18,7 +18,6 @@ namespace EmailMarketing.ExcelExportWorkerService
     {
         private static string _connectionString;
         private static string _migrationAssemblyName;
-        private IConfiguration _configuration;
 
         public static void Main(string[] args)
         {

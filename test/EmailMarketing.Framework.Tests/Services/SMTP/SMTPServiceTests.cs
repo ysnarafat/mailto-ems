@@ -98,6 +98,7 @@ namespace EmailMarketing.Framework.Tests.Services.SMTP
             var smtptoMatch = new SMTPConfig
             {
                 Id = Guid.NewGuid(),
+                UserId = userId,
                 Server = "smtp.gmail.com",
                 Port = 8080,
                 SenderName = "ABC",
@@ -115,6 +116,9 @@ namespace EmailMarketing.Framework.Tests.Services.SMTP
                 null, 1, 10, true
                 )).ReturnsAsync((smtpConfigList, 3, 2)).Verifiable();
 
+            _smtpRepositoryMock.Setup(x => x.GetCountAsync(
+                It.Is<Expression<Func<SMTPConfig, bool>>>(y => y.Compile()(smtptoMatch))
+                )).ReturnsAsync(3);
 
             //Act
             var result = _smtpService.GetAllAsync(userId, searchText, orderBy, pageIndex, pageSize);
@@ -338,7 +342,7 @@ namespace EmailMarketing.Framework.Tests.Services.SMTP
             _smtpUnitOfWorkMock.Setup(x => x.SaveChangesAsync()).Returns(Task.CompletedTask).Verifiable();
 
             //Act
-            // _smtpService.DeleteAsync(id);
+            _smtpService.DeleteAsync(id);
 
 
             //Assert

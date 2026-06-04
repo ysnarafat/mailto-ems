@@ -13,7 +13,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Smtp
     {
         protected readonly ISMTPService _smtpService;
         protected readonly IApplicationUserService _applicationUserService;
-        protected readonly ICurrentUserService _currentUserService;
+        protected new readonly ICurrentUserService _currentUserService;
         protected readonly ISmtpTestService _smtpTestService;
         protected readonly AppSettings _appSettings;
 
