@@ -518,11 +518,14 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
                 It.Is<Expression<Func<Contact, bool>>>(y => y.Compile()(contactToMatch))
                 )).ReturnsAsync(false).Verifiable();
 
+            _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
+            _contactUnitOfWorkMock.Setup(x => x.ContactValueMapRepository).Returns(_contactValueMapRepositoryMock.Object);
+
             _contactRepositoryMock.Setup(x => x.GetFirstOrDefaultAsync(
                 It.Is<Expression<Func<Contact, Contact>>>(y => y.Compile()(new Contact()) is Contact),
                 It.Is<Expression<Func<Contact, bool>>>(y => y.Compile()(existingContact)),
                 It.IsAny<Func<IQueryable<Contact>, IIncludableQueryable<Contact, object>>>(),
-                true
+                false
                 )).ReturnsAsync(existingContact).Verifiable();
 
             _contactRepositoryMock.Setup(x => x.UpdateAsync(existingContact)).Returns(Task.CompletedTask).Verifiable();

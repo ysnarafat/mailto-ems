@@ -4,7 +4,9 @@ using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Services;
 using EmailMarketing.Web.Areas.Admin.Models;
 using EmailMarketing.Web.Areas.Admin.Models.AdminUsers;
+using EmailMarketing.Web.Core;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -40,8 +42,9 @@ namespace EmailMarketing.Web.Tests
         public void Setup()
         {
             _applicationUserServiceMock = _mock.Mock<IApplicationUserService>();
-            _createAdminUsersModel = _mock.Create<CreateAdminUsersModel>();
-            //_adminUsersModel = _mock.Create<AdminUsersModel>();
+            var appSettingsMock = new Mock<IOptions<AppSettings>>();
+            appSettingsMock.Setup(x => x.Value).Returns(new AppSettings());
+            _createAdminUsersModel = new CreateAdminUsersModel(_applicationUserServiceMock.Object, appSettingsMock.Object);
         }
 
         [TearDown]

@@ -143,7 +143,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             };
             var fieldMapToMatch = new FieldMap
             {
-                Id = 1,
+                Id = 2,
                 DisplayName = "ABCDEF",
                 IsActive = true,
                 IsDeleted = false,

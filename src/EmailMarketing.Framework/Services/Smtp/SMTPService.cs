@@ -85,6 +85,13 @@ namespace EmailMarketing.Framework.Services.SMTP
             return smtp;
         }
 
+        public async Task DeleteAsync(Guid id)
+        {
+            await GetByIdAsync(id);
+            await _smtpUnitOfWork.SMTPRepository.DeleteAsync(id);
+            await _smtpUnitOfWork.SaveChangesAsync();
+        }
+
         public void Dispose()
         {
             _smtpUnitOfWork?.Dispose();

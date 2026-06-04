@@ -91,8 +91,8 @@ namespace EmailMarketing.Framework.Tests.Services.Groups
             var group = new Group
             {
                 Id = 1,
-                Name = "Friends"
-
+                Name = "Friends",
+                UserId = userId
             };
 
             _groupUnitOfWorkMock.Setup(x => x.GroupRepository).Returns(_groupRepositoryMock.Object);
