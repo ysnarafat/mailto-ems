@@ -75,9 +75,8 @@ namespace EmailMarketing.Framework.Tests.Services.Groups
         [Test]
         public void GetAllAsync_GroupLists_GetAllGroup()
         {
-            //Arrange 
+            //Arrange
             var userId = Guid.NewGuid();
-            int total = 4, totalFilter = 3;
             string searchText = "", orderBy = "Name";
             int pageIndex = 1, pageSize = 10;
 

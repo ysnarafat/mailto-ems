@@ -178,7 +178,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
 
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

@@ -85,7 +85,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             //Arrange
             int id = 1;
 
-            Contact? contact = null;
+            Contact contact = null;
             var contactsToMatch = new Contact
             {
                 Id = 1
@@ -152,7 +152,7 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
             //Arrange
             int id = 1;
 
-            Contact? contact = null;
+            Contact contact = null;
             var contactsToMatch = new Contact
             {
                 Id = 1
@@ -187,11 +187,10 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
                 ContactId = 1,
                 GroupId = 1
             };
-            int count = 1;
             _contactUnitOfWorkMock.Setup(x => x.GroupContactRepository).Returns(_groupContactRepositoryMock.Object);
 
             _groupContactRepositoryMock.Setup(x => x.GetCountAsync(
-              It.Is<Expression<Func<ContactGroup, bool>>>(y => y.Compile()(contactGroup)))).Returns(Task.FromResult(count)).Verifiable();
+              It.Is<Expression<Func<ContactGroup, bool>>>(y => y.Compile()(contactGroup)))).Returns(Task.FromResult(1)).Verifiable();
 
             //Act
             _contactService.GroupContactCountAsync(contactGroup.ContactId);
@@ -204,8 +203,6 @@ namespace EmailMarketing.Framework.Tests.Services.Contacts
         public void AddContact_ContactNotNull_AddContact()
         {
             //Arrange
-            int id = 1;
-
             var contact = new Contact
             {
                 Id = 1,

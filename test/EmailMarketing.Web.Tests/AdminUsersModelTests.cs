@@ -76,9 +76,6 @@ namespace EmailMarketing.Web.Tests
             _createAdminUsersModel.Email = "sam@gmail.com";
 
 
-            var UserRoleName = "Admin";
-            var Password = "Shohag16030";
-
             var id2 = Guid.NewGuid();
             var userTomatch = new ApplicationUser
             {
@@ -92,8 +89,6 @@ namespace EmailMarketing.Web.Tests
                 Address = "XYZ",
                 EmailConfirmed = true
             };
-            var UserRoleName2 = "Admin";
-            var Password2 = "Shohag16030";
 
             //_applicationUserServiceMock.Setup(x => x.AddAsync()).Verifiable();
 

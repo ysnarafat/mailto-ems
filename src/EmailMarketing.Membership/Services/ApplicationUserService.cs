@@ -224,7 +224,7 @@ namespace EmailMarketing.Membership.Services
 
                     return user.Id;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -277,7 +277,7 @@ namespace EmailMarketing.Membership.Services
 
                     return user.Id;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -357,7 +357,7 @@ namespace EmailMarketing.Membership.Services
 
                     return user.Id;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -408,7 +408,7 @@ namespace EmailMarketing.Membership.Services
 
                     return user.Id;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -443,7 +443,7 @@ namespace EmailMarketing.Membership.Services
 
                     return user.FullName;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -477,7 +477,7 @@ namespace EmailMarketing.Membership.Services
 
                     return (user.FullName, user.IsActive);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -511,7 +511,7 @@ namespace EmailMarketing.Membership.Services
 
                     return (user.FullName, user.IsBlocked);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -549,7 +549,7 @@ namespace EmailMarketing.Membership.Services
 
                     return user.FullName;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     scope.Dispose();
                     throw;
@@ -612,7 +612,7 @@ namespace EmailMarketing.Membership.Services
 
                     return true;
                 }
-                catch (IdentityValidationException ex)
+                catch (IdentityValidationException)
                 {
                     scope.Dispose();
                     throw;

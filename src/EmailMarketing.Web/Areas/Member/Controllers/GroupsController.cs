@@ -96,7 +96,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                     model.Response = new ResponseModel(ex.Message, ResponseType.Failure);
                     _logger.LogError($"Group '{model.Name}' already exist.");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     model.Response = new ResponseModel("Group creation failured.", ResponseType.Failure);
                     _logger.LogError($"Failed to create Group '{model.Name}'");

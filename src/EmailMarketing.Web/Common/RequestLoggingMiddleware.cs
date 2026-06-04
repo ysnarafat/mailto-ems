@@ -28,7 +28,7 @@ namespace EmailMarketing.Web.Common
 
                 await _next(context);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

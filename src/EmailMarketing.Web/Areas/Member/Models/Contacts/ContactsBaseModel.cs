@@ -10,7 +10,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         protected readonly IContactUploadService _contactUploadService;
         protected readonly IContactService _contactService;
         protected readonly IFieldMapService _fieldMapService;
-        protected readonly ICurrentUserService _currentUserService;
+        protected new readonly ICurrentUserService _currentUserService;
         protected readonly IContactExportService _contactExportService;
         public ContactsBaseModel(IContactUploadService contactExcel,
             IContactService contactService,

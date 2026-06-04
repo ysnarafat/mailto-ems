@@ -113,7 +113,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
                 await _contactService.AddContact(newContact);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new Exception("Failed to Add Contact.");
             }
