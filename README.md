@@ -65,6 +65,7 @@ On first startup the app seeds a **SuperAdmin** account automatically:
 |-----|-------------|
 | [docs/getting-started.md](docs/getting-started.md) | Setup, migrations, demo credentials, Docker |
 | [docs/database.md](docs/database.md) | Database provider, contexts, seeding, migration commands |
+| [docs/architecture/modular-monolith-migration-plan.md](docs/architecture/modular-monolith-migration-plan.md) | Step-by-step plan to restructure the project as a modular monolith with vertical slices |
 
 ## Testing
 
