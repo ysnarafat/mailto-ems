@@ -1023,3 +1023,61 @@ code, .mono {
     border-radius: 4px;
     color: var(--accent);
 }
+
+/* ── Empty States ────────────────────────────────────────────── */
+.empty-state {
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.empty-state-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+}
+
+.empty-state h6 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+}
+
+.empty-state p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    line-height: 1.6;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* DataTables empty row override */
+.dataTables_empty {
+    padding: 48px 24px !important;
+    color: var(--text-muted) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+}
+
+/* ── DataTables layout fixes ─────────────────────────────────── */
+.dataTables_wrapper {
+    padding: 16px 20px;
+}
+
+.dataTables_wrapper .row:first-child {
+    margin-bottom: 12px;
+}
+
+.dataTables_wrapper .row:last-child {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}

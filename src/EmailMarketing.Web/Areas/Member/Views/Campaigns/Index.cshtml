@@ -1,110 +1,83 @@
-﻿@model CampaignsModel
-
+@model CampaignsModel
 @{
-    ViewData["Title"] = "Campaign Lists";
+    ViewData["Title"] = "Campaigns";
 }
 
-<!-- Main content -->
-<div class="content-wrapper">
-    <!-- Content area -->
-    <div class="content">
-
-        <div class="pb-3">
-            <h4 class="d-inline">Campaign List</h4>
-            <a asp-area="Member" asp-controller="Campaigns" asp-action="AddCampaign" class="btn btn-primary float-right">
-                <i class="icon-plus-circle2"></i> Add Campaign
-            </a>
-        </div>
-
-        <!-- Basic datatable -->
-        <div class="card">
-            <div class="">
-                <partial name="_ActionMessage" model="@Model.Response" />
-            </div>
-            <table class="table" id="campaign-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Group</th>
-                        <th>Draft</th>
-                        <th>Processing</th>
-                        <th>Success</th>
-                        <th>Contacts</th>
-                        <th>Send Date Time</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <!-- /basic datatable -->
-
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Campaigns</h1>
+        <p class="page-subtitle">Manage and monitor your email campaigns</p>
     </div>
-    <!-- /content area -->
+    <a asp-area="Member" asp-controller="Campaigns" asp-action="AddCampaign" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> New Campaign
+    </a>
 </div>
 
-<!-- Active/InActive Campagin Draft Status Modal -->
+<div class="card">
+    <partial name="_ActionMessage" model="@Model.Response" />
+    <div class="table-responsive">
+        <table class="table table-hover" id="campaign-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Group</th>
+                    <th>Status</th>
+                    <th>Contacts</th>
+                    <th>Send Date</th>
+                    <th class="text-center" style="width:100px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Campaign activate/finish modal -->
 <div id="modal-activeDraft" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title"><span id="activeDraftTitle">Finish Campaign</span></h6>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="bi bi-lightning-charge-fill text-warning me-2"></i><span id="activeDraftTitle">Finish Campaign</span></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
-            <div class="modal-body">
-                <p>Are you sure want to <span id="activeDraftSure">Finish</span> this Campaign?</p>
+            <div class="modal-body" style="font-size:0.875rem;">
+                <p class="mb-0">Are you sure you want to <strong><span id="activeDraftSure">finish</span></strong> this campaign?</p>
                 <form id="activeDraftForm" action="@Url.Action("ActivateCampaign", "Campaigns", new { Area = "Member" })" method="post">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" id="activeDraftId" value="" name="id" />
+                    <input type="hidden" id="activeDraftId" name="id" />
                 </form>
             </div>
-
             <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-                <button type="button" id="activeButton" class="btn bg-danger">Yes, <span id="activeDraftButton">Finish</span>!</button>
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="activeButton" class="btn btn-primary btn-sm">
+                    <span id="activeDraftButton">Confirm</span>
+                </button>
             </div>
         </div>
     </div>
 </div>
-<!-- /default modal -->
 
-<!-- /Main content -->
 @section Scripts {
     <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
-    <partial name="~/Views/Bundle/_DatatableScriptsPartial.cshtml" />
     <script src="~/js/ajax-call.js"></script>
     <script src="~/js/project/campaign.js"></script>
-
     <script>
         $(function () {
-            var url = '@Url.Action("ViewCampaigns", "Campaigns", new { Area = "Member" })';
+            var url       = '@Url.Action("ViewCampaigns", "Campaigns", new { Area = "Member" })';
             var ReportUrl = '@Url.Action("ViewCampignWiseReport", "Campaigns", new { Area = "Member" })';
             loadDatatable(url, ReportUrl);
 
-            //Activate Campaign Draft Status
             $('#modal-activeDraft').on('show.bs.modal', function (e) {
-                var id = $(e.relatedTarget).attr('data-id');
+                var id    = $(e.relatedTarget).attr('data-id');
                 var title = $(e.relatedTarget).attr('data-title');
-                var modal = $("#modal-activeDraft");
                 $("#activeDraftId").val(id);
-                //$("#activeDraftTitle").text(title == 'Yes' ? 'Deactivate' : 'Activate');
-                //$("#activeDraftSure").text(title == 'Yes' ? 'Deactivate' : 'Activate');
-                //$("#activeDraftButton").text(title == 'Yes' ? 'Deactivate' : 'Activate');
-                $("#activeDraftTitle").text(title == 'Processing' ? 'Finish Campaign' : 'Process Campaign');
-                $("#activeDraftSure").text(title == 'Finished' ? 'Process Campaign' : 'Finish Campaign');
-                $("#activeDraftButton").text(title == 'Finished' ? 'Process' : 'Finish');
-                console.log(title);
-                modal.modal('show');
-            })
-            $("#activeButton").click(function () {
-                $("#activeDraftForm").submit();
+                var finishing = title !== 'Processing';
+                $("#activeDraftTitle").text(finishing ? 'Finish Campaign' : 'Process Campaign');
+                $("#activeDraftSure").text(finishing ? 'finish' : 'process');
+                $("#activeDraftButton").text(finishing ? 'Finish' : 'Process');
             });
 
+            $("#activeButton").click(function () { $("#activeDraftForm").submit(); });
         });
-
-
     </script>
-
-
 }

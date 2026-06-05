@@ -1,142 +1,234 @@
-﻿
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create Account";
     Layout = "_AccountLayout";
 }
-<link href="~/homeTheme/css/home.css" rel="stylesheet" />
-<!-- Content area -->
-<div class="content d-flex justify-content-center align-items-center mt-2 pt-2">
-    <div class="row pt-2">
-        <div class="col-lg-6">
-            <img src="~/homeTheme/images/sign-up.png" class="img-fluid login-img" />
+
+@section Styles {
+<style>
+    body { background: #f0f4f9; }
+    .auth-wrapper { min-height: 100vh; display: flex; }
+
+    /* Left panel */
+    .auth-panel {
+        width: 420px; flex-shrink: 0; background: #0d1117;
+        position: relative; display: flex; flex-direction: column;
+        padding: 48px 44px; overflow: hidden;
+    }
+    .auth-panel::before {
+        content: ''; position: absolute; top: -100px; right: -80px;
+        width: 420px; height: 420px;
+        background: radial-gradient(circle, rgba(34,197,94,0.2) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .auth-panel::after {
+        content: ''; position: absolute; bottom: -60px; left: -60px;
+        width: 320px; height: 320px;
+        background: radial-gradient(circle, rgba(88,101,242,0.18) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .auth-dot-grid {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 220px; height: 220px;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+        background-size: 22px 22px; pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+    .auth-panel-logo { display: flex; align-items: center; gap: 10px; margin-bottom: auto; position: relative; z-index: 1; }
+    .auth-panel-logo-icon {
+        width: 38px; height: 38px; background: rgba(34,197,94,0.15);
+        border: 1px solid rgba(34,197,94,0.35); border-radius: 10px;
+        display: flex; align-items: center; justify-content: center; color: #4ade80; font-size: 1.1rem;
+    }
+    .auth-panel-logo-text { color: #fff; font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .auth-panel-headline { position: relative; z-index: 1; margin-top: auto; }
+    .auth-panel-headline h2 {
+        color: #fff; font-size: 1.55rem; font-weight: 800;
+        letter-spacing: -0.03em; line-height: 1.25; margin-bottom: 14px;
+    }
+    .auth-panel-headline h2 span {
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .auth-panel-headline p { color: #6b7280; font-size: 0.875rem; line-height: 1.65; margin-bottom: 22px; }
+    .auth-feature-list { list-style: none; padding: 0; margin: 0; }
+    .auth-feature-list li {
+        display: flex; align-items: center; gap: 10px; color: #9ca3af;
+        font-size: 0.82rem; margin-bottom: 10px; font-weight: 500;
+    }
+    .auth-feature-list li i {
+        width: 22px; height: 22px; background: rgba(34,197,94,0.12);
+        border-radius: 6px; display: flex; align-items: center; justify-content: center;
+        color: #4ade80; font-size: 0.7rem; flex-shrink: 0;
+    }
+
+    /* Right form */
+    .auth-form-side { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 24px; overflow-y: auto; }
+    .auth-form-box { width: 100%; max-width: 420px; }
+    .form-title { font-size: 1.4rem; font-weight: 800; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .form-subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 28px; }
+
+    .auth-input-group { position: relative; margin-bottom: 14px; }
+    .auth-input-group .input-icon {
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 0.9rem; pointer-events: none; z-index: 2;
+    }
+    .auth-input-group .form-control {
+        padding-left: 36px; height: 44px; font-size: 0.875rem;
+        border-color: #e2e8f0; border-radius: 8px; transition: all 0.2s; background: #fff;
+    }
+    .auth-input-group .form-control:focus { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.1); }
+    .auth-input-group .password-toggle {
+        position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+        background: none; border: none; color: #94a3b8; cursor: pointer; padding: 0; font-size: 0.9rem; z-index: 2;
+    }
+
+    .auth-submit-btn {
+        width: 100%; height: 44px; background: #22c55e; border: none; border-radius: 8px;
+        color: #fff; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .auth-submit-btn:hover { background: #16a34a; box-shadow: 0 4px 12px rgba(34,197,94,0.35); transform: translateY(-1px); }
+
+    .auth-divider {
+        text-align: center; position: relative; margin: 18px 0; color: #cbd5e1;
+        font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em;
+    }
+    .auth-divider::before, .auth-divider::after {
+        content: ''; position: absolute; top: 50%; width: calc(50% - 26px); height: 1px; background: #e2e8f0;
+    }
+    .auth-divider::before { left: 0; } .auth-divider::after { right: 0; }
+
+    .auth-login-btn {
+        width: 100%; height: 44px; background: #f8fafc; border: 1px solid #e2e8f0;
+        border-radius: 8px; color: #374151; font-weight: 600; font-size: 0.875rem;
+        cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px;
+        transition: all 0.2s;
+    }
+    .auth-login-btn:hover { background: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
+
+    .auth-legal { text-align: center; font-size: 0.72rem; color: #94a3b8; margin-top: 18px; line-height: 1.5; }
+    .auth-legal a { color: #22c55e; font-weight: 600; }
+
+    .row-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    @@media (max-width: 768px) { .auth-panel { display: none; } }
+</style>
+}
+
+<div class="auth-wrapper">
+    <!-- Left panel -->
+    <div class="auth-panel">
+        <div class="auth-dot-grid"></div>
+        <div class="auth-panel-logo">
+            <div class="auth-panel-logo-icon"><i class="bi bi-envelope-fill"></i></div>
+            <span class="auth-panel-logo-text">MailTo</span>
         </div>
-        <div class="col-lg-6">
-            <!-- Register card -->
-            <!-- Registration form -->
-            <form class="login-form" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-                <div class="card mb-0 register-card">
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <i class="icon-plus3 text-success border-success border-3 rounded-round p-3 mb-3 mt-1"></i>
-                            <h5 class="mb-0">Create account</h5>
-                            <span class="d-block text-muted">All fields are required</span>
+        <div class="auth-panel-headline">
+            <h2>Start <span>growing</span> your audience today</h2>
+            <p>Create your free account in seconds and send your first campaign within minutes.</p>
+            <ul class="auth-feature-list">
+                <li><i class="bi bi-check-lg"></i> Free to start — no credit card</li>
+                <li><i class="bi bi-check-lg"></i> Import contacts from Excel</li>
+                <li><i class="bi bi-check-lg"></i> Personalised bulk email sending</li>
+                <li><i class="bi bi-check-lg"></i> Real-time open &amp; click tracking</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Right form -->
+    <div class="auth-form-side">
+        <div class="auth-form-box">
+            <div class="form-title">Create your account</div>
+            <div class="form-subtitle">Get started for free — no credit card required</div>
+
+            <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" novalidate>
+                <div asp-validation-summary="All" class="alert alert-danger mb-3" style="font-size:0.82rem;padding:10px 14px;"></div>
+
+                <!-- Full name -->
+                <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:6px;">Full Name</div>
+                <div class="auth-input-group">
+                    <i class="bi bi-person input-icon"></i>
+                    <input asp-for="FullName" type="text" class="form-control" placeholder="Jane Smith" autocomplete="name" />
+                </div>
+                <span asp-validation-for="FullName" class="field-validation-error"></span>
+
+                <!-- Email -->
+                <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:6px;margin-top:4px;">Email Address</div>
+                <div class="auth-input-group">
+                    <i class="bi bi-envelope input-icon"></i>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="jane@company.com" autocomplete="email" />
+                </div>
+                <span asp-validation-for="Email" class="field-validation-error"></span>
+
+                <!-- Passwords -->
+                <div class="row-two-col mt-2">
+                    <div>
+                        <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:6px;">Password</div>
+                        <div class="auth-input-group">
+                            <i class="bi bi-lock input-icon"></i>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Min. 6 characters" id="pwd1" autocomplete="new-password" />
+                            <button type="button" class="password-toggle" onclick="togglePwd('pwd1','icon1')" tabindex="-1">
+                                <i class="bi bi-eye" id="icon1"></i>
+                            </button>
                         </div>
-
-                        <div class="form-group text-center text-muted content-divider">
-                            <span class="px-2">Your credentials</span>
+                        <span asp-validation-for="Password" class="field-validation-error" style="font-size:0.72rem;"></span>
+                    </div>
+                    <div>
+                        <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:6px;">Confirm</div>
+                        <div class="auth-input-group">
+                            <i class="bi bi-lock-fill input-icon"></i>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Repeat password" id="pwd2" autocomplete="new-password" />
+                            <button type="button" class="password-toggle" onclick="togglePwd('pwd2','icon2')" tabindex="-1">
+                                <i class="bi bi-eye" id="icon2"></i>
+                            </button>
                         </div>
-
-                        <div asp-validation-summary="All" class="text-danger"></div>
-
-                        <div class="form-group form-group-feedback form-group-feedback-left">
-                            <input asp-for="FullName" type="text" class="form-control" placeholder="Full Name">
-                            <div class="form-control-feedback">
-                                <i class="icon-user-check text-muted"></i>
-                            </div>
-                            <span asp-validation-for="FullName" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group form-group-feedback form-group-feedback-left">
-                            <input asp-for="Email" type="text" class="form-control" placeholder="Email">
-                            <div class="form-control-feedback">
-                                <i class="icon-user-check text-muted"></i>
-                            </div>
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-
-                        <div class="form-group form-group-feedback form-group-feedback-left">
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Password">
-                            <div class="form-control-feedback">
-                                <i class="icon-user-lock text-muted"></i>
-                            </div>
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        @*<div class="form-group text-center text-muted content-divider">
-                        <span class="px-2">Your contacts</span>
-                    </div>*@
-
-                        <div class="form-group form-group-feedback form-group-feedback-left">
-                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password">
-                            <div class="form-control-feedback">
-                                <i class="icon-user-lock text-muted"></i>
-                            </div>
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                        </div>
-
-                        @*<div class="form-group form-group-feedback form-group-feedback-left">
-                        <input type="password" class="form-control" placeholder="Repeat email">
-                        <div class="form-control-feedback">
-                            <i class="icon-mention text-muted"></i>
-                        </div>
-                    </div>*@
-
-
-
-                        <div class="form-group">
-                            @*<div class="form-check">
-                            <label class="form-check-label">
-                                <input type="checkbox" name="remember" class="form-input-styled" checked data-fouc>
-                                Send me <a href="#">test account settings</a>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input type="checkbox" name="remember" class="form-input-styled" checked data-fouc>
-                                Subscribe to monthly newsletter
-                            </label>
-                        </div>*@
-
-                            <div class="form-check">
-                                <div>
-                                    <label class="form-check-label">
-                                        <input type="checkbox" asp-for="isChecked" id="checkbtn" class="form-input-styled" data-fouc>
-                                        Accept <a asp-controller="Account" asp-action="TermsAndConditions">terms of service</a>
-                                    </label>
-                                </div>
-                                <span asp-validation-for="isChecked" id="msg" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <button type="submit" id="submitBtn" class="btn bg-teal-400 btn-block">Register <i class="icon-circle-right2 ml-2"></i></button>
-
-                        <div class="form-group text-center text-muted content-divider">
-                            <span class="px-2 pt-3">Already Have an account?</span>
-                        </div>
-                        <div class="">
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-block">Sign in</a>
-                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="field-validation-error" style="font-size:0.72rem;"></span>
                     </div>
                 </div>
+
+                <!-- Terms -->
+                <div class="d-flex align-items-start gap-2 mt-3 mb-4">
+                    <input type="checkbox" asp-for="isChecked" id="checkbtn" class="form-check-input mt-1"
+                           style="border-color:#cbd5e1;border-radius:4px;cursor:pointer;flex-shrink:0;" />
+                    <label for="checkbtn" style="font-size:0.8rem;color:#374151;line-height:1.5;cursor:pointer;">
+                        I agree to the
+                        <a asp-controller="Account" asp-action="TermsAndConditions" style="color:#22c55e;font-weight:600;">Terms of Service</a>
+                        and <a asp-controller="Account" asp-action="TermsAndConditions" style="color:#22c55e;font-weight:600;">Privacy Policy</a>
+                    </label>
+                </div>
+                <span asp-validation-for="isChecked" id="msg" class="field-validation-error" style="display:block;margin-top:-12px;margin-bottom:12px;"></span>
+
+                <button type="submit" id="submitBtn" class="auth-submit-btn">
+                    <i class="bi bi-person-check-fill"></i> Create Account
+                </button>
             </form>
-            <!-- /registration form -->
-            <!-- /Register card -->
+
+            <div class="auth-divider">ALREADY HAVE AN ACCOUNT?</div>
+            <a asp-controller="Account" asp-action="Login" class="auth-login-btn">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In Instead
+            </a>
         </div>
     </div>
 </div>
-<!-- /content area -->
-<partial name="_FooterPartial" />
 
 @section Scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-
     <script>
+        function togglePwd(inputId, iconId) {
+            var input = document.getElementById(inputId);
+            var icon  = document.getElementById(iconId);
+            var show  = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+        }
+        // Checkbox range fix for jQuery Validate
         $(function () {
-            var defaultRangeValidator = $.validator.methods.range;
+            var def = $.validator.methods.range;
             $.validator.methods.range = function (value, element, param) {
-                if (element.type === 'checkbox') {
-                    // if it's a checkbox return true if it is checked
-                    return element.checked;
-                } else {
-                    // otherwise run the default validation function
-                    return defaultRangeValidator.call(this, value, element, param);
-                }
-            }
-        })
+                return element.type === 'checkbox' ? element.checked : def.call(this, value, element, param);
+            };
+        });
     </script>
-
     <partial name="_ValidationScriptsPartial" />
 }

@@ -1,162 +1,1006 @@
-﻿@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "MailTo — Email Marketing Platform";
+    var companyName = Configuration.GetSection("AppSettings")["CompanyFullName"] ?? "MailTo";
 }
 
-<!-- banner -->
-<div class="my-banner">
+@section Styles {
+<style>
+    /* ── Reset for public pages ── */
+    body { background: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+        background: #0d1117;
+        min-height: 92vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        padding: 80px 0 60px;
+    }
+
+    /* Dot-grid background */
+    .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+    }
+
+    /* Glow blobs */
+    .hero-blob-1 {
+        position: absolute;
+        top: -100px;
+        left: -100px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(88,101,242,0.22) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    .hero-blob-2 {
+        position: absolute;
+        bottom: -80px;
+        right: -50px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(88,101,242,0.12);
+        border: 1px solid rgba(88,101,242,0.3);
+        color: #818cf8;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 5px 12px;
+        border-radius: 50em;
+        margin-bottom: 22px;
+    }
+
+    .hero-title {
+        font-size: clamp(2.2rem, 5vw, 3.6rem);
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+
+    .hero-title .gradient-text {
+        background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c4b5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-subtitle {
+        font-size: 1.05rem;
+        color: #9ca3af;
+        line-height: 1.7;
+        max-width: 520px;
+        margin-bottom: 36px;
+    }
+
+    .hero-cta-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .btn-hero-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #5865f2;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+        border: none;
+    }
+
+    .btn-hero-primary:hover {
+        background: #4752c4;
+        color: #fff;
+        box-shadow: 0 6px 20px rgba(88,101,242,0.4);
+        transform: translateY(-1px);
+    }
+
+    .btn-hero-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: #9ca3af;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 12px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.2s;
+    }
+
+    .btn-hero-ghost:hover {
+        color: #fff;
+        border-color: rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.05);
+    }
+
+    .hero-social-proof {
+        margin-top: 44px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .proof-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #6b7280;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .proof-item i { color: #5865f2; font-size: 0.85rem; }
+
+    /* Hero visual card */
+    .hero-visual {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-app-card {
+        background: #161b27;
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+
+    .hero-app-card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .hero-app-card-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
+    .hero-stat-row {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .hero-stat {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+    }
+
+    .hero-stat-val {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.03em;
+    }
+
+    .hero-stat-label {
+        font-size: 0.65rem;
+        color: #6b7280;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-top: 2px;
+    }
+
+    .hero-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .hero-bar-label {
+        font-size: 0.72rem;
+        color: #6b7280;
+        width: 60px;
+        flex-shrink: 0;
+    }
+
+    .hero-bar-track {
+        flex: 1;
+        height: 6px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .hero-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #5865f2, #818cf8);
+    }
+
+    .hero-bar-pct {
+        font-size: 0.72rem;
+        color: #818cf8;
+        font-weight: 700;
+        width: 28px;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    /* ── Stats strip ── */
+    .stats-strip {
+        background: #0d1117;
+        padding: 40px 0;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .stat-strip-item {
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .stat-strip-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.04em;
+        line-height: 1;
+    }
+
+    .stat-strip-number span { color: #818cf8; }
+
+    .stat-strip-label {
+        font-size: 0.78rem;
+        color: #6b7280;
+        font-weight: 500;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* ── Section base ── */
+    .section { padding: 80px 0; }
+    .section-dark { background: #0d1117; }
+    .section-light { background: #fff; }
+    .section-muted { background: #f8fafc; }
+
+    .section-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(88,101,242,0.08);
+        color: #5865f2;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 50em;
+        margin-bottom: 14px;
+    }
+
+    .section-title {
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+        margin-bottom: 12px;
+    }
+
+    .section-title-white { color: #fff; }
+
+    .section-subtitle {
+        font-size: 1rem;
+        color: #64748b;
+        line-height: 1.7;
+        max-width: 540px;
+    }
+
+    .section-subtitle-white { color: #9ca3af; }
+
+    /* ── Feature cards ── */
+    .feature-card {
+        background: #fff;
+        border: 1px solid #e8ecf1;
+        border-radius: 14px;
+        padding: 28px;
+        height: 100%;
+        transition: all 0.25s;
+    }
+
+    .feature-card:hover {
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        transform: translateY(-3px);
+        border-color: rgba(88,101,242,0.2);
+    }
+
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        margin-bottom: 16px;
+    }
+
+    .feature-card h5 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px;
+    }
+
+    .feature-card p {
+        font-size: 0.875rem;
+        color: #64748b;
+        line-height: 1.65;
+        margin: 0;
+    }
+
+    /* ── How it works ── */
+    .step-card {
+        text-align: center;
+        padding: 0 16px;
+    }
+
+    .step-number {
+        width: 52px;
+        height: 52px;
+        background: rgba(88,101,242,0.12);
+        border: 2px solid rgba(88,101,242,0.25);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #818cf8;
+        margin: 0 auto 16px;
+        letter-spacing: -0.02em;
+    }
+
+    .step-card h5 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+    }
+
+    .step-card p {
+        font-size: 0.82rem;
+        color: #6b7280;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* step connector line */
+    .steps-row { position: relative; }
+    .steps-row::before {
+        content: '';
+        position: absolute;
+        top: 26px;
+        left: calc(50% / 4 + 40px);
+        right: calc(50% / 4 + 40px);
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(88,101,242,0.3), rgba(88,101,242,0.3), transparent);
+        pointer-events: none;
+    }
+
+    /* ── FAQ ── */
+    .faq-accordion .accordion-item {
+        border: 1px solid #e8ecf1;
+        border-radius: 10px !important;
+        margin-bottom: 8px;
+        overflow: hidden;
+    }
+
+    .faq-accordion .accordion-button {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #0f172a;
+        background: #fff;
+        border-radius: 10px !important;
+        box-shadow: none;
+        padding: 16px 20px;
+    }
+
+    .faq-accordion .accordion-button:not(.collapsed) {
+        color: #5865f2;
+        background: rgba(88,101,242,0.04);
+    }
+
+    .faq-accordion .accordion-button::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%235865f2'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+
+    .faq-accordion .accordion-body {
+        font-size: 0.875rem;
+        color: #64748b;
+        line-height: 1.7;
+        padding: 4px 20px 18px;
+    }
+
+    /* ── CTA section ── */
+    .cta-section {
+        background: linear-gradient(135deg, #0d1117 0%, #1a1f35 100%);
+        padding: 80px 0;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 700px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(88,101,242,0.2) 0%, transparent 65%);
+        pointer-events: none;
+    }
+
+    .cta-section > * { position: relative; z-index: 1; }
+
+    .cta-section h2 {
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.04em;
+        margin-bottom: 12px;
+    }
+
+    .cta-section p {
+        color: #9ca3af;
+        font-size: 1rem;
+        margin-bottom: 32px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* ── Footer ── */
+    .public-footer {
+        background: #0d1117;
+        padding: 60px 0 30px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .footer-brand-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(88,101,242,0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #818cf8;
+        font-size: 0.95rem;
+    }
+
+    .footer-brand-text {
+        color: #fff;
+        font-weight: 800;
+        font-size: 1rem;
+        letter-spacing: -0.02em;
+    }
+
+    .footer-tagline {
+        font-size: 0.82rem;
+        color: #6b7280;
+        line-height: 1.6;
+        max-width: 260px;
+    }
+
+    .footer-heading {
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 16px;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-links li { margin-bottom: 8px; }
+
+    .footer-links a {
+        color: #6b7280;
+        font-size: 0.82rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: #fff; }
+
+    .footer-social {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .footer-social a {
+        width: 32px;
+        height: 32px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .footer-social a:hover { background: rgba(88,101,242,0.2); color: #818cf8; }
+
+    .footer-bottom {
+        margin-top: 48px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .footer-bottom span {
+        font-size: 0.78rem;
+        color: #4b5563;
+    }
+
+    /* ── Animations ── */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+}
+
+<!-- HERO ──────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-blob-1"></div>
+    <div class="hero-blob-2"></div>
     <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="content">
-                    <div class="display-4">
-                        <span class="banner-header text-white">
-                            Do more than automate your email — activate your
-                            entire customer experience
-                        </span>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 hero-content">
+                <div class="hero-tag">
+                    <i class="bi bi-lightning-charge-fill"></i> Email Marketing Platform
+                </div>
+                <h1 class="hero-title">
+                    Activate your entire<br>
+                    <span class="gradient-text">customer experience</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Grow your audience, promote your services, and send smarter campaigns — with tools that do the heavy lifting for you.
+                </p>
+                <div class="hero-cta-group">
+                    <a asp-controller="Account" asp-action="Register" class="btn-hero-primary">
+                        <i class="bi bi-rocket-takeoff-fill"></i> Get started free
+                    </a>
+                    <a asp-controller="Account" asp-action="Login" class="btn-hero-ghost">
+                        Sign in <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="hero-social-proof">
+                    <div class="proof-item">
+                        <i class="bi bi-check-circle-fill"></i> No credit card required
                     </div>
-                    <h4 class="pt-4 text-white">
-                        Grow your audience, promote services, and sell products with marketing software that does the job for you.
-                    </h4>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary mt-3 px-5 py-3">Get started for free</a>
+                    <div class="proof-item">
+                        <i class="bi bi-check-circle-fill"></i> Free trial included
+                    </div>
+                    <div class="proof-item">
+                        <i class="bi bi-check-circle-fill"></i> Setup in minutes
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
 
+            <!-- App preview card -->
+            <div class="col-lg-6 hero-visual d-none d-lg-block">
+                <div class="hero-app-card">
+                    <div class="hero-app-card-header">
+                        <div class="hero-app-card-dot" style="background:#ff5f57;"></div>
+                        <div class="hero-app-card-dot" style="background:#ffbd2e;"></div>
+                        <div class="hero-app-card-dot" style="background:#28ca41;"></div>
+                        <span style="margin-left:8px;font-size:0.72rem;color:#4b5563;font-weight:600;">Campaign Analytics</span>
+                    </div>
+                    <div class="hero-stat-row">
+                        <div class="hero-stat">
+                            <div class="hero-stat-val">2.4k</div>
+                            <div class="hero-stat-label">Delivered</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-val" style="color:#818cf8;">68%</div>
+                            <div class="hero-stat-label">Open rate</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-val" style="color:#22c55e;">24%</div>
+                            <div class="hero-stat-label">Clicked</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:14px;">
+                        <div style="font-size:0.7rem;font-weight:700;color:#4b5563;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:10px;">Campaign Performance</div>
+                        <div class="hero-bar">
+                            <div class="hero-bar-label">Welcome</div>
+                            <div class="hero-bar-track"><div class="hero-bar-fill" style="width:82%;"></div></div>
+                            <div class="hero-bar-pct">82%</div>
+                        </div>
+                        <div class="hero-bar">
+                            <div class="hero-bar-label">Promo Q4</div>
+                            <div class="hero-bar-track"><div class="hero-bar-fill" style="width:68%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div>
+                            <div class="hero-bar-pct">68%</div>
+                        </div>
+                        <div class="hero-bar">
+                            <div class="hero-bar-label">Newsletter</div>
+                            <div class="hero-bar-track"><div class="hero-bar-fill" style="width:55%;background:linear-gradient(90deg,#0ea5e9,#38bdf8);"></div></div>
+                            <div class="hero-bar-pct">55%</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(88,101,242,0.1);border-radius:8px;border:1px solid rgba(88,101,242,0.2);">
+                        <div style="font-size:0.75rem;color:#818cf8;font-weight:600;"><i class="bi bi-lightning-charge-fill me-1"></i>Campaign Active</div>
+                        <div style="font-size:0.72rem;color:#6b7280;">Sending to 1,240 contacts…</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS STRIP ──────────────────────────────── -->
+<div class="stats-strip">
+    <div class="container">
+        <div class="row g-3 justify-content-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-strip-item">
+                    <div class="stat-strip-number">10k<span>+</span></div>
+                    <div class="stat-strip-label">Emails sent</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-strip-item">
+                    <div class="stat-strip-number">98<span>%</span></div>
+                    <div class="stat-strip-label">Deliverability</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-strip-item">
+                    <div class="stat-strip-number">500<span>+</span></div>
+                    <div class="stat-strip-label">Active campaigns</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-strip-item">
+                    <div class="stat-strip-number">24<span>/7</span></div>
+                    <div class="stat-strip-label">Support</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- content-1 -->
-<div class="content-1">
+<!-- FEATURES ─────────────────────────────────── -->
+<section class="section section-light">
     <div class="container">
-        <h2 class="text-center pb-5 display-4">Do email differently</h2>
-        <div class="row">
-            <div class="col-md-6">
-                <img src="~/homeTheme/images/content-1.png" alt="" class="img-fluid">
+        <div class="text-center mb-5 animate-on-scroll">
+            <div class="section-tag"><i class="bi bi-stars"></i> Features</div>
+            <h2 class="section-title">Everything you need to grow</h2>
+            <p class="section-subtitle mx-auto">
+                @companyName gives you the tools to build, send, and track email campaigns — without the complexity.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4 animate-on-scroll" style="transition-delay:0.05s">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(88,101,242,0.1);color:#5865f2;">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h5>Contact Management</h5>
+                    <p>Import thousands of contacts from Excel, organise them into groups, and keep your list clean and up-to-date.</p>
+                </div>
             </div>
-            <div class="col-md-6">
-                <div class="text-content">
-                    <h3>Building an email shouldn’t take hours—with @Configuration.GetSection("AppSettings")["CompanyFullName"], it takes minutes.</h3>
-                    <p>
-                        You don't worried abut time ,@Configuration.GetSection("AppSettings")["CompanyFullName"] takes few minutes for send your mail. You just need to import your xl sheet and will send your mail quickly.
-                    </p>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary mt-3 px-5 py-3">Start Here</a>
+            <div class="col-md-6 col-lg-4 animate-on-scroll" style="transition-delay:0.1s">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(34,197,94,0.1);color:#16a34a;">
+                        <i class="bi bi-send-fill"></i>
+                    </div>
+                    <h5>Bulk Email Sending</h5>
+                    <p>Send personalised emails to thousands of contacts at once using your own SMTP configuration for maximum deliverability.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 animate-on-scroll" style="transition-delay:0.15s">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(245,158,11,0.1);color:#d97706;">
+                        <i class="bi bi-bar-chart-line-fill"></i>
+                    </div>
+                    <h5>Campaign Analytics</h5>
+                    <p>Track every open, click, and delivery in real time. Export detailed reports to Excel for deeper analysis.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 animate-on-scroll" style="transition-delay:0.2s">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(139,92,246,0.1);color:#7c3aed;">
+                        <i class="bi bi-file-earmark-richtext-fill"></i>
+                    </div>
+                    <h5>Email Templates</h5>
+                    <p>Build reusable HTML templates with personalisation tags — your contacts' names and custom fields auto-inserted.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 animate-on-scroll" style="transition-delay:0.25s">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(14,165,233,0.1);color:#0284c7;">
+                        <i class="bi bi-hdd-network-fill"></i>
+                    </div>
+                    <h5>SMTP Configuration</h5>
+                    <p>Connect your own email server or use any SMTP provider — Gmail, SendGrid, SES — with full SSL support.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 animate-on-scroll" style="transition-delay:0.3s">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(239,68,68,0.1);color:#dc2626;">
+                        <i class="bi bi-download"></i>
+                    </div>
+                    <h5>Excel Import &amp; Export</h5>
+                    <p>Bulk-import contacts from .xlsx files, map custom columns, and export campaign reports — all without writing any code.</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- content-2 -->
-<div class="content-2">
+</section>
+
+<!-- HOW IT WORKS ──────────────────────────────── -->
+<section class="section section-dark">
     <div class="container">
-        <h2 class="text-center pb-5 display-4 text-white">Do it together now</h2>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="text-content text-white">
-                    <h3>Lets Get help from our specialist team member</h3>
-                    <p>
-                        If you get trouble or do not understand how to use our service lets get help from our specialist team member.Our team always ready to help you,Just let us know.
-                    </p>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary mt-3 px-5 py-3">Start Here</a>
+        <div class="text-center mb-5 animate-on-scroll">
+            <div class="section-tag" style="background:rgba(88,101,242,0.12);border:1px solid rgba(88,101,242,0.25);">
+                <i class="bi bi-map"></i> How it works
+            </div>
+            <h2 class="section-title section-title-white">From zero to sent in four steps</h2>
+            <p class="section-subtitle section-subtitle-white mx-auto">
+                No technical knowledge required. Get your first campaign out in under 10 minutes.
+            </p>
+        </div>
+        <div class="row g-4 steps-row justify-content-center animate-on-scroll">
+            <div class="col-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h5>Create account</h5>
+                    <p>Sign up free — no credit card needed. Your dashboard is ready instantly.</p>
                 </div>
             </div>
-            <div class="col-md-6">
-                <img src="~/homeTheme/images/team.png" alt="" class="img-fluid">
+            <div class="col-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h5>Import contacts</h5>
+                    <p>Upload your Excel file, map the columns, and your list is ready to use.</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h5>Build your email</h5>
+                    <p>Pick a template or write your own. Add personalisation with one click.</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h5>Send &amp; track</h5>
+                    <p>Hit send and watch opens and clicks come in — live, in your dashboard.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-
-<!-- faq -->
-<div class="faq-area">
+<!-- FAQ ───────────────────────────────────────── -->
+<section class="section section-muted">
     <div class="container">
-        <div class="row">
-            <!-- faq-area-start -->
-            <div class="faq-area pt-130 pb-100">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 mb-30">
-                            <div class="faq-wrapper">
-                                <div class="section-title">
-                                    <span><i class="far fa-question-circle"></i> F A Q</span>
-                                    <h1>Frequently asked questions</h1>
-                                    <p>
-                                        We denounce with righteous indignation and dislike men who so beguiled and demoralized by the charms of pleasure omoment, so blinded by desire, that they cannot foresee pain and troubles that are bound to ensue;
-                                        and equal blame belongs to those who their duty through weakness will which same
-                                    </p>
-                                    <a asp-controller="Account" asp-action="Faq" class="btn btn-primary mt-3 px-5 py-3">Learn More</a>
-                                </div>
-
+        <div class="row align-items-start g-5">
+            <div class="col-lg-4 animate-on-scroll">
+                <div class="section-tag"><i class="bi bi-question-circle"></i> FAQ</div>
+                <h2 class="section-title">Frequently asked questions</h2>
+                <p class="section-subtitle">
+                    Can't find your answer here? <a asp-controller="Home" asp-action="Faq" style="color:#5865f2;font-weight:600;">View all FAQs</a> or reach out to our support team.
+                </p>
+                <a asp-controller="Account" asp-action="Register" class="btn-hero-primary d-inline-flex mt-2">
+                    Get started free <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            <div class="col-lg-8 animate-on-scroll" style="transition-delay:0.1s">
+                <div class="accordion faq-accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                How do I import my contacts?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Upload a standard .xlsx or .csv file from the Contacts section. MailTo will guide you through mapping columns to contact fields — the whole process takes under two minutes.
                             </div>
                         </div>
-                        <div class="col-xl-6 col-lg-6">
-                            <div class="faq-box mb-30">
-                                <div id="accordion1">
-                                    <div class="card">
-                                        <div class="card-header" id="headingOne">
-                                            <h5 class="mb-0">
-                                                <a href="#" class="btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> Quick Wins For Improving Performance ? </a>
-                                            </h5>
-                                        </div>
-                                        <div class="collapse show" id="collapseOne" aria-labelledby="headingOne" data-parent="#accordion1">
-                                            <div class="card-body">
-                                                <p>Bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is tsame saying through shrinking from toil and pain.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div class="card-header" id="headingTwo">
-                                            <h5 class="mb-0">
-                                                <a href="#" class="btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                    Front-End Performance Challenge Make ?
-                                                </a>
-                                            </h5>
-                                        </div>
-                                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion1">
-                                            <div class="card-body">
-                                                <p>Bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is tsame saying through shrinking from toil and pain.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div class="card-header" id="headingThree">
-                                            <h5 class="mb-0">
-                                                <a href="#" class="btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                    Site Blazingly Fast And Some Prizes Ways ?
-                                                </a>
-                                            </h5>
-                                        </div>
-                                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion1">
-                                            <div class="card-body">
-                                                <p>Bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is tsame saying through shrinking from toil and pain.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div class="card-header" id="headingFour">
-                                            <h5 class="mb-0">
-                                                <a href="#" class="btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                                    We’ve Announcement  Rachel  Editor ?
-                                                </a>
-                                            </h5>
-                                        </div>
-                                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion1">
-                                            <div class="card-body">
-                                                <p>Bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is tsame saying through shrinking from toil and pain.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Can I use my own email server (SMTP)?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes. Add any SMTP configuration — Gmail, Outlook, SendGrid, Amazon SES, or your own server. You can store multiple SMTP profiles and pick one per campaign.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                How does email personalisation work?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Define custom fields when importing your contacts, then use merge tags in your email template body. MailTo replaces each tag with the real value before sending to each recipient.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Can I track who opened my emails?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely. MailTo embeds a pixel tracker in each email. You can see per-contact open and delivery status from the Campaign Reports section, and export the data to Excel.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- faq-area-end -->
         </div>
     </div>
-</div>
+</section>
+
+<!-- CTA ───────────────────────────────────────── -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to send smarter emails?</h2>
+        <p>Join today and send your first campaign in minutes — completely free.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a asp-controller="Account" asp-action="Register" class="btn-hero-primary" style="font-size:1rem;padding:14px 32px;">
+                <i class="bi bi-rocket-takeoff-fill"></i> Start for free
+            </a>
+            <a asp-controller="Account" asp-action="Login" class="btn-hero-ghost" style="font-size:1rem;padding:14px 24px;">
+                Sign in <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER ────────────────────────────────────── -->
+<footer class="public-footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-brand">
+                    <div class="footer-brand-icon"><i class="bi bi-envelope-fill"></i></div>
+                    <span class="footer-brand-text">@companyName</span>
+                </div>
+                <p class="footer-tagline">Email marketing that grows with you. Send smarter, track better, convert more.</p>
+                <div class="footer-social mt-3">
+                    <a href="#"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                    <a href="#"><i class="bi bi-github"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6 offset-lg-2">
+                <p class="footer-heading">Product</p>
+                <ul class="footer-links">
+                    <li><a asp-controller="Home" asp-action="Feature">Features</a></li>
+                    <li><a asp-controller="Home" asp-action="Pricing">Pricing</a></li>
+                    <li><a asp-controller="Home" asp-action="Tutorials">Tutorials</a></li>
+                    <li><a asp-controller="Home" asp-action="Doc">Docs</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <p class="footer-heading">Company</p>
+                <ul class="footer-links">
+                    <li><a asp-controller="Home" asp-action="Privacy">Privacy Policy</a></li>
+                    <li><a asp-controller="Account" asp-action="TermsAndConditions">Terms</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <p class="footer-heading">Account</p>
+                <ul class="footer-links">
+                    <li><a asp-controller="Account" asp-action="Login">Sign In</a></li>
+                    <li><a asp-controller="Account" asp-action="Register">Sign Up Free</a></li>
+                    <li><a asp-controller="Account" asp-action="ForgotPassword">Reset Password</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© @DateTime.Now.Year @companyName. All rights reserved.</span>
+            <span>Built with <i class="bi bi-heart-fill" style="color:#5865f2;font-size:0.75rem;"></i> using Bootstrap 5</span>
+        </div>
+    </div>
+</footer>
+
+@section Scripts {
+<script>
+    // Scroll animations
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(function(el) {
+        observer.observe(el);
+    });
+</script>
+}

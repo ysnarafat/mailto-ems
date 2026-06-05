@@ -1,278 +1,344 @@
-﻿@model CreateCampaignModel
+@model CreateCampaignModel
 @using EmailMarketing.Membership.Extensions
 @{
-    ViewData["Title"] = "Add Campaign";
+    ViewData["Title"] = "New Campaign";
     var loggedInUserEmail = User.Identity.Email();
 }
 
-@section Styles
-{
-    <link href="~/memberTheme/css/member_add_campaign.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+@section Styles {
+<link rel="stylesheet" href="~/memberTheme/css/member_add_campaign.css" />
+<style>
+    .section-panel {
+        background: #fff; border: 1px solid var(--border-color); border-radius: var(--card-radius);
+        overflow: hidden; margin-bottom: 20px;
+    }
+    .section-panel-header {
+        padding: 14px 20px; border-bottom: 1px solid var(--border-color); background: #fafbfc;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .section-panel-header-icon {
+        width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center;
+        justify-content: center; font-size: 0.85rem; flex-shrink: 0;
+    }
+    .section-panel-title { font-size: 0.875rem; font-weight: 700; color: #0f172a; letter-spacing: -0.01em; margin: 0; }
+    .section-panel-body { padding: 20px; }
+
+    .form-row-field { margin-bottom: 18px; }
+    .form-row-field .form-label { font-size: 0.8rem; font-weight: 600; color: #374151; margin-bottom: 6px; }
+
+    .group-list { max-height: 280px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; }
+    .group-item {
+        display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+        border-bottom: 1px solid #f1f5f9; transition: background 0.15s; cursor: pointer;
+    }
+    .group-item:last-child { border-bottom: none; }
+    .group-item:hover { background: #f8fafc; }
+    .group-item input[type="checkbox"] { cursor: pointer; border-color: #cbd5e1; border-radius: 4px; width: 15px; height: 15px; flex-shrink: 0; }
+    .group-item-name { font-size: 0.85rem; font-weight: 500; color: #0f172a; flex: 1; }
+    .group-item-count {
+        font-size: 0.72rem; background: rgba(88,101,242,0.08); color: #5865f2;
+        padding: 2px 7px; border-radius: 10em; font-weight: 600; flex-shrink: 0;
+    }
+
+    .group-counter {
+        font-size: 0.78rem; color: #94a3b8; padding: 8px 14px;
+        border: 1px solid var(--border-color); border-radius: 8px;
+        background: #fafbfc; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+
+    .template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+    .template-card {
+        position: relative; border: 2px solid var(--border-color); border-radius: 8px;
+        overflow: hidden; cursor: pointer; transition: all 0.2s; background: #fff;
+    }
+    .template-card:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(88,101,242,0.15); }
+    .template-card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(88,101,242,0.15); }
+    .template-card-preview { height: 90px; overflow: hidden; padding: 6px; font-size: 0.4rem; pointer-events: none; }
+    .template-card-footer {
+        padding: 6px 8px; border-top: 1px solid #f1f5f9; display: flex; align-items: center;
+        justify-content: space-between; gap: 4px;
+    }
+    .template-card-name { font-size: 0.68rem; font-weight: 600; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+    .template-card-radio { position: absolute; top: 6px; right: 6px; z-index: 2; }
+
+    .option-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .option-check input[type="checkbox"] { margin-top: 2px; cursor: pointer; border-radius: 4px; border-color: #cbd5e1; width: 15px; height: 15px; flex-shrink: 0; }
+    .option-check-label { font-size: 0.85rem; color: #374151; font-weight: 500; line-height: 1.4; cursor: pointer; }
+    .option-check-sub { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+
+    .hint-text { font-size: 0.75rem; color: #94a3b8; margin-top: 5px; line-height: 1.5; }
+    .hint-text .highlight { color: var(--accent); font-weight: 600; }
+</style>
 }
 
-<!-- Main content -->
-<div class="content-wrapper">
-    <!-- Content area -->
-    <div class="content">
-        <div class="pb-3">
-            <h4 class="d-inline">Add Campaign</h4>
-            <a asp-controller="Campaigns" asp-action="Index" asp-area="Member" class="btn bg-primary float-right"><i class="icon-list mr-2"></i> <span class="font-weight-semibold">Campaign List</span></a>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <partial name="_ActionMessage" model="@Model.Response" />
-                <div class="card">
-                    <div class="card-body">
-                        <form asp-area="Member" asp-controller="Campaigns" asp-action="AddCampaign" method="post">
-                            <div asp-validation-summary="All" class="text-danger"></div>
-                            <div class="row">
+<div class="page-header">
+    <div>
+        <h1 class="page-title">New Campaign</h1>
+        <p class="page-subtitle">Configure and launch your email campaign</p>
+    </div>
+    <a asp-controller="Campaigns" asp-action="Index" asp-area="Member" class="btn btn-light">
+        <i class="bi bi-arrow-left"></i> All Campaigns
+    </a>
+</div>
 
-                                <div class="col-6 ml-2">
-                                    <div class="form-group row">
-                                        <label asp-for="Name" class="col-sm-3 col-form-label required"></label>
-                                        <div class="col-sm-9">
-                                            <input asp-for="Name" class="form-control">
-                                            <span asp-validation-for="Name" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label asp-for="Description" class="col-sm-3 col-form-label required"></label>
-                                        <div class="col-sm-9">
-                                            <textarea asp-for="Description" class="form-control"></textarea>
-                                            <span asp-validation-for="Description" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label asp-for="EmailSubject" class="col-sm-3 col-form-label required"></label>
-                                        <div class="col-sm-9">
-                                            <input asp-for="EmailSubject" class="form-control" />
-                                            <span asp-validation-for="EmailSubject" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label asp-for="SMTPConfigId" class="col-sm-3 col-form-label required"></label>
-                                        <div class="col-sm-9">
-                                            <select asp-for="SMTPConfigId" class="form-control">
-                                                <option value="">---Select SMTP Server---</option>
-                                                @for (int i = 0; i < Model.SMTPConfigList.Count(); i++)
-                                                {
-                                                    <option value="@Model.SMTPConfigList[i].Id">@Model.SMTPConfigList[i].SenderEmail</option>
-                                                }
-                                            </select>
-                                            <span asp-validation-for="SMTPConfigId" class="text-danger">Smtp Config is required</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label asp-for="SendDateTime" class="col-sm-3 col-form-label"></label>
-                                        <div class="col-sm-9">
-                                            <input asp-for="SendDateTime" class="form-control" id="sendDateTime" disabled />
-                                            <span asp-validation-for="SendDateTime" class="text-danger"></span>
-                                            <div class="dropdown-item form-check form-check-switchery ">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-input-switchery" id="check" checked data-fouc asp-for="SendNow">
-                                                    <span class="font-weight-bold">Send Now?</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label asp-for="IsDraft" class="col-sm-3 col-form-label"></label>
-                                        <div class="col-sm-9">
-                                            <div class="dropdown-item form-check form-check-switchery ">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-input-switchery" data-fouc asp-for="IsDraft">
-                                                    <span class="font-weight-bold">Want to save in draft?</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label asp-for="IsSendEmailNotify" class="col-sm-3 col-form-label"></label>
-                                        <div class="col-sm-9">
-                                            <div class="dropdown-item form-check form-check-switchery ">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-input-switchery" data-fouc asp-for="IsSendEmailNotify" checked>
-                                                    <span class="font-weight-bold">Want to be notify by email?</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label asp-for="SendEmailAddress" class="col-sm-3 col-form-label"></label>
-                                        <div class="col-sm-9">
-                                            <input asp-for="SendEmailAddress" class="form-control" value="@loggedInUserEmail" />
-                                            <p class="pt-1">[You can send to multiple email by using comma between emails.]</p>
-                                            <span asp-validation-for="SendEmailAddress" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 ml-5">
-                                    <h4>Where you want to add this Campaign?</h4>
-                                    @Html.AntiForgeryToken()
-                                    <!-- selected -->
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="checkAll">
-                                        <label class="form-check-label" for="checkAll">Select All Groups</label>
-                                    </div>
+<form asp-area="Member" asp-controller="Campaigns" asp-action="AddCampaign" method="post">
+    <div asp-validation-summary="All" class="alert alert-danger mb-3" style="font-size:0.82rem;"></div>
 
-                                    <div class="bg-white">
-                                        <p class="p-2">
-                                            <i class="icon-collaboration"></i>&nbsp;&nbsp; <span id="selected">No</span> <span>Group</span> Selected
-                                        </p>
-                                    </div>
+    <div class="row g-3">
 
-                                    <div class="bg-white">
-                                        <ul class="list-group">
-                                            @{
-                                                for (int i = 0; i < Model.GroupSelectList.Count(); i++)
-                                                {
-                                                    <li class="list-group-item border-bottom">
-                                                        <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input group-select" id="checkSingle[@i]" value="@Model.GroupSelectList[i].IsChecked.ToString().ToLower()" name="GroupSelectList[@i].IsChecked">
-                                                            <input type="hidden" class="form-control" asp-for="@Model.GroupSelectList[i].Value">
-                                                            <input type="hidden" class="form-control" asp-for="@Model.GroupSelectList[i].Text">
+        <!-- ── Left column: details ── -->
+        <div class="col-lg-7">
 
-                                                            <label class="form-check-label" for="checkSingle[@i]">
-                                                                @Model.GroupSelectList[i].Text
-                                                                <span class="border p-1">
-                                                                    <span>@Model.GroupSelectList[i].Count</span>&nbsp;&nbsp;
-                                                                    <i class="fas fa-user"></i>
-                                                                </span>
-                                                            </label> &nbsp;&nbsp;
-                                                        </div>
-                                                    </li>
-                                                }
-                                            }
-                                        </ul>
-                                    </div>
-                                    <!-- /selected -->
-                                </div>
-                            </div>
-                            <!--Template Preview-->
-                            <div class="row" id="">
-                                <div class="col-3 ">
-                                    <div class="form-group row mt-5">
-                                        <label class="col-sm-12 col-form-label font-weight-bold">Select From Draft: <a id="remove_all" class="text-primary">Clear Selected</a> &nbsp;&nbsp;&nbsp; <span class="font-weight-normal">--- Or ---</span></label>
-                                    </div>
-                                    <div class="preview">
-                                        <div class="form-group row">
-                                            <table class="table table-borderless">
-                                                @for (int j = 0; j < Model.EmailTemplateList.Count(); j++)
-                                                {
-                                                    <tr class="card_tr">
-
-                                                        <td>
-                                                            <div class="card custom_template_card card-box-shadow">
-                                                                <div class="card-body custom_card_body">
-                                                                    <div class="template_body">
-                                                                        @Html.Raw(Model.EmailTemplateList[j].EmailTemplateBody)
-                                                                    </div>
-                                                                    <span class="d-none template_title">@Model.EmailTemplateList[j].EmailTemplateName</span>
-
-                                                                    <div class="overlay">
-                                                                        <input type="radio" name="SelectedTemplateId" value="@Model.EmailTemplateList[j].Id" class="mr-2 mt-2 selected_template" data-toggle="tooltip" data-placement="top" title="Select" />
-                                                                        <input type="hidden" class="form-control" asp-for="@Model.EmailTemplateList[j].IsPersonalized" />
-                                                                        <input type="hidden" class="form-control" asp-for="@Model.EmailTemplateList[j].Id" />
-                                                                        <a class="mr-2 mt-2 selected_template_preview text-info" data-toggle="modal" data-target="#templatebody">
-                                                                            <i class="fa fa-2x fa-eye" data-toggle="tooltip" data-placement="top" title="View"></i>
-                                                                        </a>
-                                                                        <a class="mr-2 mt-2 selected_template_copy text-info">
-                                                                            <i class="fa fa-2x fa-copy" data-toggle="tooltip" data-placement="top" title="Copy"></i>
-                                                                        </a>
-                                                                        <p class="text-white text-center pt-1">@Model.EmailTemplateList[j].EmailTemplateName</p>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            </table>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-9 pl-3 pr-3">
-                                    <div class="">
-                                        <div class="form-group row mt-5">
-                                            <label class="col-sm-12 col-form-label font-weight-bold">Create New Template:</label>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-form-label col-lg-2" asp-for="EmailTemplateTitle"></label>
-                                            <div class="col-lg-10">
-                                                <input asp-for="EmailTemplateTitle" class="form-control" />
-                                                <span asp-validation-for="EmailTemplateTitle" class="text-danger"></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-form-label col-lg-2" asp-for="isPersonalized"></label>
-                                            <div class="col-sm-9">
-                                                <div class="dropdown-item form-check form-check-switchery ">
-                                                    <label class="form-check-label">
-                                                        <input type="checkbox" class="form-input-switchery" data-fouc asp-for="isPersonalized">
-                                                        <span class="font-weight-bold">Want to personalize email body?</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-lg-2">
-                                                <label class="col-form-label" asp-for="EmailTemplateBody"></label>
-                                            </div>
-                                            <div class="col-lg-10"></div>
-                                            <div class="col-lg-12">
-                                                <textarea asp-for="EmailTemplateBody" class="form-control editor_textarea abcd"></textarea>
-                                                <div class="pt-2">
-                                                    <span><span class="text-danger">Important Note:</span> If you want to personalize email body.Then use curly brace {} and inside curly brace write Field Name. Example: {Field_Name} like this.</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between pt-3">
-                                <a asp-controller="Campaigns" asp-action="Index" asp-area="Member" class="btn btn-light"><i class="icon-arrow-left52"></i> Back</a>
-                                <button type="submit" class="btn btn-primary"><i class="icon-file-check2"></i> Save</button>
-                            </div>
-                        </form>
-
+            <!-- Campaign basics -->
+            <div class="section-panel">
+                <div class="section-panel-header">
+                    <div class="section-panel-header-icon" style="background:rgba(88,101,242,0.1);color:#5865f2;">
+                        <i class="bi bi-pencil-fill"></i>
+                    </div>
+                    <span class="section-panel-title">Campaign Details</span>
+                </div>
+                <div class="section-panel-body">
+                    <div class="form-row-field">
+                        <label asp-for="Name" class="form-label required"></label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g. Summer Promo 2025" />
+                        <span asp-validation-for="Name" class="field-validation-error"></span>
+                    </div>
+                    <div class="form-row-field">
+                        <label asp-for="Description" class="form-label required"></label>
+                        <textarea asp-for="Description" class="form-control" rows="2" placeholder="Brief description of this campaign"></textarea>
+                        <span asp-validation-for="Description" class="field-validation-error"></span>
+                    </div>
+                    <div class="form-row-field">
+                        <label asp-for="EmailSubject" class="form-label required"></label>
+                        <input asp-for="EmailSubject" class="form-control" placeholder="The subject line recipients will see" />
+                        <span asp-validation-for="EmailSubject" class="field-validation-error"></span>
+                    </div>
+                    <div class="form-row-field">
+                        <label asp-for="SMTPConfigId" class="form-label required"></label>
+                        <select asp-for="SMTPConfigId" class="form-select">
+                            <option value="">— Select SMTP server —</option>
+                            @for (int i = 0; i < Model.SMTPConfigList.Count(); i++)
+                            {
+                                <option value="@Model.SMTPConfigList[i].Id">@Model.SMTPConfigList[i].SenderEmail</option>
+                            }
+                        </select>
+                        <span asp-validation-for="SMTPConfigId" class="field-validation-error"></span>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- /Content area -->
-</div>
-<!-- /Main content -->
 
-<div class="modal fade" id="templatebody" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+            <!-- Scheduling & options -->
+            <div class="section-panel">
+                <div class="section-panel-header">
+                    <div class="section-panel-header-icon" style="background:rgba(34,197,94,0.1);color:#16a34a;">
+                        <i class="bi bi-calendar2-check-fill"></i>
+                    </div>
+                    <span class="section-panel-title">Schedule &amp; Options</span>
+                </div>
+                <div class="section-panel-body">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="SendDateTime" class="form-label"></label>
+                            <input asp-for="SendDateTime" class="form-control" id="sendDateTime" disabled />
+                            <span asp-validation-for="SendDateTime" class="field-validation-error"></span>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end pb-1">
+                            <div class="option-check mb-0">
+                                <input type="checkbox" class="form-check-input form-input-switchery" id="check" checked asp-for="SendNow" />
+                                <div>
+                                    <label class="option-check-label" for="check">Send Now</label>
+                                    <div class="option-check-sub">Sends immediately after saving</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="option-check">
+                        <input type="checkbox" class="form-check-input form-input-switchery" asp-for="IsDraft" id="isDraft" />
+                        <div>
+                            <label class="option-check-label" for="isDraft">Save as Draft</label>
+                            <div class="option-check-sub">You can activate this campaign later</div>
+                        </div>
+                    </div>
+                    <div class="option-check">
+                        <input type="checkbox" class="form-check-input form-input-switchery" asp-for="IsSendEmailNotify" id="isNotify" checked />
+                        <div>
+                            <label class="option-check-label" for="isNotify">Email Notification</label>
+                            <div class="option-check-sub">Get notified when the campaign finishes</div>
+                        </div>
+                    </div>
+                    <div class="form-row-field mt-2">
+                        <label asp-for="SendEmailAddress" class="form-label"></label>
+                        <input asp-for="SendEmailAddress" class="form-control" value="@loggedInUserEmail" />
+                        <p class="hint-text">Separate multiple emails with a comma.</p>
+                        <span asp-validation-for="SendEmailAddress" class="field-validation-error"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email template -->
+            <div class="section-panel">
+                <div class="section-panel-header">
+                    <div class="section-panel-header-icon" style="background:rgba(245,158,11,0.1);color:#d97706;">
+                        <i class="bi bi-file-earmark-richtext-fill"></i>
+                    </div>
+                    <span class="section-panel-title">Email Template</span>
+                    <span style="margin-left:auto;font-size:0.72rem;color:#94a3b8;">Select a saved template or write a new one</span>
+                </div>
+                <div class="section-panel-body">
+
+                    @if (Model.EmailTemplateList.Any())
+                    {
+                        <div style="font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:10px;">
+                            Saved Templates
+                            <a id="remove_all" class="text-accent ms-2" style="font-weight:600;cursor:pointer;">Clear selection</a>
+                        </div>
+                        <div class="template-grid mb-4">
+                            @for (int j = 0; j < Model.EmailTemplateList.Count(); j++)
+                            {
+                                <div class="template-card" id="tcard_@j">
+                                    <input type="radio" name="SelectedTemplateId" value="@Model.EmailTemplateList[j].Id"
+                                           class="template-card-radio selected_template form-check-input" />
+                                    <input type="hidden" asp-for="@Model.EmailTemplateList[j].IsPersonalized" />
+                                    <input type="hidden" asp-for="@Model.EmailTemplateList[j].Id" />
+                                    <div class="template-card-preview">
+                                        @Html.Raw(Model.EmailTemplateList[j].EmailTemplateBody)
+                                    </div>
+                                    <div class="template-card-footer">
+                                        <span class="template-card-name d-none template_title">@Model.EmailTemplateList[j].EmailTemplateName</span>
+                                        <span class="template-card-name">@Model.EmailTemplateList[j].EmailTemplateName</span>
+                                        <a class="selected_template_preview" data-bs-toggle="modal" data-bs-target="#templatebody"
+                                           style="color:#94a3b8;cursor:pointer;font-size:0.8rem;" title="Preview">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a class="selected_template_copy" style="color:#94a3b8;cursor:pointer;font-size:0.8rem;" title="Copy">
+                                            <i class="bi bi-copy"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div style="flex:1;height:1px;background:var(--border-color);"></div>
+                            <span style="font-size:0.75rem;color:#94a3b8;font-weight:600;white-space:nowrap;">OR CREATE NEW</span>
+                            <div style="flex:1;height:1px;background:var(--border-color);"></div>
+                        </div>
+                    }
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="EmailTemplateTitle" class="form-label"></label>
+                            <input asp-for="EmailTemplateTitle" class="form-control" placeholder="Template name" />
+                            <span asp-validation-for="EmailTemplateTitle" class="field-validation-error"></span>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end pb-1">
+                            <div class="option-check mb-0">
+                                <input type="checkbox" class="form-check-input form-input-switchery" asp-for="isPersonalized" id="isPersonalized" />
+                                <div>
+                                    <label class="option-check-label" for="isPersonalized">Personalise body</label>
+                                    <div class="option-check-sub">Use <span class="highlight">{Field_Name}</span> tags</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="EmailTemplateBody" class="form-label"></label>
+                            <textarea asp-for="EmailTemplateBody" class="form-control editor_textarea abcd" rows="8"></textarea>
+                            <p class="hint-text">To personalise: use <span class="highlight">{FieldName}</span> — e.g. <span class="highlight">{FirstName}</span>, <span class="highlight">{Company}</span></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── Right column: groups ── -->
+        <div class="col-lg-5">
+            <div class="section-panel" style="position:sticky;top:80px;">
+                <div class="section-panel-header">
+                    <div class="section-panel-header-icon" style="background:rgba(139,92,246,0.1);color:#7c3aed;">
+                        <i class="bi bi-collection-fill"></i>
+                    </div>
+                    <span class="section-panel-title">Target Groups</span>
+                </div>
+                <div class="section-panel-body">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="group-counter">
+                        <i class="bi bi-people-fill" style="color:#5865f2;"></i>
+                        <span><strong id="selected">0</strong> <span>group(s) selected</span></span>
+                        <a href="#" id="checkAllLabel" style="margin-left:auto;font-size:0.75rem;font-weight:600;color:#5865f2;" onclick="document.getElementById('checkAll').click();return false;">Select all</a>
+                    </div>
+
+                    <div class="group-list">
+                        <!-- Select all -->
+                        <div class="group-item" style="background:#fafbfc;border-bottom:1px solid var(--border-color);">
+                            <input type="checkbox" class="form-check-input" id="checkAll" />
+                            <span class="group-item-name fw-semibold" style="font-size:0.8rem;color:#64748b;">All Groups</span>
+                        </div>
+                        @{
+                            for (int i = 0; i < Model.GroupSelectList.Count(); i++)
+                            {
+                                <label class="group-item" for="checkSingle@(i)">
+                                    <input type="checkbox" class="form-check-input group-select"
+                                           id="checkSingle@(i)"
+                                           value="@Model.GroupSelectList[i].IsChecked.ToString().ToLower()"
+                                           name="GroupSelectList[@i].IsChecked" />
+                                    <input type="hidden" asp-for="@Model.GroupSelectList[i].Value" />
+                                    <input type="hidden" asp-for="@Model.GroupSelectList[i].Text" />
+                                    <span class="group-item-name">@Model.GroupSelectList[i].Text</span>
+                                    <span class="group-item-count">
+                                        <i class="bi bi-people-fill me-1"></i>@Model.GroupSelectList[i].Count
+                                    </span>
+                                </label>
+                            }
+                        }
+                    </div>
+
+                    @if (!Model.GroupSelectList.Any())
+                    {
+                        <div style="padding:24px;text-align:center;color:#94a3b8;">
+                            <i class="bi bi-collection" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+                            <div style="font-size:0.82rem;font-weight:500;">No groups yet</div>
+                            <a asp-area="Member" asp-controller="Groups" asp-action="Index"
+                               style="font-size:0.78rem;color:#5865f2;font-weight:600;">Create a group →</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="d-flex align-items-center justify-content-between mt-2 mb-4 pt-2">
+        <a asp-controller="Campaigns" asp-action="Index" asp-area="Member" class="btn btn-light">
+            <i class="bi bi-arrow-left"></i> Cancel
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg"></i> Save Campaign
+        </button>
+    </div>
+</form>
+
+<!-- Template preview modal -->
+<div class="modal fade" id="templatebody" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h6 class="modal-title"><i class="bi bi-eye me-2 text-accent"></i>Template Preview</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                @*@Html.Raw(Model.EmailTemplateList[0].EmailTemplateBody)*@
-            </div>
+            <div class="modal-body" style="min-height:300px;"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-
-
-@section Scripts
-{
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+@section Scripts {
     <script src="https://cdn.tiny.cloud/1/plj32oi7siumt37tnxcbarowphfd2zt66talpivgjvpt70i5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://cdn.tiny.cloud/1/plj32oi7siumt37tnxcbarowphfd2zt66talpivgjvpt70i5/tinymce/5/jquery.tinymce.min.js" referrerpolicy="origin"></script>
     <script src="~/js/project/member_add_campaign.js"></script>
 }
-
