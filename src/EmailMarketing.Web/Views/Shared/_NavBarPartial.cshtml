@@ -1,65 +1,53 @@
-﻿
-    <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-level-up-alt"></i></button>
-
-<!-- Main navbar -->
-<div class="navbar navbar-expand-md navbar-light">
-
+<nav class="public-navbar navbar navbar-expand-md">
     <div class="container">
-        <!-- Header with logo -->
-        <div class="navbar-brand">
-            <a asp-controller="Home" asp-action="Index" class="d-inline-block">
-                <img src="~/theme/global_assets/images/logo_dark_mail-to.png" />
-            </a>
-        </div>
-        <!-- /header with logo -->
-        <!-- Mobile controls -->
-        <div class="d-flex d-md-none">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
-                <i class="icon-tree5"></i>
-            </button>
-        </div>
-        <!-- /mobile controls -->
-        <!-- Navbar content -->
-        <div class="collapse navbar-collapse" id="navbar-mobile">
-            <ul class="navbar-nav">
+
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+            <img src="~/theme/global_assets/images/logo_dark_mail-to.png" alt="MailTo" style="height:28px;" />
+        </a>
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav">
+            <i class="bi bi-list" style="font-size:1.4rem;"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="publicNav">
+            <ul class="navbar-nav me-auto gap-1">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Features
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a asp-controller="Home" asp-action="Feature" class="dropdown-item">Campaigns</a>
-                        <a asp-controller="Home" asp-action="Feature" class="dropdown-item">Reports</a>
-                        <a asp-controller="Home" asp-action="Feature" class="dropdown-item">High Volume Sender</a>
-                    </div>
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Features</a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-controller="Home" asp-action="Feature" class="dropdown-item"><i class="bi bi-megaphone"></i> Campaigns</a></li>
+                        <li><a asp-controller="Home" asp-action="Feature" class="dropdown-item"><i class="bi bi-bar-chart"></i> Reports</a></li>
+                        <li><a asp-controller="Home" asp-action="Feature" class="dropdown-item"><i class="bi bi-send"></i> High Volume</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a asp-controller="Home" asp-action="Pricing" class="nav-link">Pricing</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Resources
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                        <a asp-controller="Home" asp-action="Doc" class="dropdown-item">Documentation</a>
-                        <a href="" class="dropdown-item">support</a>
-                        <a asp-controller="Home" asp-action="Tutorials" class="dropdown-item">Tutorials</a>
-                    </div>
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Resources</a>
+                    <ul class="dropdown-menu">
+                        <li><a asp-controller="Home" asp-action="Doc" class="dropdown-item"><i class="bi bi-book"></i> Documentation</a></li>
+                        <li><a asp-controller="Home" asp-action="Tutorials" class="dropdown-item"><i class="bi bi-play-circle"></i> Tutorials</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a asp-controller="Home" asp-action="Faq" class="nav-link">FAQ</a>
                 </li>
             </ul>
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav gap-2 align-items-center">
                 <li class="nav-item">
-                    <a asp-controller="Account" asp-action="Login" class="nav-link btn log-in border border-secondary text-white rounded-pill my-2">Log In</a>
+                    <a asp-controller="Account" asp-action="Login"
+                       class="btn btn-light btn-sm" style="font-weight:600;">
+                        Log In
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a asp-controller="Account" asp-action="Register" class="nav-link btn sign-up text-white ml-3 rounded-pill my-2">Sign Up Free</a>
+                    <a asp-controller="Account" asp-action="Register"
+                       class="btn btn-primary btn-sm" style="font-weight:600;">
+                        Sign Up Free
+                    </a>
                 </li>
             </ul>
         </div>
-        <!-- /navbar content -->
-    </div>
 
-</div>
-<!-- /main navbar -->
+    </div>
+</nav>

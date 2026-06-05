@@ -1,120 +1,120 @@
-﻿@model MenuModel
+@model MenuModel
 @using EmailMarketing.Membership.Extensions
 
 @{
-    var areaName = this.ViewContext.RouteData.Values["area"].ToString();
-    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
-    var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+    var areaName       = this.ViewContext.RouteData.Values["area"]?.ToString();
+    var controllerName = this.ViewContext.RouteData.Values["controller"]?.ToString();
+    var actionName     = this.ViewContext.RouteData.Values["action"]?.ToString();
+    var userFullName   = User.Identity.FullName();
+    var userInitial    = string.IsNullOrEmpty(userFullName) ? "A" : userFullName.Substring(0, 1).ToUpper();
 }
 
-@{
-    var loggedInUserFullName = User.Identity.FullName();
-    //var loggedInUserFullName = "DevSkill Team A";
-}
+<aside class="sidebar" id="appSidebar">
 
-<!-- Main sidebar -->
-<div class="sidebar sidebar-dark sidebar-main sidebar-expand-md">
-
-    <!-- Sidebar mobile toggler -->
-    <div class="sidebar-mobile-toggler text-center">
-        <a href="#" class="sidebar-mobile-main-toggle">
-            <i class="icon-arrow-left8"></i>
-        </a>
-        Navigation
-        <a href="#" class="sidebar-mobile-expand">
-            <i class="icon-screen-full"></i>
-            <i class="icon-screen-normal"></i>
-        </a>
+    <div class="sidebar-brand">
+        <i class="bi bi-envelope-fill" style="color:#5865f2;font-size:1.3rem;"></i>
+        <span class="sidebar-brand-text ms-2">MailTo <span style="font-size:0.65rem;font-weight:500;color:#6b7280;vertical-align:middle;background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:4px;margin-left:4px;">Admin</span></span>
     </div>
-    <!-- /sidebar mobile toggler -->
-    <!-- Sidebar content -->
-    <div class="sidebar-content">
 
-        <!-- User menu -->
-        <div class="sidebar-user">
-            <div class="card-body">
-                <div class="media">
-                    <div class="mr-3">
-                        <a href="#"><img src="~/theme/global_assets/images/placeholders/placeholder.jpg" width="38" height="38" class="rounded-circle" alt=""></a>
-                    </div>
+    <div class="sidebar-body">
+        <p class="sidebar-section-label">Overview</p>
+        <ul class="sidebar-nav">
+            @{
+                var isDashActive = controllerName == "Dashboard" && areaName == "Admin";
+            }
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+                   class="nav-link @(isDashActive ? "active" : "")">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+        </ul>
 
-                    <div class="media-body">
-                        <div class="media-title font-weight-semibold">@loggedInUserFullName</div>
-                        <div class="font-size-xs opacity-50">
-                            <i class="icon-pin font-size-sm"></i> &nbsp;Dhaka,BD
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /user menu -->
-        <!-- Main navigation -->
-        <div class="card card-sidebar-mobile">
-            <ul class="nav nav-sidebar" data-nav-type="accordion">
+        <p class="sidebar-section-label mt-2">Management</p>
+        <ul class="sidebar-nav">
+            @foreach (var menu in Model.MenuItems)
+            {
+                var isActive = menu.Children.Any(sm =>
+                    controllerName == sm.Controller && actionName == sm.Action && areaName == sm.Area);
+                var collapseId = "admin-menu-" + menu.Title.Replace(" ", "-").ToLower();
 
-                <!-- Main -->
                 <li class="nav-item">
-                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="nav-link ">
-                        <i class="icon-home5"></i>
-                        <span>
-                            Dashboard
-                        </span>
+                    <a href="#@collapseId"
+                       class="nav-link nav-submenu-toggle"
+                       data-bs-toggle="collapse"
+                       aria-expanded="@(isActive ? "true" : "false")">
+                        <i class="@menu.Icon"></i>
+                        <span>@menu.Title</span>
+                        <i class="bi bi-chevron-right nav-arrow"></i>
+                    </a>
+                    <div id="@collapseId" class="collapse @(isActive ? "show" : "")">
+                        <ul class="sidebar-sub-nav">
+                            @foreach (var sm in menu.Children)
+                            {
+                                var isSubActive = controllerName == sm.Controller && actionName == sm.Action && areaName == sm.Area;
+                                <li class="nav-item">
+                                    <a asp-area="@sm.Area" asp-controller="@sm.Controller" asp-action="@sm.Action"
+                                       class="nav-link @(isSubActive ? "active" : "")">
+                                        <i class="@sm.Icon"></i>
+                                        <span>@sm.Title</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </li>
+            }
+
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="AdminUsers" asp-action="Index"
+                   class="nav-link @(controllerName=="AdminUsers" ? "active":"")">
+                    <i class="bi bi-shield-person"></i>
+                    <span>Admins</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="Admin" asp-controller="MemberUsers" asp-action="Index"
+                   class="nav-link @(controllerName=="MemberUsers" ? "active":"")">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Members</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="dropdown">
+            <div class="sidebar-user-info dropdown-toggle" data-bs-toggle="dropdown" style="cursor:pointer;">
+                <div class="sidebar-user-avatar-placeholder">@userInitial</div>
+                <div class="flex-1" style="overflow:hidden;">
+                    <div class="sidebar-user-name">@userFullName</div>
+                    <div class="sidebar-user-role">Administrator</div>
+                </div>
+                <i class="bi bi-three-dots-vertical" style="color:#6b7280;font-size:0.8rem;flex-shrink:0;"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a asp-area="Admin" asp-controller="Profile" asp-action="Index" class="dropdown-item">
+                        <i class="bi bi-person"></i> My Profile
                     </a>
                 </li>
-                @{
-                    foreach (var menu in Model.MenuItems)
-                    {
-                        var isActiveMenu = menu.Children.Any(sm => sm.IsActive) || menu.Children.Any(sm =>
-                                                controllerName == sm.Controller && actionName == sm.Action && areaName == sm.Area);
-
-                        <li class="nav-item nav-item-submenu @(isActiveMenu ? "nav-item-open" : "")">
-                            <a href="#" class="nav-link"><i class="@menu.Icon"></i> <span>@menu.Title</span></a>
-
-                            <ul class="nav nav-group-sub" data-submenu-title="@menu.Title" style="display: @(isActiveMenu ? "block" : "none")">
-                                @foreach (var submenu in menu.Children)
-                                {
-                                    var isActiveSubMenu = submenu.IsActive || (controllerName == submenu.Controller &&
-                                                                actionName == submenu.Action && areaName == submenu.Area);
-                                    <li class="nav-item">
-                                        <a asp-area="@submenu.Area" asp-controller="@submenu.Controller" asp-action="@submenu.Action"
-                                           class="nav-link @(isActiveSubMenu ? "active" : "")">
-                                            <i class="@submenu.Icon"></i>
-                                            <span>@submenu.Title</span>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </li>
-                    }
-                }
-
-                @*<li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Main</div> <i class="icon-menu" title="Main"></i></li>
-        <li class="nav-item">
-            <a asp-controller="Groups" asp-action="Index" asp-area="Admin" class="nav-link active">
-                <i class="icon-home4"></i>
-                <span>
-                    Dashboard
-                    <span class="d-block font-weight-normal opacity-50">No active orders</span>
-                </span>
-            </a>
-        </li>
-        <li class="nav-item nav-item-submenu">
-            <a href="#" class="nav-link"><i class="icon-copy"></i> <span>Layouts</span></a>
-
-            <ul class="nav nav-group-sub" data-submenu-title="Layouts">
-                <li class="nav-item"><a href="#" class="nav-link">Default layout</a></li>
-                <li class="nav-item"><a href="#" class="nav-link active">Layout 2</a></li>
-            </ul>
-        </li>
-        <li class="nav-item"><a href="#" class="nav-link"><i class="icon-width"></i> <span>RTL version</span></a></li>*@
-                <!-- /main -->
-
+                <li>
+                    <a asp-area="Admin" asp-controller="Profile" asp-action="ChangePassword" class="dropdown-item">
+                        <i class="bi bi-key"></i> Change Password
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                    <form asp-area="" asp-controller="Account" asp-action="Logout"
+                          asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="dropdown-item text-danger">
+                            <i class="bi bi-box-arrow-right"></i> Sign Out
+                        </button>
+                    </form>
+                </li>
             </ul>
         </div>
-        <!-- /main navigation -->
-
     </div>
-    <!-- /sidebar content -->
 
-</div>
-<!-- /main sidebar -->
+</aside>

@@ -1,239 +1,149 @@
-﻿
 @model DashboardModel
-﻿@using EmailMarketing.Membership.Extensions
+@using EmailMarketing.Membership.Extensions
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 
 @{
-    ViewData["Title"] = "Index";
-}
-@{
+    ViewData["Title"] = "Dashboard";
     var fullName = User.Identity.FullName();
+    var initial = string.IsNullOrEmpty(fullName) ? "U" : fullName.Substring(0, 1).ToUpper();
+    var companyName = Configuration.GetSection("AppSettings")["CompanyFullName"];
+    var companyPhone = Configuration.GetSection("AppSettings")["CompanyPhoneNo"];
+    var companyEmail = Configuration.GetSection("AppSettings")["CompanyEmail"];
 }
 
-<!-- Main content -->
-<div class="content-wrapper">
-    <!-- Content area -->
-    <div class="content">
-        <div class="user_welcome">
-            <span class="user_welcome_title">Welcome back, @fullName</span>
-            <p class="user_welcome_subtitle text-muted">Let's quick Start</p>
-        </div>
-        <div class="content-main">
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="row">
-                        <div class="col-12">
+<!-- Welcome -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+    <div>
+        <h1 class="page-title">Welcome back, @fullName 👋</h1>
+        <p class="page-subtitle">Here's what's happening with your campaigns today.</p>
+    </div>
+    <a asp-area="Member" asp-controller="Campaigns" asp-action="AddCampaign"
+       class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> New Campaign
+    </a>
+</div>
 
-                            <div class="card text-center card-box-shadow">
-                                <div class="card-body">
-                                    <i class="icon-paperplane icon-2x text-primary border-primary border-3 rounded-round p-3 mb-3"></i>
-                                    <h5 class="card-title">Campaigns</h5>
-                                    <p class="mb-3">You can see your campaign list which you added previously or add campaign</p>
-                                    <a asp-controller="Campaigns" asp-action="Index" asp-area="Member" class="btn bg-success-400"><i class="icon-eye"></i> View Campaigns</a>
-                                    <a asp-controller="Campaigns" asp-action="AddCampaign" asp-area="Member" class="btn bg-success-400"><i class="icon-plus-circle2"></i> Add Campaign</a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-
-                            <div class="row">
-                                <div class="col-5">
-                                    <div class="card text-center card-box-shadow">
-                                        <div class="card-body">
-                                            <i class="icon-list2 icon-2x text-primary border-primary border-3 rounded-round p-3 mb-3"></i>
-                                            <h5 class="card-title">View Your contacts</h5>
-                                            <p class="mb-3">View your contact List</p>
-                                            <a asp-controller="Contacts" asp-action="Index" asp-area="Member" class="btn bg-success-400"><i class="icon-eye"></i> View</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="card text-center card-box-shadow">
-                                        <div class="card-body">
-                                            <i class="icon-upload4 icon-2x text-primary border-primary border-3 rounded-round p-3 mb-3"></i>
-                                            <h5 class="card-title">Upload/Add Contact</h5>
-                                            <p class="mb-3">Upload your contacts from exel sheet or add single contact</p>
-                                            <a asp-controller="ContactUpload" asp-action="UploadContact" asp-area="Member" class="btn bg-success-400"><i class="icon-upload4"></i> Upload Contacts</a>
-                                            <a asp-controller="Contacts" asp-action="AddSingleContact" asp-area="Member" class="btn bg-success-400"><i class="icon-plus-circle2"></i> Add Contact</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <div class="card text-center card-box-shadow">
-                                        <div class="card-body">
-                                            <i class="icon-file-download2 icon-2x text-primary border-primary border-3 rounded-round p-3 mb-3"></i>
-                                            <h5 class="card-title">Export Campaign Report</h5>
-                                            <a asp-controller="Campaigns" asp-action="ViewReport" asp-area="Member" class="btn bg-success-400"><i class="icon-download7"></i> Export</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="card text-center card-box-shadow">
-                                        <div class="card-body">
-                                            <i class="icon-vcard icon-2x text-primary border-primary border-3 rounded-round p-3 mb-3"></i>
-                                            <h5 class="card-title">Export Contacts</h5>
-                                            <a asp-controller="Contacts" asp-action="Export" asp-area="Member" class="btn bg-success-400"><i class="icon-download7"></i> Export</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-
-                            <div class="row">
-                                <div class="col-5">
-                                    <div class="card text-center card-box-shadow">
-                                        <div class="card-body">
-                                            <i class="icon-mail-read icon-2x text-primary border-primary border-3 rounded-round p-3 mb-3"></i>
-                                            <h5 class="card-title">SMTP</h5>
-                                            <p class="mb-3">View or Add SMTP</p>
-                                            <a asp-controller="SMTP" asp-action="Index" asp-area="Member" class="btn bg-success-400"><i class="icon-eye"></i> View</a>
-                                            <a asp-controller="SMTP" asp-action="Add" asp-area="Member" class="btn bg-success-400"><i class="icon-plus-circle2"></i> Add</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="card text-center card-box-shadow">
-                                        <div class="card-body">
-                                            <i class="icon-stack4 icon-2x text-primary border-primary border-3 rounded-round p-3 mb-3"></i>
-                                            <h5 class="card-title">Email Template</h5>
-                                            <p class="mb-3">You can view or add template</p>
-                                            <a asp-controller="EmailTemplate" asp-action="ViewEmailTemplates" asp-area="Member" class="btn bg-success-400"><i class="icon-eye"></i> View</a>
-                                            <a asp-controller="EmailTemplate" asp-action="AddEmailTemplate" asp-area="Member" class="btn bg-success-400"><i class="icon-plus-circle2"></i> Create</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
+<!-- Stat row -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="stat-card-row">
+                <div class="stat-card-icon indigo"><i class="bi bi-send-fill"></i></div>
+                <div>
+                    <div class="stat-card-value">@Model.TotalCampaigns</div>
+                    <div class="stat-card-label">Campaigns</div>
                 </div>
-                <div class="col-md-5">
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="stat-card-row">
+                <div class="stat-card-icon green"><i class="bi bi-people-fill"></i></div>
+                <div>
+                    <div class="stat-card-value">@Model.TotalContacts</div>
+                    <div class="stat-card-label">Contacts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card">
+            <div class="stat-card-row">
+                <div class="stat-card-icon violet"><i class="bi bi-collection-fill"></i></div>
+                <div>
+                    <div class="stat-card-value">@Model.TotalGroups</div>
+                    <div class="stat-card-label">Groups</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="row g-3">
 
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <div class="card card-body bg-lignt text-dark text-center user_free_trial card-box-shadow m-0 p-0 pt-3">
+    <!-- Quick actions left -->
+    <div class="col-lg-8">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="card-header-title"><i class="bi bi-grid me-2 text-accent"></i>Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
 
-                                <div class="d-inline-block mb-1">
-                                    <img src="~/memberTheme/images/dummy-profile.png" class="rounded-round" width="110" height="110" alt="" />
-                                </div>
-
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0 mt-1">
-                                        @fullName
-                                    </h5>
-                                    <span class="d-block py-3">29 days left in your trial.</span>
-                                </div>
-
-
-
-                                <ul class="list-inline mb-0">
-                                    <li>
-                                        <a asp-area="Member" asp-controller="UpgrateMembership" asp-action="Index" class="btn btn-primary">Upgrate</a>
-                                    </li>
-                                </ul>
-                                <img src="~/memberTheme/images/wave.png" alt="" class="w-100 img-fluid m-0 p-0">
+                    <!-- Campaigns -->
+                    <div class="col-md-6">
+                        <div class="card border action-card h-100">
+                            <div class="action-card-icon indigo" style="background:rgba(88,101,242,0.1);">
+                                <i class="bi bi-send-fill" style="color:#5865f2;"></i>
+                            </div>
+                            <h6>Campaigns</h6>
+                            <p>Manage and send targeted email campaigns to your contacts.</p>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <a asp-area="Member" asp-controller="Campaigns" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                <a asp-area="Member" asp-controller="Campaigns" asp-action="AddCampaign" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus-lg"></i> Add
+                                </a>
                             </div>
                         </div>
                     </div>
 
-
-
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <div class="card card-box-shadow">
-                                <div class="card-body">
-                                    <div class="media">
-                                        <div class="mr-3">
-                                            <i class="icon-users4 icon-2x text-primary border-primary border-3 rounded-round p-3"></i>
-                                        </div>
-
-                                        <div class="media-body">
-                                            <h3 class="font-weight-bold mb-0 pb-0">@Model.TotalContacts</h3>
-                                            <h4 class="font-weight-bold mt-0 pt-0">Contacts</h4>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Contacts -->
+                    <div class="col-md-6">
+                        <div class="card border action-card h-100">
+                            <div class="action-card-icon green" style="background:rgba(34,197,94,0.1);">
+                                <i class="bi bi-person-lines-fill" style="color:#16a34a;"></i>
                             </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card card-box-shadow">
-                                <div class="card-body">
-                                    <div class="media">
-                                        <div class="mr-3">
-                                            <i class="icon-collaboration icon-2x text-primary border-primary border-3 rounded-round p-3"></i>
-                                        </div>
-
-                                        <div class="media-body">
-                                            <h3 class="font-weight-bold mb-0 pb-0">@Model.TotalGroups</h3>
-                                            <h4 class="font-weight-bold mt-0 pt-0">Groups</h4>
-                                        </div>
-                                    </div>
-                                </div>
+                            <h6>Contacts</h6>
+                            <p>Import, organize, and manage your contact lists efficiently.</p>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <a asp-area="Member" asp-controller="Contacts" asp-action="Index" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                <a asp-area="Member" asp-controller="ContactUpload" asp-action="UploadContact" class="btn btn-success btn-sm">
+                                    <i class="bi bi-upload"></i> Import
+                                </a>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <div class="card card-box-shadow">
-                                <div class="card-body">
-                                    <div class="media">
-                                        <div class="mr-3">
-                                            <i class="icon-paperplane icon-2x text-primary border-primary border-3 rounded-round p-3"></i>
-                                        </div>
-
-                                        <div class="media-body">
-                                            <h3 class="font-weight-bold mb-0 pb-0">@Model.TotalCampaigns</h3>
-                                            <h4 class="font-weight-bold mt-0 pt-0">Campaigns</h4>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Email Templates -->
+                    <div class="col-md-6">
+                        <div class="card border action-card h-100">
+                            <div class="action-card-icon amber" style="background:rgba(245,158,11,0.1);">
+                                <i class="bi bi-file-earmark-richtext" style="color:#d97706;"></i>
+                            </div>
+                            <h6>Email Templates</h6>
+                            <p>Design reusable templates for your email marketing campaigns.</p>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <a asp-area="Member" asp-controller="EmailTemplate" asp-action="ViewEmailTemplates" class="btn btn-outline-warning btn-sm">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                <a asp-area="Member" asp-controller="EmailTemplate" asp-action="AddEmailTemplate" class="btn btn-warning btn-sm text-white">
+                                    <i class="bi bi-plus-lg"></i> Create
+                                </a>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <div class="card card-box-shadow">
-                                <div class="card-body">
-                                    <div class="media">
-                                        <div class="mr-3">
-                                            <a href="#">
-                                                <img src="~/memberTheme/images/hand-shake.png" class="rounded-circle" width="70" height="50" alt="">
-                                            </a>
-                                        </div>
-
-                                        <div class="media-body">
-                                            <h4>Contact with @Configuration.GetSection("AppSettings")["CompanyFullName"] support</h4>
-                                            <a href="#" class="font-weight-semibold text-default">
-                                                <span><i class="icon-phone-wave"></i> @Configuration.GetSection("AppSettings")["CompanyPhoneNo"]</span>
-                                            </a><br />
-                                            <a href="#" class="font-weight-semibold text-default">
-                                                <span><i class="icon-mail5"></i> @Configuration.GetSection("AppSettings")["CompanyEmail"]</span>
-                                            </a>
-
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- SMTP -->
+                    <div class="col-md-6">
+                        <div class="card border action-card h-100">
+                            <div class="action-card-icon sky" style="background:rgba(14,165,233,0.1);">
+                                <i class="bi bi-hdd-network-fill" style="color:#0284c7;"></i>
+                            </div>
+                            <h6>SMTP Config</h6>
+                            <p>Configure your email server settings for reliable delivery.</p>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <a asp-area="Member" asp-controller="SMTP" asp-action="Index" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                <a asp-area="Member" asp-controller="SMTP" asp-action="Add" class="btn btn-info btn-sm text-white">
+                                    <i class="bi bi-plus-lg"></i> Add
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -241,7 +151,114 @@
                 </div>
             </div>
         </div>
+
+        <!-- Exports -->
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="stat-card-icon pink" style="width:40px;height:40px;border-radius:9px;flex-shrink:0;">
+                            <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div style="font-size:0.82rem;font-weight:700;color:#0f172a;">Campaign Report</div>
+                            <div style="font-size:0.75rem;color:#94a3b8;">Export to Excel</div>
+                        </div>
+                        <a asp-area="Member" asp-controller="Campaigns" asp-action="ViewReport"
+                           class="btn btn-light btn-sm flex-shrink-0">
+                            <i class="bi bi-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="stat-card-icon green" style="width:40px;height:40px;border-radius:9px;flex-shrink:0;">
+                            <i class="bi bi-person-check-fill"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div style="font-size:0.82rem;font-weight:700;color:#0f172a;">Contact Export</div>
+                            <div style="font-size:0.75rem;color:#94a3b8;">Export to Excel</div>
+                        </div>
+                        <a asp-area="Member" asp-controller="Contacts" asp-action="Export"
+                           class="btn btn-light btn-sm flex-shrink-0">
+                            <i class="bi bi-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /content area -->
+
+    <!-- Right column -->
+    <div class="col-lg-4">
+
+        <!-- Profile card -->
+        <div class="card mb-3" style="overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#5865f2 0%,#7c3aed 100%);padding:28px 20px 44px;text-align:center;position:relative;">
+                <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+                <div style="position:absolute;bottom:-30px;left:-10px;width:80px;height:80px;background:rgba(255,255,255,0.05);border-radius:50%;"></div>
+                <div style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:#fff;border:3px solid rgba(255,255,255,0.3);margin-bottom:10px;">
+                    @initial
+                </div>
+                <div style="color:#fff;font-weight:700;font-size:1rem;margin-bottom:3px;">@fullName</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:0.75rem;">Member Account</div>
+            </div>
+            <div style="margin-top:-14px;background:#fff;border-radius:12px 12px 0 0;padding:16px 20px;">
+                <div class="d-flex gap-2 mb-3">
+                    <div class="card border flex-1 text-center" style="padding:10px 8px;border-radius:8px!important;">
+                        <div style="font-size:1.1rem;font-weight:800;color:#0f172a;">@Model.TotalCampaigns</div>
+                        <div style="font-size:0.7rem;color:#94a3b8;font-weight:500;">Campaigns</div>
+                    </div>
+                    <div class="card border flex-1 text-center" style="padding:10px 8px;border-radius:8px!important;">
+                        <div style="font-size:1.1rem;font-weight:800;color:#0f172a;">@Model.TotalContacts</div>
+                        <div style="font-size:0.7rem;color:#94a3b8;font-weight:500;">Contacts</div>
+                    </div>
+                    <div class="card border flex-1 text-center" style="padding:10px 8px;border-radius:8px!important;">
+                        <div style="font-size:1.1rem;font-weight:800;color:#0f172a;">@Model.TotalGroups</div>
+                        <div style="font-size:0.7rem;color:#94a3b8;font-weight:500;">Groups</div>
+                    </div>
+                </div>
+                <div style="background:linear-gradient(135deg,rgba(88,101,242,0.08),rgba(124,58,237,0.08));border-radius:8px;padding:12px;border:1px solid rgba(88,101,242,0.15);text-align:center;">
+                    <div style="font-size:0.75rem;color:#5865f2;font-weight:600;margin-bottom:6px;">🎯 29 days left in trial</div>
+                    <a asp-area="Member" asp-controller="UpgrateMembership" asp-action="Index"
+                       class="btn btn-primary btn-sm w-100">Upgrade Plan</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support card -->
+        @if (!string.IsNullOrEmpty(companyPhone) || !string.IsNullOrEmpty(companyEmail))
+        {
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div style="width:34px;height:34px;background:rgba(34,197,94,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#16a34a;font-size:1rem;flex-shrink:0;">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:0.82rem;font-weight:700;color:#0f172a;">@companyName Support</div>
+                            <div style="font-size:0.72rem;color:#94a3b8;">We're here to help</div>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(companyPhone))
+                    {
+                        <div class="d-flex align-items-center gap-2 mb-2" style="font-size:0.8rem;color:#374151;">
+                            <i class="bi bi-telephone text-accent"></i>
+                            <span>@companyPhone</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(companyEmail))
+                    {
+                        <div class="d-flex align-items-center gap-2" style="font-size:0.8rem;color:#374151;">
+                            <i class="bi bi-envelope text-accent"></i>
+                            <span>@companyEmail</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+    </div>
 </div>
-<!-- /main content -->
