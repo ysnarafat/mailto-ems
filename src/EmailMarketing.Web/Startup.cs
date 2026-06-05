@@ -129,9 +129,14 @@ namespace EmailMarketing.Web
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+            ApplicationUserManager userManager, ApplicationRoleManager roleManager,
+            ApplicationDbContext membershipDb, FrameworkContext frameworkDb)
         {
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
+            // Apply any pending EF Core migrations automatically on startup.
+            membershipDb.Database.Migrate();
+            frameworkDb.Database.Migrate();
 
             if (env.IsDevelopment())
             {
