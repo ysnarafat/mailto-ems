@@ -1081,3 +1081,17 @@ code, .mono {
     padding-top: 12px;
     border-top: 1px solid var(--border-color);
 }
+
+/* ── Legacy Limitless wrapper neutralisation ─────────────────── */
+/* Leftover .content-wrapper / .content divs in not-yet-updated   */
+/* views have no CSS from the old theme, so these are safety nets  */
+.page-body > .content-wrapper,
+.page-body > .content-wrapper > .content {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+/* Old `.content` top-level in views */
+.page-body > .content {
+    padding: 0 !important;
+    margin: 0 !important;
+}

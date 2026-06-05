@@ -1,87 +1,98 @@
-﻿@model CampaignsModel
+@model CampaignsModel
 @using EmailMarketing.Membership.Extensions
 @{
-    ViewData["Title"] = "ViewReport";
+    ViewData["Title"] = "Export Campaign Report";
     var loggedInUserEmail = User.Identity.Email();
 }
 
-
-<!-- Content area -->
-<div class="content">
-    <div class="pb-3">
-        <h4 class="d-inline"><a class="text-black-50" asp-area="Member" asp-controller="Dashboard" asp-action="Index"><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Dashboard</span></a></h4>
-        <a asp-controller="Campaigns" asp-action="Index" asp-area="Member" class="btn bg-primary float-right"><i class="icon-list mr-2"></i> <span class="font-weight-semibold">Campaign List</span></a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Export Campaign Report</h1>
+        <p class="page-subtitle">Download delivery data as an Excel file</p>
     </div>
-    <div class="">
-        <h1 class="text-center">Report</h1>
-        <div class="row">
-            <div class="col-md-6 m-auto text-center">
-                <h3 class="mb-1 pb-0">Export Your Campaign Report</h3>
-                <partial name="_ActionMessage" model="@Model.Response" />
-                <div class="bg-white text-left p-3 mb-3">
-                    <form asp-action="Export" asp-controller="Campaigns" asp-area="Member" method="post">
-                        <div class="pb-3">
-                            <div class="dropdown-item form-check form-check-switchery ">
-                                <label class="form-check-label">
-                                    <input type="checkbox" id="email-checkbox-all-campaign" class="form-input-switchery" checked asp-for="IsSendEmailNotifyForAll">
-                                    <span class="font-weight-bold">Send file via email once export is complete</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="form-group row">
-                                <label for="inputEmail" class="col-md-3 col-form-label">Email</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="Enter Email" asp-for="SendEmailAddress" value="@loggedInUserEmail">
-                                    <p class="pt-2">[You can send to multiple email by comma separating email.]</p>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" asp-for="IsExportAll" value="true" />
-                        <div class="text-center">
-                            <button class="btn btn-primary"><i class="icon-file-download2 text-white"> Export All Campaign Report</i></button>
-                        </div>
-                    </form>
-                </div>
-                <h5 class="text-center">Or</h5>
-                <div class="bg-white text-left p-3 mb-3">
-                    <form asp-action="Export" asp-controller="Campaigns" asp-area="Member" method="post">
-                        <div class="pb-3">
-                            <div class="dropdown-item form-check form-check-switchery ">
-                                <label class="form-check-label">
-                                    <input type="checkbox" class="form-input-switchery" id="email-checkbox-campaign-wise" checked asp-for="IsSendEmailNotifyForCampaignwise">
-                                    <span class="font-weight-bold">Send file via email once export is complete</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="form-group row">
-                                <label for="inputEmail" class="col-md-3 col-form-label">Email</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" placeholder="Enter Email" asp-for="SendEmailAddress" value="@loggedInUserEmail">
-                                    <p class="pt-2">[You can send to multiple email by comma separating email.]</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="form-group row">
-                                <label for="Id" class="col-md-3 col-form-label">Campaign</label>
-                                <div class="col-md-9">
-                                    <select class="form-control" asp-for="Id" asp-items="@(new SelectList(Model.CampaignSelectList,"Value","Text"))">
-                                        <option value="">--- Choose Campaign ---</option>
-                                    </select>
-                                    <span asp-validation-for="Id" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" asp-for="IsExportAll" value="false" />
-                        <div class="text-center mt-3">
-                            <button class="btn btn-primary"><i class="icon-file-download2 text-white"> Export Campaign Wise Report</i></button>
-                        </div>
-                    </form>
-                </div>
+    <a asp-controller="Campaigns" asp-action="Index" asp-area="Member" class="btn btn-light">
+        <i class="bi bi-arrow-left"></i> Campaign List
+    </a>
+</div>
+
+<partial name="_ActionMessage" model="@Model.Response" />
+
+<div class="row g-3" style="max-width:820px;">
+
+    <!-- Export all -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h6 class="card-header-title">
+                    <i class="bi bi-file-earmark-bar-graph-fill me-2" style="color:#5865f2;"></i>All Campaigns
+                </h6>
+            </div>
+            <div class="card-body">
+                <p style="font-size:0.82rem;color:#64748b;margin-bottom:16px;line-height:1.6;">
+                    Export the delivery report for every campaign in one Excel file.
+                </p>
+                <form asp-action="Export" asp-controller="Campaigns" asp-area="Member" method="post">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <input type="checkbox" id="notifyAll" class="form-check-input" asp-for="IsSendEmailNotifyForAll"
+                               style="border-color:#cbd5e1;border-radius:4px;cursor:pointer;" />
+                        <label for="notifyAll" style="font-size:0.82rem;font-weight:500;color:#374151;cursor:pointer;">
+                            Email me when the export is ready
+                        </label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:0.8rem;font-weight:600;color:#374151;">Notify email(s)</label>
+                        <input type="text" class="form-control" asp-for="SendEmailAddress" value="@loggedInUserEmail"
+                               placeholder="email@example.com" />
+                        <div style="font-size:0.72rem;color:#94a3b8;margin-top:4px;">Separate multiple with commas.</div>
+                    </div>
+                    <input type="hidden" asp-for="IsExportAll" value="true" />
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-download"></i> Export All Reports
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export campaign-wise -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h6 class="card-header-title">
+                    <i class="bi bi-megaphone-fill me-2" style="color:#22c55e;"></i>Single Campaign
+                </h6>
+            </div>
+            <div class="card-body">
+                <p style="font-size:0.82rem;color:#64748b;margin-bottom:16px;line-height:1.6;">
+                    Export the delivery report for one specific campaign.
+                </p>
+                <form asp-action="Export" asp-controller="Campaigns" asp-area="Member" method="post">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <input type="checkbox" id="notifyWise" class="form-check-input" asp-for="IsSendEmailNotifyForCampaignwise"
+                               style="border-color:#cbd5e1;border-radius:4px;cursor:pointer;" />
+                        <label for="notifyWise" style="font-size:0.82rem;font-weight:500;color:#374151;cursor:pointer;">
+                            Email me when the export is ready
+                        </label>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:0.8rem;font-weight:600;color:#374151;">Campaign</label>
+                        <select class="form-select" asp-for="Id"
+                                asp-items="@(new SelectList(Model.CampaignSelectList, "Value", "Text"))">
+                            <option value="">— Choose a campaign —</option>
+                        </select>
+                        <span asp-validation-for="Id" class="field-validation-error"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size:0.8rem;font-weight:600;color:#374151;">Notify email(s)</label>
+                        <input type="text" class="form-control" asp-for="SendEmailAddress" value="@loggedInUserEmail"
+                               placeholder="email@example.com" />
+                    </div>
+                    <input type="hidden" asp-for="IsExportAll" value="false" />
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-download"></i> Export Campaign Report
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<!-- /Content area -->

@@ -1,152 +1,117 @@
-﻿@model EmailMarketing.Web.Areas.Member.Models.Smtp.EditSMTPModel
-
+@model EmailMarketing.Web.Areas.Member.Models.Smtp.EditSMTPModel
 @{
     ViewData["Title"] = "Edit SMTP";
 }
 
-<!-- Content area -->
-<div class="content">
-    <div class="pb-3">
-        <h4 class="d-inline">Edit SMTP</h4>
-        <a asp-controller="SMTP" asp-action="Index" asp-area="Member" class="btn bg-primary float-right"><i class="icon-list mr-2"></i> <span class="font-weight-semibold">SMTP List</span></a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Edit SMTP Server</h1>
+        <p class="page-subtitle">Update your email server configuration</p>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <partial name="_ActionMessage" model="@Model.Response" />
-            <div class="">
-                <form asp-action="Edit" asp-controller="SMTP" asp-area="Member" method="post">
-                    <div class="">
-                        <fieldset class="mb-3">
-                            @Html.AntiForgeryToken()
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="row">
-                                <div class="col-md-6 border-right p-2">
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-lg-4 required" asp-for="Server"></label>
-                                        <div class="col-lg-8">
-                                            <input type="text" id="server" class="form-control" asp-for="Server">
-                                            <span asp-validation-for="Server" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-lg-4 required" asp-for="Port"></label>
-                                        <div class="col-lg-8">
-                                            <input type="text" id="port" class="form-control" asp-for="Port">
-                                            <span asp-validation-for="Port" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-lg-4 required" asp-for="SenderName"></label>
-                                        <div class="col-lg-8">
-                                            <input type="text" id="sender_name" class="form-control" asp-for="SenderName">
-                                            <span asp-validation-for="SenderName" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-lg-4 required" asp-for="SenderEmail"></label>
-                                        <div class="col-lg-8">
-                                            <input type="text" id="sender_email" class="form-control" asp-for="SenderEmail">
-                                            <span asp-validation-for="SenderEmail" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 border-left p-2">
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-lg-4 required" asp-for="UserName"></label>
-                                        <div class="col-lg-8">
-                                            <input type="text" id="user_name" class="form-control" asp-for="UserName">
-                                            <span asp-validation-for="UserName" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-lg-4 required" asp-for="Password"></label>
-                                        <div class="col-lg-8">
-                                            <input type="password" id="password" class="form-control" asp-for="Password">
-                                            <span asp-validation-for="Password" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-lg-4" asp-for="EnableSSL"></label>
-                                        <div class="col-lg-8">
-                                            <input type="checkbox" id="enable_ssl" class="form-check" asp-for="EnableSSL">
-                                            <span asp-validation-for="EnableSSL" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
+    <a asp-controller="SMTP" asp-action="Index" asp-area="Member" class="btn btn-light">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="card-header-title"><i class="bi bi-hdd-network-fill me-2 text-accent"></i>Server Details</h6>
+    </div>
+    <div class="card-body">
+        <partial name="_ActionMessage" model="@Model.Response" />
+        <form asp-action="Edit" asp-controller="SMTP" asp-area="Member" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" style="font-size:0.82rem;padding:10px 14px;"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label required" asp-for="Server"></label>
+                    <input type="text" id="server" class="form-control" asp-for="Server" />
+                    <span asp-validation-for="Server" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required" asp-for="Port"></label>
+                    <input type="text" id="port" class="form-control" asp-for="Port" />
+                    <span asp-validation-for="Port" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required" asp-for="SenderName"></label>
+                    <input type="text" id="sender_name" class="form-control" asp-for="SenderName" />
+                    <span asp-validation-for="SenderName" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required" asp-for="SenderEmail"></label>
+                    <input type="text" id="sender_email" class="form-control" asp-for="SenderEmail" />
+                    <span asp-validation-for="SenderEmail" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required" asp-for="UserName"></label>
+                    <input type="text" id="user_name" class="form-control" asp-for="UserName" />
+                    <span asp-validation-for="UserName" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required" asp-for="Password"></label>
+                    <div style="position:relative;">
+                        <input type="password" id="password" class="form-control" asp-for="Password" style="padding-right:40px;" />
+                        <button type="button" onclick="var el=document.getElementById('password');var i=document.getElementById('pwdIcon');el.type=el.type==='password'?'text':'password';i.className=el.type==='password'?'bi bi-eye':'bi bi-eye-slash';"
+                                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#94a3b8;cursor:pointer;" tabindex="-1">
+                            <i class="bi bi-eye" id="pwdIcon"></i>
+                        </button>
                     </div>
-                    <div class="">
-                        <div class="">
-                            <a asp-controller="SMTP" asp-action="Index" asp-area="Member" class="btn btn-light"><i class="icon-arrow-left52"></i> Back</a>
-                            <div class="float-right">
-                                <button type="submit" class="btn bg-teal ml-2"><i class="icon-file-check2"></i> Save</button>
-                                <button type="submit" id="smtpTestBtn" class="btn bg-teal ml-2"><i class="icon-shield-check"></i> Test SMTP</button>
-                            </div>
-                        </div>
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
+                </div>
+                <div class="col-12">
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" id="enable_ssl" class="form-check-input" asp-for="EnableSSL"
+                               style="border-color:#cbd5e1;border-radius:4px;cursor:pointer;" />
+                        <label for="enable_ssl" class="form-label mb-0" style="cursor:pointer;">Enable SSL / TLS encryption</label>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+
+            <div class="d-flex align-items-center justify-content-between mt-4 pt-2 border-top">
+                <a asp-controller="SMTP" asp-action="Index" asp-area="Member" class="btn btn-light">
+                    <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+                <div class="d-flex gap-2">
+                    <button type="button" id="smtpTestBtn" class="btn btn-outline-primary">
+                        <i class="bi bi-shield-check"></i> Test Connection
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Update
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
-<!-- /Content area -->
 
 @section Scripts {
-    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
-    <partial name="~/Views/Bundle/_FormInputScriptsPartial.cshtml" />
-    <partial name="~/Views/Bundle/_DateTimePickerScriptsPartial.cshtml" />
     <script src="~/js/ajax-call.js"></script>
-    <script src="~/js/project/smtp-test.js"></script>
-
     <script>
-        $(function () {
-            $('#smtpTestBtn').click(function (e) {
-                e.preventDefault();
-
-                var data = {
-                    Server: $('#server').val(),
-                    Port: Number.parseInt($('#port').val()),
-                    SenderName: $('#sender_name').val(),
-                    SenderEmail: $('#sender_email').val(),
-                    UserName: $('#user_name').val(),
-                    Password: $('#password').val(),
-                    EnableSSL: !!$('#enable_ssl').val(),
-                };
-
-                var Url = '@Url.Action("TestSmtp", "SMTP", new { Area = "Member" })';
-
-                ajaxCall(Url, data, 'renderSmtpTest', 'POST');
+        $('#smtpTestBtn').click(function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            btn.html('<span class="spinner-border spinner-border-sm me-1"></span> Testing...').prop('disabled', true);
+            var data = {
+                Server: $('#server').val(), Port: parseInt($('#port').val()),
+                SenderName: $('#sender_name').val(), SenderEmail: $('#sender_email').val(),
+                UserName: $('#user_name').val(), Password: $('#password').val(),
+                EnableSSL: $('#enable_ssl').is(':checked')
+            };
+            $.ajax({
+                url: '@Url.Action("TestSmtp", "SMTP", new { Area = "Member" })',
+                type: 'POST', contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (r) {
+                    if (r === true) showToast('SMTP connection successful!', 'success');
+                    else if (r === 'failed') showToast('Please fill in all fields.', 'error');
+                    else showToast('Invalid SMTP settings — connection failed.', 'error');
+                },
+                error: function () { showToast('Connection test failed.', 'error'); },
+                complete: function () { btn.html('<i class="bi bi-shield-check"></i> Test Connection').prop('disabled', false); }
             });
-
         });
-
-        function renderSmtpTest(response) {
-            if (response == true) {
-                new Noty({
-                    text: 'Success',
-                    type: 'success',
-                    theme: ' alert alert-success alert-styled-left p-0',
-                    closeWith: ['button']
-                }).show();
-            }
-            else if (response == "failed")
-            {
-                new Noty({
-                    text: 'Fill up all the input field',
-                    type: 'error',
-                    theme: ' alert alert-danger alert-styled-left p-0',
-                    closeWith: ['button']
-                }).show();
-            }
-            else {
-                new Noty({
-                    text: 'Invalid SMTP Settings',
-                    type: 'error',
-                    theme: ' alert alert-danger alert-styled-left p-0',
-                    closeWith: ['button']
-                }).show();
-            }
-        }
     </script>
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
 }

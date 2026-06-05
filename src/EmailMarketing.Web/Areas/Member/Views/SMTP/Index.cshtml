@@ -1,90 +1,83 @@
-﻿@{
-    ViewData["Title"] = "View SMTP";
+@{
+    ViewData["Title"] = "SMTP Configuration";
 }
 
-<!-- Content area -->
-<div class="content">
-    <div class="pb-3">
-        <h4 class="d-inline">SMTP List</h4>
-        <a asp-controller="SMTP" asp-action="Add" asp-area="Member" class="btn bg-primary float-right"><i class="icon-plus-circle2 mr-2"></i> <span class="font-weight-semibold">Add New SMTP</span></a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">SMTP Configuration</h1>
+        <p class="page-subtitle">Manage your email server connections</p>
     </div>
-    <!-- Basic datatable -->
-    <div class="card">
-        <div class="card-body">
-            <partial name="_ActionMessage" model="@Model.Response" />
-        </div>
-        <table class="table" id="group-table">
+    <a asp-controller="SMTP" asp-action="Add" asp-area="Member" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Add SMTP
+    </a>
+</div>
+
+<div class="card">
+    <partial name="_ActionMessage" model="@Model.Response" />
+    <div class="table-responsive">
+        <table class="table table-hover" id="group-table">
             <thead>
                 <tr>
                     <th>Server</th>
                     <th>Port</th>
                     <th>Sender Name</th>
                     <th>Sender Email</th>
-                    <th>User Name</th>
-                    <th>Enable SSL</th>
-                    <th>Active</th>
-                    <th>Actions</th>
+                    <th>SSL</th>
+                    <th>Status</th>
+                    <th class="text-center" style="width:120px;">Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </div>
-    <!-- /basic datatable -->
 </div>
 
-<!-- Active/InActive SMTP Settings modal -->
+<!-- Activate / Deactivate modal -->
 <div id="modal-active" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title"><span id="activeSmtpTitle">Activate SMTP Setting</span></h6>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">
+                    <i class="bi bi-hdd-network me-2 text-accent"></i>
+                    <span id="activeSmtpTitle">Activate SMTP</span>
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
-            <div class="modal-body">
-                <p>Are you sure want to <span id="activeSmtpSure">Activate SMTP Setting?</span>?</p>
+            <div class="modal-body" style="font-size:0.875rem;">
+                <p class="mb-0">Are you sure you want to <strong><span id="activeSmtpSure">activate</span></strong> this SMTP configuration?</p>
                 <form id="activeSmtpForm" action="@Url.Action("ActivateSmtp", "SMTP", new { Area = "Member" })" method="post">
                     @Html.AntiForgeryToken()
-                    <input type="hidden" id="activeSmtpId" value="" name="id" />
+                    <input type="hidden" id="activeSmtpId" name="id" />
                 </form>
             </div>
-
             <div class="modal-footer">
-                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-                <button type="button" id="activeButton" class="btn bg-danger">Yes, <span id="activeSmtpButton">Activate</span>!</button>
+                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="activeButton" class="btn btn-primary btn-sm">
+                    <span id="activeSmtpButton">Activate</span>
+                </button>
             </div>
         </div>
     </div>
 </div>
-<!-- /default modal -->
 
 @section Scripts {
-    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
-    <partial name="~/Views/Bundle/_DatatableScriptsPartial.cshtml" />
     <script src="~/js/project/smtp.js"></script>
     <script src="~/js/ajax-call.js"></script>
-
     <script>
         $(function () {
-            var url = '@Url.Action("GetSMTP", "SMTP", new { Area = "Member" })';
-            var editUrl = '@Url.Action("Edit", "SMTP", new { Area = "Member" })';
+            var url     = '@Url.Action("GetSMTP", "SMTP", new { Area = "Member" })';
+            var editUrl = '@Url.Action("Edit",    "SMTP", new { Area = "Member" })';
             loadDatatable(url, editUrl);
 
-            //Activate SMTP Settings
             $('#modal-active').on('show.bs.modal', function (e) {
-                var id = $(e.relatedTarget).attr('data-id');
-                var title = $(e.relatedTarget).attr('data-title');
-                var modal = $("#modal-active");
-                $("#activeSmtpId").val(id);
-                $("#activeSmtpTitle").text(title == 'Yes' ? 'Deactivate SMTP Setting' : 'Activate SMTP Setting');
-                $("#activeSmtpSure").text(title == 'Yes' ? 'Deactivate SMTP Setting' : 'Activate SMTP Setting');
-                $("#activeSmtpButton").text(title == 'Yes' ? 'Deactivate' : 'Activate');
-                console.log(title);
-                modal.modal('show');
-            })
-            $("#activeButton").click(function () {
-                $("#activeSmtpForm").submit();
+                var deact = $(e.relatedTarget).attr('data-title') === 'Yes';
+                $('#activeSmtpId').val($(e.relatedTarget).attr('data-id'));
+                $('#activeSmtpTitle').text(deact ? 'Deactivate SMTP' : 'Activate SMTP');
+                $('#activeSmtpSure').text(deact ? 'deactivate' : 'activate');
+                $('#activeSmtpButton').text(deact ? 'Deactivate' : 'Activate');
             });
+
+            $('#activeButton').click(function () { $('#activeSmtpForm').submit(); });
         });
     </script>
 }

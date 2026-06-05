@@ -1,107 +1,73 @@
-﻿@model CreateMemberUserModel
+@model CreateMemberUserModel
 @{
-    ViewData["Title"] = "Add";
+    ViewData["Title"] = "Add Member";
 }
 
-<!-- Content area -->
-<div class="content">
-    <div class="pb-3">
-        <h4 class="d-inline">Add Member</h4>
-        <a asp-controller="MemberUsers" asp-action="Index" asp-area="Admin" class="btn btn-labeled btn-labeled-right bg-primary float-right"><i class="icon-list mr-2"></i> <span class="font-weight-semibold">Member List</span></a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Add Member</h1>
+        <p class="page-subtitle">Create a new member account</p>
     </div>
-    <div class="row">
-        <div class="col-12 m-auto">
-            <div class="card">
-                <div class="card-body">
-                    <partial name="_ActionMessage" model="@Model.Response" />
-                    <div class="">
-                        <form asp-action="Add" asp-controller="MemberUsers" asp-area="Admin" method="post">
-                            <div class="">
-                                <fieldset class="mb-3">
-                                    @Html.AntiForgeryToken()
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <div class="row">
-                                        <div class="col-md-6 border-right p-2">
-                                            <div class="form-group row">
-                                                <label class="col-form-label col-lg-4 required" asp-for="FullName"></label>
-                                                <div class="col-lg-8">
-                                                    <input type="text" class="form-control" asp-for="FullName">
-                                                    <span asp-validation-for="FullName" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-form-label col-lg-4 required" asp-for="Email"></label>
-                                                <div class="col-lg-8">
-                                                    <input type="text" class="form-control" asp-for="Email">
-                                                    <span asp-validation-for="Email" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-form-label col-lg-4" asp-for="PhoneNumber"></label>
-                                                <div class="col-lg-8">
-                                                    <input type="text" class="form-control" asp-for="PhoneNumber">
-                                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 border-left p-2">
-                                            <div class="form-group row">
-                                                <label class="col-form-label col-lg-4" asp-for="Gender"></label>
-                                                <div class="col-lg-8">
+    <a asp-controller="MemberUsers" asp-action="Index" asp-area="Admin" class="btn btn-light">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>
 
-                                                    <select asp-for="Gender" class="form-control">
-                                                        @if (@Model.Gender != null)
-                                                        {
-                                                            @if (@Model.Gender.Equals("Male"))
-                                                            {
-                                                                <option value="Male" selected>Male</option>
-                                                                <option value="Female">Female</option>
-                                                            }
-                                                            else if (@Model.Gender.Equals("Female"))
-                                                            {
-                                                                <option value="Female" selected>Female</option>
-                                                                <option value="Male">Male</option>
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            <option value="">--- Select Gender ---</option>
-                                                            <option value="Male">Male</option>
-                                                            <option value="Female">Female</option>
-                                                        }
+<div class="card" style="max-width:680px;">
+    <div class="card-header">
+        <h6 class="card-header-title"><i class="bi bi-person-plus-fill me-2 text-accent"></i>Member Details</h6>
+    </div>
+    <div class="card-body">
+        <partial name="_ActionMessage" model="@Model.Response" />
+        <form asp-action="Add" asp-controller="MemberUsers" asp-area="Admin" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" style="font-size:0.82rem;padding:10px 14px;"></div>
 
-                                                    </select>
-                                                    <span asp-validation-for="Gender" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-form-label col-lg-4" asp-for="Address"></label>
-                                                <div class="col-lg-8">
-                                                    <textarea type="text" class="form-control" asp-for="Address"></textarea>
-                                                    <span asp-validation-for="Address" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div class="">
-                                <div class="d-flex justify-content-between">
-                                    <a asp-controller="MemberUsers" asp-action="Index" asp-area="Admin" class="btn btn-light"><i class="icon-arrow-left52"></i> Back</a>
-                                    <button type="submit" class="btn bg-teal ml-2"><i class="icon-file-check2"></i> Save</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label required" asp-for="FullName"></label>
+                    <input type="text" class="form-control" asp-for="FullName" placeholder="Full name" />
+                    <span asp-validation-for="FullName" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required" asp-for="Email"></label>
+                    <input type="email" class="form-control" asp-for="Email" placeholder="email@example.com" />
+                    <span asp-validation-for="Email" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="PhoneNumber"></label>
+                    <input type="text" class="form-control" asp-for="PhoneNumber" placeholder="+1 234 567 890" />
+                    <span asp-validation-for="PhoneNumber" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Gender"></label>
+                    <select asp-for="Gender" class="form-select">
+                        <option value="">— Select gender —</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="field-validation-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" asp-for="Address"></label>
+                    <textarea class="form-control" asp-for="Address" rows="2" placeholder="Street, city, country"></textarea>
+                    <span asp-validation-for="Address" class="field-validation-error"></span>
                 </div>
             </div>
-        </div>
+
+            <div class="d-flex align-items-center justify-content-between mt-4 pt-2 border-top">
+                <a asp-controller="MemberUsers" asp-action="Index" asp-area="Admin" class="btn btn-light">
+                    <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i> Create Member
+                </button>
+            </div>
+        </form>
     </div>
 </div>
-<!-- /Content area -->
 
 @section Scripts {
     <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
-    <partial name="~/Views/Bundle/_FormInputScriptsPartial.cshtml" />
-    <partial name="~/Views/Bundle/_DateTimePickerScriptsPartial.cshtml" />
 }

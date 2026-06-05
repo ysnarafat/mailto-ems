@@ -1,133 +1,106 @@
-﻿@model CampaignsModel
+@model CampaignsModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Campaign Delivery Report";
 }
-    <link href="~/memberTheme/css/campaign-details.css" rel="stylesheet" />
-<!-- Main content -->
-<div class="content-wrapper">
-    <!-- Content area -->
-    <div class="content">
-        <div class="row">
-            <div class="col-12">
-                <div class="pb-3">
-                    <h4 class="d-inline">Campaign Delevery Report</h4>
-                    <a asp-area="Member" asp-controller="Campaigns" asp-action="Index" class="btn btn-primary float-right"> <i class="icon-list mr-2"></i> Campaign List</a>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <!-- Basic datatable -->
-                <div class="card">
-                    <div class="card-body">
-                        <partial name="_ActionMessage" model="@Model.Response" />
-                    </div>
-                    <!-- Page header -->
-                    <div class="row">
-                        <div class="col-5">
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td class="col-5 float-left"><h7>Campaign Name : </h7></td>
-                                    <td class="col-7 float-left"><h7>@Model.CampaignName</h7></td>
-                                </tr>
-                                <tr>
-                                    <td class="col-5 float-left"><h7>Sender Email:  </h7></td>
-                                    <td class="col-7 float-left"><h7>@Model.SenderEmail</h7></td>
-                                </tr>
-                                <tr>
-                                    <td class="col-5 float-left"><h7>Campaign Description:  </h7></td>
-                                    <td class="col-7 float-left"><h7>@Model.Description</h7></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-3">
-                            <table class="table table-borderless">
-                                <tr>
-                                    <td class="col-6 float-left"><h7>Sender Name: </h7></td>
-                                    <td class="col-6 float-left"><h7>@Model.SenderName</h7></td>
-                                </tr>
-                                <tr>
-                                    <td class="col-6 float-left"><h7>Email Subject: </h7></td>
-                                    <td class="col-6 float-left"><h7>@Model.EmailSubject</h7></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-4">
-                            <div class="preview">
-                                <div class="card custom_template_card card-box-shadow">
-                                    <div class="card-body custom_card_body">
-                                        <div class="template_body">
-                                            @Html.Raw(Model.EmailTemplate.EmailTemplateBody)
-                                        </div>
-                                        <span class="d-none template_title">@Model.EmailTemplate.EmailTemplateName</span>
-                                        <div class="overlay">
-                                            <a class="mr-2 mt-2 selected_template_preview text-info" data-toggle="modal" data-target="#templatebody">
-                                                <i class="fa fa-2x fa-eye" data-toggle="tooltip" data-placement="top" title="View"></i>
-                                            </a>
-                                        </div>
-                                        <div class="overlay_title text-center">
-                                            <div class="text-center">
-                                                <p class="text-white text-center mt-1">@Model.EmailTemplate.EmailTemplateName</p>
-                                            </div>
-                                        </div>
 
-                                    </div>
-                                </div>
-                            </div>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Campaign Delivery Report</h1>
+        <p class="page-subtitle">Contact-level send and open tracking</p>
+    </div>
+    <a asp-area="Member" asp-controller="Campaigns" asp-action="Index" class="btn btn-light">
+        <i class="bi bi-arrow-left"></i> Campaign List
+    </a>
+</div>
+
+<!-- Campaign info strip -->
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="row g-3 align-items-start">
+            <div class="col-md-8">
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Campaign</div>
+                        <div style="font-size:0.9rem;font-weight:700;color:#0f172a;">@Model.CampaignName</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Sender</div>
+                        <div style="font-size:0.875rem;font-weight:500;color:#374151;">@Model.SenderName <span style="color:#94a3b8;">(@Model.SenderEmail)</span></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Subject</div>
+                        <div style="font-size:0.875rem;font-weight:500;color:#374151;">@Model.EmailSubject</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Description</div>
+                        <div style="font-size:0.875rem;color:#64748b;">@Model.Description</div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.EmailTemplate != null)
+            {
+                <div class="col-md-4">
+                    <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">Email Template</div>
+                    <div style="border:1px solid var(--border-color);border-radius:8px;overflow:hidden;position:relative;height:110px;background:#f8fafc;cursor:pointer;"
+                         data-bs-toggle="modal" data-bs-target="#templatebody">
+                        <div style="transform:scale(0.45);transform-origin:top left;width:222%;pointer-events:none;padding:6px;">
+                            @Html.Raw(Model.EmailTemplate.EmailTemplateBody)
+                        </div>
+                        <div style="position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:rgba(13,17,23,0.75);display:flex;align-items:center;gap:6px;">
+                            <span style="font-size:0.72rem;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;">@Model.EmailTemplate.EmailTemplateName</span>
+                            <i class="bi bi-eye" style="color:#818cf8;font-size:0.8rem;flex-shrink:0;"></i>
                         </div>
                     </div>
-                    <!-- /page header -->
-                    <hr />
-                    <input type="hidden" id="campaignId" value="@Model.CampaignId" />
-                    <table class="table" id="campaign-table">
-                        <thead>
-                            <tr>
-                                <th>Contact Email</th>
-                                <th>Delivered</th>
-                                <th>Seen</th>
-                                <th>Seen Date Time</th>
-                                <th>Send Date Time</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
                 </div>
-                <!-- /basic datatable -->
-            </div>
-        </div>
-    </div>
-    <!-- /content area -->
-</div>
-<!-- /main content -->
-<!-- Template Modal -->
-<div class="modal fade" id="templatebody" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">@Model.EmailTemplate.EmailTemplateName</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @Html.Raw(Model.EmailTemplate.EmailTemplateBody)
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
+            }
         </div>
     </div>
 </div>
-<!-- /Template Modal -->
+
+<!-- Delivery table -->
+<div class="card">
+    <partial name="_ActionMessage" model="@Model.Response" />
+    <input type="hidden" id="campaignId" value="@Model.CampaignId" />
+    <div class="table-responsive">
+        <table class="table table-hover" id="campaign-table">
+            <thead>
+                <tr>
+                    <th>Contact Email</th>
+                    <th>Delivered</th>
+                    <th>Opened</th>
+                    <th>Opened At</th>
+                    <th>Sent At</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Template preview modal -->
+@if (Model.EmailTemplate != null)
+{
+    <div class="modal fade" id="templatebody" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title"><i class="bi bi-eye me-2 text-accent"></i>@Model.EmailTemplate.EmailTemplateName</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">@Html.Raw(Model.EmailTemplate.EmailTemplateBody)</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @section Scripts {
-    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
-    <partial name="~/Views/Bundle/_DatatableScriptsPartial.cshtml" />
     <script src="~/js/ajax-call.js"></script>
     <script src="~/js/project/campaignreport.js"></script>
     <script>
         $(function () {
-            var campaignId = $('#campaignId').val();
             var url = '@Url.Action("ViewDeleveryReport", "Campaigns", new { Area = "Member", campaignId = Model.CampaignId })';
             loadDatatable(url);
         });

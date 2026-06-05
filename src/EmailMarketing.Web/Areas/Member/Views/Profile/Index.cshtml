@@ -1,118 +1,83 @@
-﻿@model ProfileInformationModel
-
+@model ProfileInformationModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "My Profile";
+    var initial = string.IsNullOrEmpty(Model.FullName) ? "U" : Model.FullName.Substring(0, 1).ToUpper();
 }
 
+<div class="page-header">
+    <h1 class="page-title">My Profile</h1>
+    <a asp-area="Member" asp-controller="Profile" asp-action="UpdateInformation" class="btn btn-primary">
+        <i class="bi bi-pencil"></i> Edit Profile
+    </a>
+</div>
 
-<div class="content-wrapper">
-    <div class="content">
-        <div class="col-md-12" data-select2-id="49">
-
-            <!-- Basic layout-->
-            <div class="card" data-select2-id="48">
-                <div class="card-header header-elements-inline">
-                    <h5 class="card-title"><b>Profile Information</b></h5>
+<div class="row g-3" style="max-width:760px;">
+    <!-- Avatar card -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body d-flex align-items-center gap-4 flex-wrap">
+                <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#5865f2,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;color:#fff;flex-shrink:0;">
+                    @initial
                 </div>
+                <div>
+                    <div style="font-size:1.2rem;font-weight:800;color:#0f172a;letter-spacing:-0.02em;">
+                        @(Model.FullName ?? "—")
+                    </div>
+                    <div style="font-size:0.85rem;color:#94a3b8;margin-top:3px;">
+                        @(Model.Email ?? "—")
+                    </div>
+                    <span class="badge badge-soft-primary mt-1">Member</span>
+                </div>
+                <div class="ms-auto d-flex gap-2">
+                    <a asp-area="Member" asp-controller="Profile" asp-action="ChangePassword" class="btn btn-light btn-sm">
+                        <i class="bi bi-key"></i> Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <table class="table">
-
-                                <tr>
-                                    <td class="col-4 float-left"><h5>Full Name : </h5></td>
-                                    @if (@Model.FullName == null)
-                                    {
-                                        <td class="col-8 float-left"><h5>Not Set</h5></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="col-8 float-left"><h5>@Model.FullName</h5></td>
-                                    }
-                                </tr>
-                                <tr>
-                                    <td class="col-4 float-left"><h5>Email : </h5></td>
-                                    @if (@Model.Email == null)
-                                    {
-                                        <td class="col-8 float-left"><h5>Not Set</h5></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="col-8 float-left"><h5>@Model.Email</h5></td>
-                                    }
-                                </tr>
-                                <tr>
-                                    <td class="col-4 float-left"><h5>Date of Birth : </h5></td>
-                                    @if (@Model.DateOfBirth == null)
-                                    {
-                                        <td class="col-8 float-left"><h5>Not Set</h5></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="col-8 float-left"><h5>@Model.DateOfBirth</h5></td>
-                                    }
-                                </tr>
-                            </table>
+    <!-- Info card -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-header-title"><i class="bi bi-person me-2 text-accent"></i>Personal Information</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-0">
+                    @{
+                        void InfoRow(string label, string icon, string value) {
+                            <div class="col-12 d-flex align-items-start gap-3 py-3" style="border-bottom:1px solid #f1f5f9;">
+                                <div style="width:32px;height:32px;border-radius:8px;background:rgba(88,101,242,0.08);display:flex;align-items:center;justify-content:center;color:#5865f2;flex-shrink:0;font-size:0.85rem;">
+                                    <i class="bi @icon"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">@label</div>
+                                    <div style="font-size:0.875rem;font-weight:500;color:@(string.IsNullOrEmpty(value) ? "#cbd5e1" : "#0f172a");">
+                                        @(string.IsNullOrEmpty(value) ? "Not set" : value)
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @{ InfoRow("Full Name",    "bi-person",          Model.FullName); }
+                    @{ InfoRow("Email",        "bi-envelope",        Model.Email); }
+                    @{ InfoRow("Phone Number", "bi-telephone",       Model.PhoneNumber); }
+                    @{ InfoRow("Gender",       "bi-gender-ambiguous",Model.Gender); }
+                    @{ InfoRow("Date of Birth","bi-calendar2",       Model.DateOfBirth?.ToString("dd MMM yyyy")); }
+                    <div class="col-12 d-flex align-items-start gap-3 py-3">
+                        <div style="width:32px;height:32px;border-radius:8px;background:rgba(88,101,242,0.08);display:flex;align-items:center;justify-content:center;color:#5865f2;flex-shrink:0;font-size:0.85rem;">
+                            <i class="bi bi-geo-alt"></i>
                         </div>
-
-                        <div class="col-6">
-                            <table class="table">
-                                <tr>
-                                    <td class="col-4 float-left"><h5>Gender : </h5></td>
-                                    @if (@Model.Gender == null)
-                                    {
-                                        <td class="col-8 float-left"><h5>Not Set</h5></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="col-8 float-left"><h5>@Model.Gender</h5></td>
-                                    }
-                                </tr>
-                                
-                                <tr>
-                                    <td class="col-4 float-left"><h5>Phone Number : </h5></td>
-                                    @if (@Model.PhoneNumber == null)
-                                    {
-                                        <td class="col-8 float-left"><h5>Not Set</h5></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="col-8 float-left"><h5>@Model.PhoneNumber</h5></td>
-                                    }
-                                </tr>
-                                <tr>
-                                    <td class="col-4 float-left"><h5>Address : </h5></td>
-                                    @if (@Model.Address == null)
-                                    {
-                                        <td class="col-8 float-left"><h5>Not Set</h5></td>
-                                    }
-                                    else
-                                    {
-                                        <td class="col-8 float-left">
-                                            <h5>
-                                                <pre>@Model.Address</pre>
-                                            </h5>
-                                        </td>
-                                    }
-                                </tr>
-                            </table>
+                        <div>
+                            <div style="font-size:0.72rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;">Address</div>
+                            <div style="font-size:0.875rem;font-weight:500;color:@(string.IsNullOrEmpty(Model.Address) ? "#cbd5e1" : "#0f172a");white-space:pre-line;">
+                                @(string.IsNullOrEmpty(Model.Address) ? "Not set" : Model.Address)
+                            </div>
                         </div>
                     </div>
-
-
-                    <!--Back & Edit Button-->
-                    <div>
-
-                        <div class="d-flex justify-content-between">
-                            <a asp-area="Member" asp-controller="Dashboard" asp-action="Index" class="btn btn-light"><i class="icon-arrow-left52"></i> Back</a>
-                            <a asp-area="Member" asp-controller="Profile" asp-action="UpdateInformation" class="btn btn-primary ml-2"><i class="icon-pencil7"></i> Edit</a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
