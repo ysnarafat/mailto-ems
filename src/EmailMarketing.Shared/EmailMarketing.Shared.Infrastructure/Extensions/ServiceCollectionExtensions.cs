@@ -1,9 +1,5 @@
-using EmailMarketing.Modules.Campaigns;
-using EmailMarketing.Modules.Contacts;
-using EmailMarketing.Modules.FileProcessing;
-using EmailMarketing.Modules.Notifications;
-using EmailMarketing.Modules.Users;
 using EmailMarketing.Shared.Abstractions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,54 +10,18 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddSharedInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Add Entity Framework
+        // Add Entity Framework with unified ApplicationDbContext
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        // Add Identity
-        services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        // Add Identity with custom ApplicationUser and ApplicationRole
+        services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        // Add MediatR
+        // Add MediatR for shared infrastructure
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly));
-
-        // Register all modules
-        RegisterModules(services);
 
         return services;
     }
-
-    private static void RegisterModules(IServiceCollection services)
-    {
-        var modules = new List<IModule>
-        {
-            new UsersModule(),
-            new ContactsModule(),
-            new CampaignsModule(),
-            new FileProcessingModule(),
-            new NotificationsModule()
-        };
-
-        foreach (var module in modules)
-        {
-            module.RegisterServices(services);
-        }
-    }
-}
-
-// Placeholder classes - these would be moved from existing projects
-public class ApplicationDbContext : DbContext
-{
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
-
-    // DbSets would be defined here
-}
-
-public class ApplicationUser
-{
-    public string Id { get; set; } = string.Empty;
-    public string UserName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
 }

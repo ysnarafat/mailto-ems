@@ -1,3 +1,4 @@
+using System;
 using MediatR;
 
 namespace EmailMarketing.Shared.Abstractions.Events;

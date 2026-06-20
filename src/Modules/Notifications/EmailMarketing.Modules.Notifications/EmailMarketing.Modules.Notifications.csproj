@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -15,9 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\EmailMarketing.Shared\EmailMarketing.Shared.Abstractions\EmailMarketing.Shared.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\EmailMarketing.Shared\EmailMarketing.Shared.Domain\EmailMarketing.Shared.Domain.csproj" />
-    <ProjectReference Include="..\..\..\EmailMarketing.Shared\EmailMarketing.Shared.Infrastructure\EmailMarketing.Shared.Infrastructure.csproj" />
-  </ItemGroup>
+    <ProjectReference Include="..\..\..\EmailMarketing.Shared\EmailMarketing.Shared.Infrastructure\EmailMarketing.Shared.Infrastructure.csproj" />  </ItemGroup>
 
   <ItemGroup>
     <None Update="Templates\DemoEmailTemplate.tt">
