@@ -1,7 +1,12 @@
+using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EmailMarketing.Host.Extensions;
 using EmailMarketing.Shared.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,13 +26,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add shared infrastructure
+// Add shared infrastructure (DbContext, Identity, base MediatR)
 builder.Services.AddSharedInfrastructure(builder.Configuration);
 
-// Configure Autofac container
-builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+// Discover and register all modules via reflection (NO CIRCULAR DEPENDENCY)
+builder.Services.AddModules();
+
+// Configure Autofac container to include registered services
+builder.Host.ConfigureContainer<ContainerBuilder>((context, containerBuilder) =>
 {
-    containerBuilder.RegisterModules(builder.Configuration);
+    // Register modules in Autofac for any Autofac-specific needs
+    containerBuilder.RegisterModules(builder.Services);
+
+    // Populate Autofac from IServiceCollection registrations
+    containerBuilder.Populate(builder.Services);
 });
 
 var app = builder.Build();

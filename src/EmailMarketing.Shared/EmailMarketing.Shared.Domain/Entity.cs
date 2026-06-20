@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using EmailMarketing.Shared.Abstractions.Events;
 
 namespace EmailMarketing.Shared.Domain;

@@ -1,178 +1,165 @@
-# CLAUDE.md
+﻿# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-**MailTo EMS** is an Email Marketing Software built with a **modular monolith** architecture in .NET 10. It manages contacts, campaigns, email sending, and file import/export operations through loosely-coupled modules that communicate via domain events.
+**MailTo EMS** is an Email Marketing Software built with a **modular monolith** architecture in .NET 10. It manages contacts, campaigns, email sending, and file import/export through loosely-coupled modules that communicate via MediatR events.
 
 ## Technology Stack
 
 - **Framework**: ASP.NET Core 10.0
 - **Database**: SQL Server with Entity Framework Core
-- **DI Container**: Autofac
-- **Event Handling**: MediatR
-- **Logging**: Serilog
-- **Testing**: xUnit (with existing tests in old structure)
+- **DI Container**: Autofac (bridged from `IServiceCollection`)
+- **Event Handling**: MediatR (`INotification` / `INotificationHandler`)
+- **Logging**: Serilog (configured in `Program.cs`, driven by `appsettings.json`)
 
-## Solution Structure
+## Solution Files
 
-Two solution files exist during the modular monolith migration:
+Two solution files coexist:
 
-- **EmailMarketing.sln** - Legacy monolithic structure (older projects with services and workers)
-- **EmailMarketing.ModularMonolith.sln** - New modular structure (active development)
+- **`EmailMarketing.sln`** — Legacy monolithic structure (do not modify)
+- **`EmailMarketing.ModularMonolith.sln`** — Active development target
 
-### Modular Monolith Architecture
+Always use `EmailMarketing.ModularMonolith.sln` for builds, tests, and migrations.
+
+## Architecture
 
 ```
 src/
-├── EmailMarketing.Host/              # Entry point (ASP.NET Core app)
-├── EmailMarketing.Shared/            # Shared kernel (contracts, domain, infrastructure)
-│   ├── Abstractions/                 # IModule, event contracts
-│   ├── Domain/                       # Base entities, aggregate roots
-│   └── Infrastructure/               # DbContext, service collection setup
-└── Modules/                          # Business modules (independent, event-driven)
-    ├── Users/                        # Authentication, authorization
-    ├── Contacts/                     # Contact and group management
-    ├── Campaigns/                    # Email campaigns
-    ├── FileProcessing/               # Excel import/export
-    └── Notifications/                # Email sending
+├── EmailMarketing.Host/              # ASP.NET Core entry point
+├── EmailMarketing.Shared/
+│   ├── Shared.Abstractions/          # IModule, IDomainEvent, IIntegrationEvent, service interfaces
+│   ├── Shared.Domain/                # Entity, AggregateRoot base classes
+│   └── Shared.Infrastructure/        # ApplicationDbContext, Identity, Repository, UoW, extensions
+└── Modules/
+    ├── Users/                        # Auth, identity management
+    ├── Contacts/                     # Contact CRUD, upload, field maps, export
+    ├── Groups/                       # Group management
+    ├── Campaigns/                    # Campaign lifecycle
+    ├── FileProcessing/               # Excel import/export queue
+    └── Notifications/                # SMTP config, email sending
 ```
 
-## Key Architecture Concepts
+### Module Internal Layout
 
-### Module Structure
+Every module follows this folder convention:
 
-Each module implements `IModule` interface and registers its services via `RegisterServices()`:
+```
+EmailMarketing.Modules.{Name}/
+  Infrastructure/
+    Repositories/     # Repository interfaces + implementations
+    Services/         # Service interfaces + implementations
+    UnitOfWorks/      # UnitOfWork interfaces + implementations
+  Domain/
+    Events/           # IDomainEvent / IIntegrationEvent implementations
+  Application/
+    Commands/         # MediatR IRequest command objects
+    Queries/          # MediatR IRequest query objects
+    Handlers/         # IRequestHandler / INotificationHandler implementations
+  {Name}Module.cs     # IModule implementation — root of module
+```
+
+### Module Registration
+
+Modules are **auto-discovered at runtime via reflection** — `AddModules()` in `Program.cs` scans all loaded assemblies for `IModule` implementations and calls `RegisterServices()` on each.
+
+To add a new module:
+1. Create `src/Modules/{Name}/EmailMarketing.Modules.{Name}/`
+2. Create `.csproj` referencing `Shared.Abstractions`, `Shared.Domain`, `Shared.Infrastructure`
+3. Implement `IModule`:
+   ```csharp
+   public class {Name}Module : IModule
+   {
+       public string Name => "{Name}";
+       public void RegisterServices(IServiceCollection services)
+       {
+           services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof({Name}Module).Assembly));
+           // register repos, services, UoW here
+       }
+   }
+   ```
+4. Add `<ProjectReference>` to `EmailMarketing.Host.csproj` (so the assembly is loaded at startup)
+5. Add the project to `EmailMarketing.ModularMonolith.sln`
+
+No manual registration in `ContainerBuilderExtensions` needed — reflection handles discovery.
+
+### Database & Entities
+
+Single shared `ApplicationDbContext` (in `Shared.Infrastructure`). All entity `DbSet<>` properties live there.
+
+Entity base classes (in `Shared.Infrastructure.Data`):
+- `IEntity<TKey>` — `Id`, `IsDeleted`, `IsActive`
+- `IAuditableEntity<TKey>` — extends `IEntity<TKey>` + `CreatedBy`, `Created`, `LastModifiedBy`, `LastModified`
+
+All module entities extend one of these and live in `Shared.Infrastructure/Data/Entities/{Module}/`.
+
+### Repository & Unit of Work Pattern
+
+Every module repository extends the generic base:
 
 ```csharp
-public class YourModule : IModule
+public class GroupRepository : Repository<Group, int, ApplicationDbContext>, IGroupRepository
 {
-    public string Name => "YourModule";
-    
-    public void RegisterServices(IServiceCollection services)
-    {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(YourModule).Assembly));
-        // Register module services
-    }
+    public GroupRepository(ApplicationDbContext dbContext) : base(dbContext) {}
 }
 ```
 
-### Inter-Module Communication
+`Repository<TEntity, TKey, TContext>` is in `Shared.Infrastructure.Data` and requires `TEntity : IEntity<TKey>`.
 
-Modules communicate exclusively through **domain events** published via MediatR:
+`IUnitOfWork` / `UnitOfWork` (also in `Shared.Infrastructure.Data`) wrap the DbContext's save/transaction operations. Each module defines its own `I{Module}UnitOfWork` that composes its repositories.
 
-- **Domain Events** (INotification) - Local events within a module
-- **Integration Events** (IIntegrationEvent) - Cross-module events
+### Cross-Module Data Access
 
-Modules are registered in `src/EmailMarketing.Host/Extensions/ContainerBuilderExtensions.cs`. **To add a new module: import it and instantiate it in the modules list.**
+**No direct `ProjectReference` between modules.** When a module needs to read another module's data:
 
-### Database Access
+- Create a read-only repository in the consuming module (e.g., `IGroupReadRepository` in Contacts)
+- It extends `Repository<Group, int, ApplicationDbContext>` using the shared DbContext
+- Register it in the consuming module's `RegisterServices()`
 
-Single shared DbContext (`ApplicationDbContext` in `Shared.Infrastructure`). Each module can have its own data models, but they share the same database context.
+Example: `Contacts` reads `Group` data via its own `GroupReadRepository`, not via the Groups module.
+
+### Inter-Module Events
+
+For write-side cross-module communication use MediatR events:
+- `IDomainEvent` (`INotification`) — intra-module, synchronous
+- `IIntegrationEvent` — cross-module, published via `IMediator.Publish()`
+
+Event definitions go in `Domain/Events/`, handlers in `Application/Handlers/`.
 
 ## Development Commands
 
-### Build
 ```bash
+# Build
 dotnet build EmailMarketing.ModularMonolith.sln
-```
 
-### Run (Development)
-```bash
+# Run
 dotnet run --project src/EmailMarketing.Host/EmailMarketing.Host.csproj
-```
 
-The application starts at `http://localhost:5000` (HTTPS) by default.
-
-### Run Tests
-```bash
-# All tests
-dotnet test EmailMarketing.ModularMonolith.sln
-
-# Specific test project
+# Test (legacy test projects — modular tests not yet created)
 dotnet test test/EmailMarketing.Framework.Tests/EmailMarketing.Framework.Tests.csproj
-
-# Run single test
 dotnet test --filter "FullyQualifiedName~TestClassName"
-```
 
-### Run with Docker
-```bash
+# Docker
 docker-compose -f docker-compose.modular.yml up --build
-```
 
-### Database Migrations (if using Code-First)
-```bash
-# Add migration
+# EF migrations
 dotnet ef migrations add MigrationName --project src/EmailMarketing.Host/EmailMarketing.Host.csproj
-
-# Update database
 dotnet ef database update --project src/EmailMarketing.Host/EmailMarketing.Host.csproj
 ```
 
-## Adding a New Module
-
-1. Create folder structure: `src/Modules/ModuleName/EmailMarketing.Modules.ModuleName/`
-2. Create `.csproj` file (reference `Shared.Abstractions` and `Shared.Domain`)
-3. Implement `IModule` interface in a `ModuleNameModule.cs` class
-4. Register MediatR in `RegisterServices()`
-5. Add project reference to `EmailMarketing.Host.csproj`
-6. Import and instantiate in `ContainerBuilderExtensions.RegisterModules()`
-
 ## Configuration
 
-- **appsettings.json** in `EmailMarketing.Host` - Database connection string, SMTP, logging
-- Connection string key: `DefaultConnection`
-- Environment-specific overrides: `appsettings.Development.json`, `appsettings.Production.json`
-
-## Testing Strategy
-
-- **Unit tests** - Individual module logic (mock dependencies)
-- **Integration tests** - Module interactions and event handling
-- **Test projects** - Legacy structure has `EmailMarketing.*.Tests` projects (being modernized)
-
-When writing tests for modules, ensure handlers are registered via MediatR and DbContext is properly seeded.
-
-## Important Notes
-
-- **No direct module dependencies** - Use events for cross-module communication
-- **Single deployable unit** - Modular architecture supports future microservices extraction
-- **Migration in progress** - Codebase is transitioning from monolithic to modular structure; both old and new projects may coexist temporarily
-- **Autofac + IServiceCollection** - Both DI patterns are in use; understand both registration methods
-- **Serilog logging** - Configured in `Program.cs`; check `appsettings.json` for log levels and sinks
+`src/EmailMarketing.Host/appsettings.json` — connection string (`DefaultConnection`), SMTP, Serilog sinks.
 
 ## Claude Code Skills
 
-Custom skills are available to assist with development tasks. These skills provide specialized validation and workflows.
+### `/validate-modular-monolith`
 
-### validate-modular-monolith
+Validates code against modular monolith patterns:
+- No cross-module `ProjectReference`
+- Event-driven cross-module communication
+- Services registered within their own module
+- Entities and repositories in correct locations
 
-Validates code changes against modular monolith architecture patterns and the project's specific structure.
-
-**Usage:**
-```
-/validate-modular-monolith
-
-[Paste your code to validate]
-```
-
-**What it checks:**
-- Module boundaries and independence (no cross-module dependencies)
-- Event-driven communication (proper MediatR usage)
-- DI registration patterns (services registered in their module)
-- Shared kernel adherence (business logic stays in modules)
-- Project structure alignment with established conventions
-
-**When to use:**
-- Before committing code changes
-- When submitting a pull request
-- When reviewing module code for architectural compliance
-
-**See:** `.claude/skills/README.md` for detailed documentation and examples.
-
-## Useful References
-
-- See `MODULAR_MONOLITH.md` for detailed architecture decisions and migration phases
-- See `README.md` for feature overview and deployment instructions
-- See `.claude/skills/README.md` for available Claude Code skills and usage
+Use before committing or submitting a PR. See `.claude/skills/README.md` for details.

@@ -1,3 +1,6 @@
+using EmailMarketing.Modules.Notifications.Repositories;
+using EmailMarketing.Modules.Notifications.Services;
+using EmailMarketing.Modules.Notifications.UnitOfWorks;
 using EmailMarketing.Shared.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,15 +12,9 @@ public class NotificationsModule : IModule
 
     public void RegisterServices(IServiceCollection services)
     {
-        // Register notification services
-        // services.AddScoped<IEmailService, EmailService>();
-        // services.AddScoped<INotificationService, NotificationService>();
-        // services.AddScoped<ISmtpService, SmtpService>();
-        
-        // Register background services
-        // services.AddHostedService<EmailSendingWorkerService>();
-        
-        // Register MediatR handlers for this module
+        services.AddScoped<ISmtpConfigRepository, SmtpConfigRepository>();
+        services.AddScoped<INotificationUnitOfWork, NotificationUnitOfWork>();
+        services.AddScoped<ISmtpConfigService, SmtpConfigService>();
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(NotificationsModule).Assembly));
     }
 }

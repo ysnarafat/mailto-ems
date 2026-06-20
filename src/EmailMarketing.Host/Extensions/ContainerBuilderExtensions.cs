@@ -1,46 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Autofac;
-using EmailMarketing.Modules.Campaigns;
-using EmailMarketing.Modules.Contacts;
-using EmailMarketing.Modules.FileProcessing;
-using EmailMarketing.Modules.Notifications;
-using EmailMarketing.Modules.Users;
 using EmailMarketing.Shared.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EmailMarketing.Host.Extensions;
 
 public static class ContainerBuilderExtensions
 {
-    public static void RegisterModules(this ContainerBuilder builder, IConfiguration configuration)
+    /// <summary>
+    /// Registers all discovered modules with the Autofac container.
+    /// This bridges the gap between IServiceCollection (Microsoft DI) and Autofac container.
+    /// </summary>
+    public static void RegisterModules(this ContainerBuilder builder, IServiceCollection services)
     {
-        // Register all modules
-        var modules = new List<IModule>
-        {
-            new UsersModule(),
-            new ContactsModule(),
-            new CampaignsModule(),
-            new FileProcessingModule(),
-            new NotificationsModule()
-        };
+        // Discover all module types using the same reflection-based approach as IServiceCollection
+        var moduleTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(assembly => GetLoadableTypes(assembly))
+            .Where(type =>
+                typeof(IModule).IsAssignableFrom(type) &&
+                !type.IsInterface &&
+                !type.IsAbstract)
+            .ToList();
 
-        foreach (var module in modules)
+        // For each module, instantiate it and let it register with both IServiceCollection and Autofac
+        foreach (var moduleType in moduleTypes)
         {
-            builder.RegisterModule(new ModuleRegistration(module));
+            var instance = (IModule)Activator.CreateInstance(moduleType)
+                ?? throw new InvalidOperationException($"Failed to instantiate module {moduleType.Name}");
+
+            // Module registers with IServiceCollection (handled separately in Program.cs)
+            // Here we just register the module itself in Autofac for reference
+            builder.RegisterInstance(instance).As<IModule>();
         }
     }
-}
 
-public class ModuleRegistration : Autofac.Module
-{
-    private readonly IModule _module;
-
-    public ModuleRegistration(IModule module)
+    private static IEnumerable<Type> GetLoadableTypes(System.Reflection.Assembly assembly)
     {
-        _module = module;
-    }
-
-    protected override void Load(ContainerBuilder builder)
-    {
-        // Module-specific registrations would go here
-        // For now, we'll use the IServiceCollection approach
+        try
+        {
+            return assembly.GetTypes();
+        }
+        catch (System.Reflection.ReflectionTypeLoadException ex)
+        {
+            return ex.Types.Where(t => t != null)!;
+        }
     }
 }
