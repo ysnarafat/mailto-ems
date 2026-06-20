@@ -6,112 +6,155 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 MailTo EMS is an Email Marketing Software platform built with .NET 10.0 and PostgreSQL. It manages contacts, campaigns, bulk email sending, and campaign performance tracking.
 
-## Build & Test Commands
+## Technology Stack
 
-```bash
-# Restore and build
-dotnet restore EmailMarketing.sln
-dotnet build EmailMarketing.sln --configuration Release
+- **Framework**: ASP.NET Core 10.0
+- **Database**: SQL Server with Entity Framework Core
+- **DI Container**: Autofac (bridged from `IServiceCollection`)
+- **Event Handling**: MediatR (`INotification` / `INotificationHandler`)
+- **Logging**: Serilog (configured in `Program.cs`, driven by `appsettings.json`)
 
-# Run all tests
-dotnet test EmailMarketing.sln
+## Solution File
 
-# Run a specific test project
-dotnet test test/EmailMarketing.Framework.Tests/EmailMarketing.Framework.Tests.csproj
+`EmailMarketing.ModularMonolith.sln` — the only active solution.
 
-# Run a single test class (NUnit filter syntax)
-dotnet test test/EmailMarketing.Framework.Tests/ --filter "FullyQualifiedName~ContactServiceTests"
+## Architecture
 
-# Run the web application
-dotnet run --project src/EmailMarketing.Web
-
-# Docker (full stack with PostgreSQL)
-docker-compose up --build
+```
+src/
+├── EmailMarketing.Host/              # ASP.NET Core entry point
+├── EmailMarketing.Shared/
+│   ├── Shared.Abstractions/          # IModule, IDomainEvent, IIntegrationEvent, service interfaces
+│   ├── Shared.Domain/                # Entity, AggregateRoot base classes
+│   └── Shared.Infrastructure/        # ApplicationDbContext, Identity, Repository, UoW, extensions
+└── Modules/
+    ├── Users/                        # Auth, identity management
+    ├── Contacts/                     # Contact CRUD, upload, field maps, export
+    ├── Groups/                       # Group management
+    ├── Campaigns/                    # Campaign lifecycle
+    ├── FileProcessing/               # Excel import/export queue
+    └── Notifications/                # SMTP config, email sending
 ```
 
-## Database Migrations
+### Module Internal Layout
 
-Two separate DbContexts require separate migration commands:
+Every module follows this folder convention:
+
+```
+EmailMarketing.Modules.{Name}/
+  Infrastructure/
+    Repositories/     # Repository interfaces + implementations
+    Services/         # Service interfaces + implementations
+    UnitOfWorks/      # UnitOfWork interfaces + implementations
+  Domain/
+    Events/           # IDomainEvent / IIntegrationEvent implementations
+  Application/
+    Commands/         # MediatR IRequest command objects
+    Queries/          # MediatR IRequest query objects
+    Handlers/         # IRequestHandler / INotificationHandler implementations
+  {Name}Module.cs     # IModule implementation — root of module
+```
+
+### Module Registration
+
+Modules are **auto-discovered at runtime via reflection** — `AddModules()` in `Program.cs` scans all loaded assemblies for `IModule` implementations and calls `RegisterServices()` on each.
+
+To add a new module:
+1. Create `src/Modules/{Name}/EmailMarketing.Modules.{Name}/`
+2. Create `.csproj` referencing `Shared.Abstractions`, `Shared.Domain`, `Shared.Infrastructure`
+3. Implement `IModule`:
+   ```csharp
+   public class {Name}Module : IModule
+   {
+       public string Name => "{Name}";
+       public void RegisterServices(IServiceCollection services)
+       {
+           services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof({Name}Module).Assembly));
+           // register repos, services, UoW here
+       }
+   }
+   ```
+4. Add `<ProjectReference>` to `EmailMarketing.Host.csproj` (so the assembly is loaded at startup)
+5. Add the project to `EmailMarketing.ModularMonolith.sln`
+
+No manual registration in `ContainerBuilderExtensions` needed — reflection handles discovery.
+
+### Database & Entities
+
+Single shared `ApplicationDbContext` (in `Shared.Infrastructure`). All entity `DbSet<>` properties live there.
+
+Entity base classes (in `Shared.Infrastructure.Data`):
+- `IEntity<TKey>` — `Id`, `IsDeleted`, `IsActive`
+- `IAuditableEntity<TKey>` — extends `IEntity<TKey>` + `CreatedBy`, `Created`, `LastModifiedBy`, `LastModified`
+
+All module entities extend one of these and live in `Shared.Infrastructure/Data/Entities/{Module}/`.
+
+### Repository & Unit of Work Pattern
+
+Every module repository extends the generic base:
+
+```csharp
+public class GroupRepository : Repository<Group, int, ApplicationDbContext>, IGroupRepository
+{
+    public GroupRepository(ApplicationDbContext dbContext) : base(dbContext) {}
+}
+```
+
+`Repository<TEntity, TKey, TContext>` is in `Shared.Infrastructure.Data` and requires `TEntity : IEntity<TKey>`.
+
+`IUnitOfWork` / `UnitOfWork` (also in `Shared.Infrastructure.Data`) wrap the DbContext's save/transaction operations. Each module defines its own `I{Module}UnitOfWork` that composes its repositories.
+
+### Cross-Module Data Access
+
+**No direct `ProjectReference` between modules.** When a module needs to read another module's data:
+
+- Create a read-only repository in the consuming module (e.g., `IGroupReadRepository` in Contacts)
+- It extends `Repository<Group, int, ApplicationDbContext>` using the shared DbContext
+- Register it in the consuming module's `RegisterServices()`
+
+Example: `Contacts` reads `Group` data via its own `GroupReadRepository`, not via the Groups module.
+
+### Inter-Module Events
+
+For write-side cross-module communication use MediatR events:
+- `IDomainEvent` (`INotification`) — intra-module, synchronous
+- `IIntegrationEvent` — cross-module, published via `IMediator.Publish()`
+
+Event definitions go in `Domain/Events/`, handlers in `Application/Handlers/`.
+
+## Development Commands
 
 ```bash
-# ApplicationDbContext (Identity/Membership)
-dotnet ef database update --project src/EmailMarketing.Web --context ApplicationDbContext
-dotnet ef migrations add <Name> --project src/EmailMarketing.Web --context ApplicationDbContext --output-dir Migrations/Membership
+# Build
+dotnet build EmailMarketing.ModularMonolith.sln
 
-# FrameworkContext (Business domain)
-dotnet ef database update --project src/EmailMarketing.Web --context FrameworkContext
-dotnet ef migrations add <Name> --project src/EmailMarketing.Web --context FrameworkContext --output-dir Migrations/Framework
+# Run
+dotnet run --project src/EmailMarketing.Host/EmailMarketing.Host.csproj
+
+# Test (legacy test projects — modular tests not yet created)
+dotnet test test/EmailMarketing.Framework.Tests/EmailMarketing.Framework.Tests.csproj
+dotnet test --filter "FullyQualifiedName~TestClassName"
+
+# Docker
+docker-compose -f docker-compose.modular.yml up --build
+
+# EF migrations
+dotnet ef migrations add MigrationName --project src/EmailMarketing.Host/EmailMarketing.Host.csproj
+dotnet ef database update --project src/EmailMarketing.Host/EmailMarketing.Host.csproj
 ```
 
 ## Configuration
 
-Copy `src/EmailMarketing.Web/appsettings.template.json` to `appsettings.json` and configure:
-- `ConnectionStrings.DefaultConnection` — PostgreSQL connection string
-- `AppSettings` — file paths for import/export/email files
-- `SmtpSettings` — transactional email server
+`src/EmailMarketing.Host/appsettings.json` — connection string (`DefaultConnection`), SMTP, Serilog sinks.
 
-Each worker service also has its own `appsettings.json` that must be configured with the same connection string.
+## Claude Code Skills
 
-## Architecture
+### `/validate-modular-monolith`
 
-### Project Structure
+Validates code against modular monolith patterns:
+- No cross-module `ProjectReference`
+- Event-driven cross-module communication
+- Services registered within their own module
+- Entities and repositories in correct locations
 
-| Project | Role |
-|---|---|
-| `EmailMarketing.Web` | ASP.NET Core MVC app; Areas: Admin and Member |
-| `EmailMarketing.Framework` | Business logic, entities, repositories, services |
-| `EmailMarketing.Data` | Generic repository/UoW interfaces and base implementation |
-| `EmailMarketing.Common` | Shared exceptions, email utilities, file storage, datetime helpers |
-| `EmailMarketing.Membership` | ASP.NET Identity, user/role management, data seeding |
-| `EmailMarketing.ExcelWorkerService` | Background: imports contacts from Excel |
-| `EmailMarketing.ExcelExportWorkerService` | Background: exports contacts to Excel |
-| `EmailMarketing.EmailSendingWorkerService` | Background: sends queued campaign emails |
-| `EmailMarketing.CampaingReportExcelExportService` | Background: exports campaign reports |
-
-### Two DbContexts
-
-- **`ApplicationDbContext`** (Membership project) — Identity tables (users, roles, claims). Migrations in `src/EmailMarketing.Web/Migrations/Membership/`.
-- **`FrameworkContext`** (Framework project) — all business domain tables (campaigns, contacts, groups, SMTP, templates). Migrations in `src/EmailMarketing.Web/Migrations/Framework/`.
-
-Both contexts are registered in `Startup.cs` and injected via Autofac.
-
-### Dependency Injection
-
-Autofac is used instead of the built-in .NET DI container. Registrations are split across:
-- `FrameworkModule` (`src/EmailMarketing.Framework/FrameworkModule.cs`) — registers repositories, UoWs, services
-- `WebModule` (`src/EmailMarketing.Web/`) — registers web-layer services and models
-
-### Repository & Unit of Work Pattern
-
-`EmailMarketing.Data` defines the generic interfaces. The pattern has two levels:
-1. `IRepository<TEntity, TKey, TContext>` — CRUD, async LINQ queries, pagination, includes
-2. Domain-specific UoWs (e.g., `IContactUnitOfWork`, `ICampaignUnitOfWork`) — group related repositories and expose `SaveAsync()` / `BeginTransaction()`
-
-All entities inherit from `IEntity<TKey>` which includes `IsDeleted` (soft delete) and `IsActive` flags.
-
-### Key Domain Relationships
-
-- **Campaign** → uses one EmailTemplate, one SMTPConfig, targets many Groups
-- **Campaign** → produces many CampaignReports (per-contact send tracking)
-- **Contact** → belongs to many Groups (via ContactGroup join table)
-- **Contact** → has many ContactValueMap entries (custom field data defined by FieldMap)
-- **ContactUpload** → spawns Contact records (Excel import source tracking)
-
-### Role-Based Access
-
-Three roles seeded on startup: `SuperAdmin`, `Admin`, `Member`. Default seeded credentials: `admin@mailto.com` / `Admin@1234` (see `EmailMarketing.Membership/Seeds/DataSeeder.cs`).
-
-### Background Workers
-
-Worker services poll the database for queued jobs. They share the same `FrameworkContext` and are enabled/disabled by commenting them in/out of `docker-compose.yml`.
-
-## Testing
-
-Tests use **NUnit** with **Autofac.Extras.Moq** and **Shouldly** assertions. The standard setup:
-
-```csharp
-[OneTimeSetUp] public void ClassSetup() => _mock = AutoMock.GetLoose();
-[SetUp] public void Setup() => _service = _mock.Create<ConcreteService>();
-```
-
-Mock repositories via `_mock.Mock<IRepository>().Setup(...)` then assert with Shouldly (`result.ShouldNotBeNull()`).
+Use before committing or submitting a PR. See `.claude/skills/README.md` for details.
