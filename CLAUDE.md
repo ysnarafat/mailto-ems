@@ -14,14 +14,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Event Handling**: MediatR (`INotification` / `INotificationHandler`)
 - **Logging**: Serilog (configured in `Program.cs`, driven by `appsettings.json`)
 
-## Solution Files
+## Solution File
 
-Two solution files coexist:
-
-- **`EmailMarketing.sln`** — Legacy monolithic structure (do not modify)
-- **`EmailMarketing.ModularMonolith.sln`** — Active development target
-
-Always use `EmailMarketing.ModularMonolith.sln` for builds, tests, and migrations.
+`EmailMarketing.ModularMonolith.sln` — the only active solution.
 
 ## Architecture
 
@@ -163,3 +158,4 @@ Validates code against modular monolith patterns:
 - Entities and repositories in correct locations
 
 Use before committing or submitting a PR. See `.claude/skills/README.md` for details.
+
