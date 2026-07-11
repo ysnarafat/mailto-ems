@@ -12,7 +12,7 @@ services:
           #network: host
         environment:
           - ASPNETCORE_ENVIRONMENT=Production
-          - ConnectionStrings__DefaultConnection=Server=${DB_SERVER};Database=${DB_NAME};User Id=${DB_USER_ID};Password=${DB_PASSWORD};MultipleActiveResultSets=true;
+          - ConnectionStrings__DefaultConnection=Host=${DB_SERVER};Database=${DB_NAME};Username=${DB_USER_ID};Password=${DB_PASSWORD};Port=${DB_PORT:-5432};
           - AppSettings__ContactImportFileUrl=${ROOT_URL}/${CONTACT_IMPORT_FILE_URL}
           - AppSettings__ContactExportFileUrl=${ROOT_URL}/${CONTACT_EXPORT_FILE_URL}
           - AppSettings__EmailSenderFileUrl=${ROOT_URL}/${EMAIL_SENDER_FILE_URL}
@@ -24,19 +24,22 @@ services:
           #- "44380-44385:443"
         #extra_hosts:
           #- "WIN_MSSQL:192.168.0.1"
-        #depends_on:
-          #- db
+        depends_on:
+          - db
         volumes:
           - data-volume:${VOLUME_CONTAINER_DIRECTORY}
           # - C:\\MailToEMS\Web:/app/wwwroot
           
-    #db:
-        #image: "mcr.microsoft.com/mssql/server"
-        #environment:
-            #SA_PASSWORD: "P@ssword"
-            #ACCEPT_EULA: "Y"
-        #ports:
-          #- "1433:1433"
+    db:
+        image: "postgres:15"
+        environment:
+            POSTGRES_DB: ${DB_NAME:-MailtoEMS}
+            POSTGRES_USER: ${DB_USER_ID:-postgres}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+        ports:
+          - "${DB_PORT:-5432}:5432"
+        volumes:
+          - postgres-data:/var/lib/postgresql/data
     
     # contact-import-worker:
     #     #image: ems-contact-import-worker
@@ -47,7 +50,7 @@ services:
     #       dockerfile: EmailMarketing.ExcelWorkerService/Dockerfile
     #     environment:
     #       - ASPNETCORE_ENVIRONMENT=Production
-    #       - ConnectionStrings__DefaultConnection=Server=${DB_SERVER};Database=${DB_NAME};User Id=${DB_USER_ID};Password=${DB_PASSWORD};MultipleActiveResultSets=true;
+    #       - ConnectionStrings__DefaultConnection=Host=${DB_SERVER};Database=${DB_NAME};Username=${DB_USER_ID};Password=${DB_PASSWORD};Port=${DB_PORT:-5432};
     #       - WorkerSettings__ContactImportFileUrl=${ROOT_URL}/${CONTACT_IMPORT_FILE_URL}
     #       - WorkerSettings__ContactImportLogUrl=${ROOT_URL}/${CONTACT_IMPORT_LOG_URL}
     #     #depends_on:
@@ -64,7 +67,7 @@ services:
     #       dockerfile: EmailMarketing.EmailSendingWorkerService/Dockerfile
     #     environment:
     #       - ASPNETCORE_ENVIRONMENT=Production
-    #       - ConnectionStrings__DefaultConnection=Server=${DB_SERVER};Database=${DB_NAME};User Id=${DB_USER_ID};Password=${DB_PASSWORD};MultipleActiveResultSets=true;
+    #       - ConnectionStrings__DefaultConnection=Host=${DB_SERVER};Database=${DB_NAME};Username=${DB_USER_ID};Password=${DB_PASSWORD};Port=${DB_PORT:-5432};
     #       - WorkerSettings__EmailSenderFileUrl=${ROOT_URL}/${EMAIL_SENDER_FILE_URL}
     #       - WorkerSettings__EmailSenderLogUrl=${ROOT_URL}/${EMAIL_SENDER_LOG_URL}
     #       - WorkerSettings__EmailOpenTrackingUrl=${EMAIL_OPEN_TRACKING_URL}
@@ -81,7 +84,7 @@ services:
     #       dockerfile: EmailMarketing.ExcelExportWorkerService/Dockerfile
     #     environment:
     #       - ASPNETCORE_ENVIRONMENT=Production
-    #       - ConnectionStrings__DefaultConnection=Server=${DB_SERVER};Database=${DB_NAME};User Id=${DB_USER_ID};Password=${DB_PASSWORD};MultipleActiveResultSets=true;
+    #       - ConnectionStrings__DefaultConnection=Host=${DB_SERVER};Database=${DB_NAME};Username=${DB_USER_ID};Password=${DB_PASSWORD};Port=${DB_PORT:-5432};
     #       - WorkerSettings__ContactExportFileUrl=${ROOT_URL}/${CONTACT_EXPORT_FILE_URL}
     #       - WorkerSettings__ContactExportLogUrl=${ROOT_URL}/${CONTACT_EXPORT_LOG_URL}
     #     #depends_on:
@@ -97,7 +100,7 @@ services:
     #       dockerfile: EmailMarketing.CampaingReportExcelExportService/Dockerfile
     #     environment:
     #       - ASPNETCORE_ENVIRONMENT=Production
-    #       - ConnectionStrings__DefaultConnection=Server=${DB_SERVER};Database=${DB_NAME};User Id=${DB_USER_ID};Password=${DB_PASSWORD};MultipleActiveResultSets=true;
+    #       - ConnectionStrings__DefaultConnection=Host=${DB_SERVER};Database=${DB_NAME};Username=${DB_USER_ID};Password=${DB_PASSWORD};Port=${DB_PORT:-5432};
     #       - WorkerSettings__CampaignExportFileUrl=${ROOT_URL}/${CAMPAIGN_EXPORT_FILE_URL}
     #       - WorkerSettings__CampaignExportLogUrl=${ROOT_URL}/${CAMPAIGN_EXPORT_LOG_URL}
     #     #depends_on:
@@ -114,3 +117,4 @@ volumes:
             #o: bind
             #type: none
             #device: ${VOLUME_HOST_DIRECTORY}
+    postgres-data:

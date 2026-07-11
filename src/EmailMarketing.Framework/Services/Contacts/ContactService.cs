@@ -87,7 +87,7 @@ namespace EmailMarketing.Framework.Services.Contacts
 
         public async Task<int> GroupContactCountAsync(int id)
         {
-            return await _contactUnitOfWork.GroupContactRepository.GetCountAsync();
+            return await _contactUnitOfWork.GroupContactRepository.GetCountAsync(x => x.ContactId == id);
         }
 
         public async Task AddContact(Contact contact)
@@ -108,26 +108,22 @@ namespace EmailMarketing.Framework.Services.Contacts
         }
         public async Task UpdateAsync(Contact contact)
         {
-            //TODO: update failed when check isExists
-            //var isExists = await _contactUnitOfWork.ContactRepository.IsExistsAsync(x => x.Email == contact.Email && x.Id != contact.Id && x.UserId == contact.UserId);
-            //if (isExists)
-            //    throw new DuplicationException(nameof(contact.Email));
+            var isExists = await _contactUnitOfWork.ContactRepository.IsExistsAsync(x => x.Email == contact.Email && x.Id != contact.Id && x.UserId == contact.UserId);
+            if (isExists)
+                throw new DuplicationException(nameof(contact.Email));
 
             var updateEntity = await _contactUnitOfWork.ContactRepository.GetFirstOrDefaultAsync(x => x, x => x.Id == contact.Id,
                 null, false);
 
-
-            var existingContactGroups = await _contactUnitOfWork.GroupContactRepository.GetAsync(x => x,
-                                                                            x => x.ContactId == updateEntity.Id, null, null, false);
+            var existingContactGroups = (await _contactUnitOfWork.GroupContactRepository.GetAsync(x => x,
+                x => x.ContactId == updateEntity.Id, null, null, false)) ?? new List<ContactGroup>();
             if (existingContactGroups.Any())
                 await _contactUnitOfWork.GroupContactRepository.DeleteRangeAsync(existingContactGroups);
 
-
-            var existingContactValueMaps = await _contactUnitOfWork.ContactValueMapRepository.GetAsync(x => x,
-            x => x.ContactId == updateEntity.Id, null, null, false);
+            var existingContactValueMaps = (await _contactUnitOfWork.ContactValueMapRepository.GetAsync(x => x,
+                x => x.ContactId == updateEntity.Id, null, null, false)) ?? new List<ContactValueMap>();
             if (existingContactValueMaps.Any())
                 await _contactUnitOfWork.ContactValueMapRepository.DeleteRangeAsync(existingContactValueMaps);
-
 
             updateEntity.Email = contact.Email;
             updateEntity.LastModified = contact.LastModified;
@@ -135,22 +131,24 @@ namespace EmailMarketing.Framework.Services.Contacts
             await _contactUnitOfWork.ContactRepository.UpdateAsync(updateEntity);
 
             var contactValueMaps = new List<ContactValueMap>();
-            foreach (var item in contact.ContactValueMaps)
+            foreach (var item in contact.ContactValueMaps ?? new List<ContactValueMap>())
             {
-                var contactValueMap = new ContactValueMap();
-                contactValueMap.Value = item.Value;
-                contactValueMap.FieldMapId = item.FieldMapId;
-                contactValueMap.ContactId = contact.Id;
-                contactValueMaps.Add(contactValueMap);
+                contactValueMaps.Add(new ContactValueMap
+                {
+                    Value = item.Value,
+                    FieldMapId = item.FieldMapId,
+                    ContactId = contact.Id
+                });
             }
 
             var contactGroups = new List<ContactGroup>();
-            foreach (var item in contact.ContactGroups)
+            foreach (var item in contact.ContactGroups ?? new List<ContactGroup>())
             {
-                var contactGroup = new ContactGroup();
-                contactGroup.ContactId = contact.Id;
-                contactGroup.GroupId = item.GroupId;
-                contactGroups.Add(contactGroup);
+                contactGroups.Add(new ContactGroup
+                {
+                    ContactId = contact.Id,
+                    GroupId = item.GroupId
+                });
             }
 
             if (contactGroups.Any())
@@ -160,8 +158,6 @@ namespace EmailMarketing.Framework.Services.Contacts
                 await _contactUnitOfWork.ContactValueMapRepository.AddRangeAsync(contactValueMaps);
 
             await _contactUnitOfWork.SaveChangesAsync();
-
-
         }
         public async Task<IList<(int Value, string Text, int Count)>> GetAllGroupsAsync(Guid? userId)
         {

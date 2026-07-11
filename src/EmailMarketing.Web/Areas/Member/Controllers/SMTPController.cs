@@ -56,7 +56,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                 {
                     model.Response = new ResponseModel(ex.Message, ResponseType.Failure);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     model.Response = new ResponseModel("SMTP creation failured.", ResponseType.Failure);
                 }
@@ -74,7 +74,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                     var result = await model.SmtpTest();
                     return Json(result);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return Json(false);
                 }
@@ -114,7 +114,7 @@ namespace EmailMarketing.Web.Areas.Member.Controllers
                 {
                     model.Response = new ResponseModel(ex.Message, ResponseType.Failure);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     model.Response = new ResponseModel("SMTP edit failured.", ResponseType.Failure);
                 }

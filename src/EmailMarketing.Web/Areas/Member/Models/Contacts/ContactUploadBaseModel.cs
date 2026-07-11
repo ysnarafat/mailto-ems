@@ -8,7 +8,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
     public class ContactUploadBaseModel : MemberBaseModel, IDisposable
     {
         protected readonly IContactUploadService _contactUploadService;
-        protected readonly ICurrentUserService _currentUserService;
+        protected new readonly ICurrentUserService _currentUserService;
 
         public ContactUploadBaseModel(IContactUploadService contactUpload,
             ICurrentUserService currentUserService)

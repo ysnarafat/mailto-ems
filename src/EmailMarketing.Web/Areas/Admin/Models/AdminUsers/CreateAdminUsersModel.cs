@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using EmailMarketing.Common.Services;
 using EmailMarketing.Membership.Constants;
 using EmailMarketing.Membership.Entities;
 using EmailMarketing.Membership.Services;
@@ -35,6 +36,7 @@ namespace EmailMarketing.Web.Areas.Admin.Models.AdminUsers
         }
 
         public CreateAdminUsersModel(IApplicationUserService applicationUserService, IOptions<AppSettings> appSettings)
+            : base((ICurrentUserService)null, applicationUserService)
         {
             _applicationUserService = applicationUserService;
             _appSettings = appSettings.Value;

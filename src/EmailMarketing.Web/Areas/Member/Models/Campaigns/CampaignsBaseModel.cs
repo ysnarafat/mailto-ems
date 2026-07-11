@@ -9,7 +9,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
     {
         protected ICampaignService _campaignService;
         protected IEmailTemplateService _emailTemplateService;
-        protected ICurrentUserService _currentUserService;
+        protected new ICurrentUserService _currentUserService;
 
         public CampaignsBaseModel(ICampaignService campaignService,
                                 ICurrentUserService currentUserService,

@@ -10,7 +10,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
     {
         protected readonly ICampaignService _campaignService;
         protected readonly ICampaignReportExportService _campaignReportExportService;
-        protected readonly ICurrentUserService _currentUserService;
+        protected new readonly ICurrentUserService _currentUserService;
         public CampaignBaseModel(ICampaignService campaignService, ICampaignReportExportService campaignREService,
 
             ICurrentUserService currentUserService)

@@ -174,7 +174,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
                 downloadQueue.SendEmailAddress = SendEmailAddress;
                 await _campaignReportExportService.SaveDownloadQueueAsync(downloadQueue);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new Exception("Failed to export. Please try again");
             }
@@ -220,7 +220,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Campaigns
 
                 await _campaignReportExportService.AddDownloadQueueSubEntities(dowloadQueueSubEntity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new Exception("Failed to Export. Please try again.");
             }

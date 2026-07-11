@@ -10,7 +10,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Groups
     {
         protected readonly IGroupService _groupService;
         protected readonly IApplicationUserService _applicationUserService;
-        protected readonly ICurrentUserService _currentUserService;
+        protected new readonly ICurrentUserService _currentUserService;
 
         public GroupBaseModel(IGroupService groupService, IApplicationUserService applicationUserService,
             ICurrentUserService currentUserService)

@@ -23,7 +23,7 @@ namespace EmailMarketing.Web.Areas.Member.Models.Contacts
         public bool IsProcessing { get; set; }
         public DateTime Created { get; set; }
 
-        private readonly IContactService _contactService;
+        private new readonly IContactService _contactService;
         public ViewContactUploadModel(IContactUploadService contactUploadService, IContactService contactService,
            ICurrentUserService currentUserService) : base(contactUploadService, currentUserService)
         {
